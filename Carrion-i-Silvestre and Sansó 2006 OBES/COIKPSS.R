@@ -44,3 +44,22 @@ determi <- function(model, t, tb) {
 
     return(xt)
 }
+
+alrvr <- function(e) {
+    t <- length(e)
+    k <- 0.8
+    a <- solve(e[1:(t - 1)] %*% e[1:(t - 1)]) %*% e[1:(t - 1)] %*% e[2:t]
+    l <- min(
+        1.1447 * (4 * a^2 * t / ((1 + a)^2 * (1 - a)^2))^(1 / 3), # nolint
+        1.1447 * (4 * k^2 * t / ((1 + k)^2 * (1 - k)^2))^(1 / 3)  # nolint
+    )
+    l <- trunc(l)
+    lrv <- as.numeric((e %*% e) / t)
+    i <- 1
+    while (i <= l) {
+        w <- (1 - i / (l + 1))
+        lrv <- lrv + 2 * as.numeric(e[1:(t - i)] %*% e[(1 + i):t]) * w / t
+        i <- i + 1
+    }
+    return(lrv)
+}
