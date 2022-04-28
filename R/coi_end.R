@@ -303,4 +303,6 @@ valors <- function(model, lambda, k) {
         v_vc <- m_vc[, 9, drop = FALSE]
     else
         stop("ERROR! Try to specify the value of lambda again")
+
+    return(v_vc)
 }
