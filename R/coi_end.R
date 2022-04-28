@@ -192,7 +192,7 @@ dols <- function(y, x, model, klags, kleads, tb) {
     else if (klags == 0 & kleads == 0) {
         ll <- d_streg
     }
-    print(dim(ll))
+
     if (model == 0) {
         xreg <- cbind(
             streg[(klags + 2):(t - kleads), , drop = FALSE],
