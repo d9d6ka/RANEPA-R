@@ -35,6 +35,7 @@ coi_end <- function(y, x, model, k2, cri) {
         cbind(minSC, 2 + tbe)
     )
 
+    colnames(vec_out) <- c("stat", "tb")
     return(vec_out)
 }
 
@@ -190,10 +191,9 @@ dols <- function(y, x, model, klags, kleads, tb) {
     t <- nrow(y)
 
     streg <- x
-    d_streg <- streg[2:t, , drop = FALSE] - streg[1:(t - 1), , drop = FALSE]
-    d_streg_step <- d_streg
-    d_streg_r <- d_streg[(t - 1):1, , drop = FALSE]
-    d_streg_r_step <- d_streg_r
+    d_streg_step <- streg[2:t, , drop = FALSE] - streg[1:(t - 1), , drop = FALSE]
+    d_streg <- d_streg_step
+    d_streg_r <- d_streg_step
 
     for (i in 1:klags) {
         d_streg <- cbind(
@@ -205,13 +205,13 @@ dols <- function(y, x, model, klags, kleads, tb) {
     for (i in 1:kleads) {
         d_streg_r <- cbind(
             d_streg_r,
-            lagn(d_streg_r_step, i)
+            lagn(d_streg_step, -i)
         )
     }
 
     if (klags != 0 & kleads != 0) {
         lags <- d_streg
-        leads <- d_streg_r[(t - 1):1, (ncol(streg) + 1):(ncol(d_streg_r)), drop = FALSE]
+        leads <- d_streg_r[, (ncol(streg) + 1):(ncol(d_streg_r)), drop = FALSE]
         ll <- cbind(lags, leads)[(klags + 1):(t - 1 - kleads), , drop = FALSE]
     }
     else if (klags != 0 & kleads == 0) {
@@ -220,7 +220,7 @@ dols <- function(y, x, model, klags, kleads, tb) {
     }
     else if (klags == 0 & kleads != 0) {
         lags <- d_streg
-        leads <- d_streg_r[(t - 1):1, (ncol(streg) + 1):(ncol(d_streg_r)), drop = FALSE]
+        leads <- d_streg_r[, (ncol(streg) + 1):(ncol(d_streg_r)), drop = FALSE]
         ll <- cbind(lags, leads)[1:(t - 1 - kleads), , drop = FALSE]
     }
     else if (klags == 0 & kleads == 0) {
