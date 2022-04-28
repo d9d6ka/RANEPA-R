@@ -4,6 +4,40 @@ require(zeallot)
 
 ## `[` <- function(...) base::`[`(..., drop = FALSE) # nolint
 
+coi_end <- function(y, x, model, k2, cri) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.matrix(x)) x <- as.matrix(x)
+
+    t <- nrow(y)
+
+    m_SC <- matrix(data = 0, nrow = t - 5, ncol = 2)
+
+    for (i in 3:(t-3)) {
+        if (cri[2] + 2 < i & i < t - 5 - cri[2]) {
+            c(beta, tests, u, t_b) %<-% coi_kpss(y, x, model, i, k2, cri)
+            m_SC[i - 2, 1] <- tests
+            m_SC[i - 2, 2] <- as.numeric(t(u) %*% u)
+        }
+        else {
+            m_SC[i - 2, 1] <- 2 ^ 20
+            m_SC[i - 2, 2] <- 2 ^ 20
+        }
+    }
+
+    minSC <- min(m_SC[, 1])
+    tbe <- which.min(m_SC[, 1])
+    vec_out <- cbind(minSC, 2 + tbe)
+
+    tbe <- which.min(m_SC[, 2])
+    minSC <- m_SC[tbe, 1]
+    vec_out <- rbind(
+        vec_out,
+        cbind(minSC, 2 + tbe)
+    )
+
+    return(vec_out)
+}
+
 coi_kpss <- function(y, x, model, tb, k2, cri) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
