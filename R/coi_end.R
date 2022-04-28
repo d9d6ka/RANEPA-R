@@ -2,7 +2,7 @@
 
 require(zeallot)
 
-## `[` <- function(...) base::`[`(..., drop = FALSE)
+## `[` <- function(...) base::`[`(..., drop = FALSE) # nolint
 
 determi <- function(model, t, tb) {
     du <- rbind(
@@ -87,24 +87,28 @@ lagn <- function(x, i) {
 }
 
 DOLS <- function(y, x, model, klags, kleads, tb) {
-    t <- length(y)
+    if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
-
-    d_streg <- x[2:t, , drop = FALSE] - x[1:(t - 1), , drop = FALSE]
+    
+    t <- nrow(y)
+    
+    streg <- x
+    d_streg <- streg[2:t, , drop = FALSE] - streg[1:(t - 1), , drop = FALSE]
+    d_streg_step <- d_streg
+    d_streg_r <- d_streg[(t - 1):1, , drop = FALSE]
+    d_streg_r_step <- d_streg_r
 
     for (i in 1:klags) {
         d_streg <- cbind(
             d_streg,
-            lagn(d_streg, i)
+            lagn(d_streg_step, i)
         )
     }
-
-    d_streg_r <- d_streg[(t-1):1, , drop = FALSE]
 
     for (i in 1:kleads) {
         d_streg_r <- cbind(
             d_streg_r,
-            lagn(d_streg_r, i)
+            lagn(d_streg_r_step, i)
         )
     }
 
@@ -125,7 +129,7 @@ DOLS <- function(y, x, model, klags, kleads, tb) {
     else if (klags == 0 & kleads == 0) {
         ll <- d_streg
     }
-
+    print(dim(ll))
     if (model == 0) {
         xreg <- cbind(
             streg[(klags + 2):(t - kleads), , drop = FALSE],
@@ -161,12 +165,13 @@ DOLS <- function(y, x, model, klags, kleads, tb) {
         )
     }
 
-    beta <- solve(t(xreg) %*% xreg) %*% t(xreg) %*% y[(klags + 2):(t - kleads), 1, drop = FALSE]
+    beta <- solve(t(xreg) %*% xreg) %*% t(xreg) %*%
+        y[(klags + 2):(t - kleads), 1, drop = FALSE]
     e <- y[(klags + 2):(t - kleads), 1, drop = FALSE] - xreg %*% beta
-    s2 <- (t(e) %*% e) / (nrow(xreg) - ncol(xreg))
+    s2 <- as.numeric(t(e) %*% e) / (nrow(xreg) - ncol(xreg))
     t_beta <- sweep(beta, 1, sqrt(diag(s2 * solve(t(xreg) %*% xreg))))
 
-    bic <- ln(s2) + ncol(xreg) * ln(nrow(xreg)) / nrow(xreg)
+    bic <- log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
 
     return(
         list(
