@@ -18,3 +18,4 @@ Description: A (one paragraph) description of what
 License: GPL (>= 2)
 URL: https://github.com/d9d6ka/RANEPA-R
 BugReports: https://github.com/d9d6ka/RANEPA-R/issues
+RoxygenNote: 7.1.2
