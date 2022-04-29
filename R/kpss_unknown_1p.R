@@ -1,4 +1,4 @@
-#' LM-test of cointegration
+#' KPSS-test of cointegration
 #'
 #' @description
 #' Procedure for testing the null of cointegration in the possible presence of structural breaks
@@ -40,7 +40,7 @@
 #'
 #' @importFrom zeallot %<-%
 #' @export
-coi_end <- function(y, x, model, k2, cri) {
+kpss_unknown_1p <- function(y, x, model, k2, cri) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -50,7 +50,7 @@ coi_end <- function(y, x, model, k2, cri) {
 
     for (i in 3:(t-3)) {
         if (cri[2] + 2 < i & i < t - 5 - cri[2]) {
-            c(beta, tests, u, t_b) %<-% coi_kpss(y, x, model, i, k2, cri)
+            c(beta, tests, u, t_b) %<-% kpss_known_1p(y, x, model, i, k2, cri)
             m_SC[i - 2, 1] <- tests
             m_SC[i - 2, 2] <- as.numeric(t(u) %*% u)
         }

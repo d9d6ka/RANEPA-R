@@ -1,4 +1,3 @@
-source("R/lagn.R")
 ## Procedure ALRVR to estimate the long-run variance as
 ## in Sul, Phillips and Choi (2003).
 ## Quadratic Spectral and Bartlett kernels.

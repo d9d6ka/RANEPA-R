@@ -46,7 +46,7 @@
 #'
 #' @importFrom zeallot %<-%
 #' @export
-coi_kpss <- function(y, x, model, tb, k2, cri) {
+kpss_known_1p <- function(y, x, model, tb, k2, cri) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -59,16 +59,16 @@ coi_kpss <- function(y, x, model, tb, k2, cri) {
         if (model == 0)
             xt <- x
         else if (1 <= model & model <= 4) {
-            deter <- determi(model, t, tb)
+            deter <- determi_kpss_1p(model, t, tb)
             xt <- cbind(deter, x)
         }
         else if (model == 5) {
-            deter <- determi(1, t, tb)
+            deter <- determi_kpss_1p(1, t, tb)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }
         else if (model == 6) {
-            deter <- determi(4, t, tb)
+            deter <- determi_kpss_1p(4, t, tb)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }

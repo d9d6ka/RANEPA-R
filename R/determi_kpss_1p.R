@@ -1,4 +1,4 @@
-determi <- function(model, t, tb) {
+determi_kpss_1p <- function(model, t, tb) {
     du <- rbind(
         matrix(data = 0, nrow = tb, ncol = 1),
         matrix(data = 1, nrow = t - tb, ncol = 1)
