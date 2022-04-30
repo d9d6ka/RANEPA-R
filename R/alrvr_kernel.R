@@ -91,8 +91,5 @@ alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
 
     lrv <- min(lrv_recolored, t * 0.15 * lrv)
     
-    print(l)
-    print(lrv)
-    print(lrv_recolored)
     return(lrv)
 }
