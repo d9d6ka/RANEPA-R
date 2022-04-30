@@ -2,17 +2,18 @@ Package: breaktest
 Version: 0.0.1
 Date: 2022-04-28
 Title: My First Collection of Functions
-Authors@R: c(person("Anton", "Skrobotov", role = c("aut", "cre"),
+Authors@R: c(person("Anton", "Skrobotov", role = c("aut", "ctb"),
                     email = "antonskrobotov@gmail.com"),
-             person("Alexey", "Tsarev", role = "aut"),
-             person("Vadim", "Zyamalov", role = "ctb",
+             person("Alexey", "Tsarev", role = role = c("aut", "ctb")),
+             person("Vadim", "Zyamalov", role = c("aut", "cre", "ctb"),
                     email = "zyamalov@ranepa.ru"))
-Author: Anton Skrobotov [aut, cre],
-        Alexey Tsarev [aut],
-        Vadim Zyamalov [ctb]
+Author: Anton Skrobotov [aut, ctb],
+        Alexey Tsarev [aut, ctb],
+        Vadim Zyamalov [aut, cre, ctb]
 Maintainer: Vadim Zyamalov <zyamalov@ranepa.rut>
 Depends: R (>= 3.1.0)
 Imports:
+    MASS,
     zeallot
 Description: A (one paragraph) description of what
   the package does and why it may be useful.
