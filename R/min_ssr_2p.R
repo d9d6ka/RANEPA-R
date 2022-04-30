@@ -1,18 +1,24 @@
-## Procedure to minimise the SSR
-## Sintaxis:
-##  {e, Tb_vec} = min_ssr(y,model);
-## Input:
-##      y       (Tx1)-vector of time series
-##      model   = 1 for the AA (without trend) model
-##              = 2 for the AA (with trend) model
-##              = 3 for the BB model
-##              = 4 for the CC model
-##              = 5 for the AC-CA model
-##  Output:
-##      e       (Tx1) vector of estimated OLS residuals
-##      Tb_vec  (2x1) vector with the estimated break points
+#' Procedure to minimize the SSR for 2 break points
+#' 
+#' @param y (Tx1)-vector of time series
+#' @param model
+#' \describe{
+#' \item{1}{for the AA (without trend) model}
+#' \item{2}{for the AA (with trend) model}
+#' \item{3}{for the BB model}
+#' \item{4}{for the CC model}
+#' \item{5}{for the AC-CA model}
+#' }
+#' 
+#' @return List containing
+#' \describe{
+#' \item{resid}{(Tx1) vector of estimated OLS residuals}
+#' \item{tb1}{The first breaking point}
+#' \item{tb2}{The second breaking point}
+#' }
+#' 
 #' @importFrom zeallot %<-%
-min_ssr <- function(y, model) {
+min_ssr_2p <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     t <- nrow(y)
@@ -68,14 +74,5 @@ min_ssr <- function(y, model) {
 
     return(
         list(u = r_min, tb1 = tb1_min, tb2 = tb2_min)
-    )
-}
-
-olsqr <- function(y, x) {
-    b <- solve(t(x) %*% x) %*% t(x) %*% y
-    p <- x %*% b
-    r <- y - p
-    return(
-        list(b = b, r = r, p = p)
     )
 }

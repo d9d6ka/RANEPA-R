@@ -44,6 +44,7 @@
 #' \item{t_b}{Individual significance t-statistics}
 #' }
 #'
+#' @import MASS
 #' @importFrom zeallot %<-%
 #' @export
 kpss_known_1p <- function(y, x, model, tb, k2, cri) {
@@ -73,7 +74,7 @@ kpss_known_1p <- function(y, x, model, tb, k2, cri) {
             xt <- cbind(deter, x, xdu)
         }
 
-        beta <- solve(t(xt) %*% xt) %*% t(xt) %*% y
+        beta <- qr.solve(t(xt) %*% xt) %*% t(xt) %*% y
         u <- y - xt %*% beta
         t_b <- tb
     }
@@ -95,7 +96,7 @@ kpss_known_1p <- function(y, x, model, tb, k2, cri) {
     }
 
     sg <- alrvr(u)
-    tests <- solve((t^2) * sg) * apply(apply(u, 2, cumsum)^2, 2, sum)
+    tests <- qr.solve((t^2) * sg) * apply(apply(u, 2, cumsum)^2, 2, sum)
 
     return(
         list(

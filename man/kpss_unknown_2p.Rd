@@ -4,7 +4,7 @@
 \alias{kpss_unknown_2p}
 \title{KPSS-test with 2 unknown structural breaks}
 \usage{
-kpss_unknown_2p(y, model, kmax, kernel)
+kpss_unknown_2p(y, model, kmax = 0, kernel = "bartlett")
 }
 \arguments{
 \item{y}{(Tx1)-vector of time series}

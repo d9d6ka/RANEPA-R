@@ -1,0 +1,26 @@
+{
+    "id": "BAD1698A",
+    "path": "D:/git/breaktest/R/alrvr.R",
+    "project_path": "R/alrvr.R",
+    "type": "r_source",
+    "hash": "4125272524",
+    "contents": "",
+    "dirty": false,
+    "created": 1651301365234.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "21,0",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1651300862,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1651300862,
+    "read_only": false,
+    "read_only_alternatives": []
+}
