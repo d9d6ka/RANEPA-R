@@ -1,0 +1,26 @@
+{
+    "id": "4878EBC4",
+    "path": "D:/git/breaktest/R/ssr_partition_1p.R",
+    "project_path": "R/ssr_partition_1p.R",
+    "type": "r_source",
+    "hash": "1717189074",
+    "contents": "",
+    "dirty": false,
+    "created": 1651463432216.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "9,25",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1651465904,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1651465904592,
+    "read_only": false,
+    "read_only_alternatives": []
+}

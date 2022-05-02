@@ -1,0 +1,9 @@
+#' @import MASS
+olsqr <- function(y, x) {
+    b <- qr.solve(t(x) %*% x) %*% t(x) %*% y
+    p <- x %*% b
+    r <- y - p
+    return(
+        list(beta = b, resid = r, predict = p)
+    )
+}
