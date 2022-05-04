@@ -44,9 +44,9 @@ kpss_known_2p <- function(y, model, tb1, tb2, kmax, kernel) {
     s_t <- apply(e, 2, cumsum)
 
     if (!is.null(kernel))
-        test <- t^(-2) * as.numeric(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
+        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
     else
-        test <- t^(-2) * as.numeric(t(s_t) %*% s_t) / alrvr(e)
+        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
 
     return(test)
 }

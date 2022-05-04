@@ -12,10 +12,10 @@ alrvr <- function(e) {
         1.1447 * (4 * k^2 * t / ((1 + k)^2 * (1 - k)^2))^(1 / 3)  # nolint
     )
     l <- trunc(l)
-    lrv <- as.numeric(t(e) %*% e) / t
+    lrv <- drop(t(e) %*% e) / t
     for (i in 1:l) {
         w <- (1 - i / (l + 1))
-        lrv <- lrv + 2 * as.numeric(t(e[1:(t - i)]) %*% e[(1 + i):t]) * w / t
+        lrv <- lrv + 2 * drop(t(e[1:(t - i)]) %*% e[(1 + i):t]) * w / t
     }
     return(lrv)
 }

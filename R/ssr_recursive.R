@@ -11,7 +11,7 @@ ssr_recursive <- function(y, x, beg, end, width = 2) {
 
     if (beg < 1) beg <- 1
     if (nrow(y) < end) end <- nrow(y)
-    
+
     t <- nrow(y)
 
     result <- matrix(data = Inf, nrow = t, ncol = 1)
@@ -23,9 +23,9 @@ ssr_recursive <- function(y, x, beg, end, width = 2) {
     c(beta_0, resid_0, predict_0) %<-% olsqr(y_0, x_0)
 
     for (r in beg:(beg + width - 2)) result[r, 1] <- 0
-    
-    result[beg + width - 1, 1] <- as.numeric(t(resid_0) %*% resid_0)
-    
+
+    result[beg + width - 1, 1] <- drop(t(resid_0) %*% resid_0)
+
     for (r in (beg + width):end) {
         if (r > end) break
 

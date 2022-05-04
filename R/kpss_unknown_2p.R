@@ -41,9 +41,9 @@ kpss_unknown_2p <- function(y, model, kmax = 0, kernel = "bartlett") {
     s_t <- apply(e, 2, cumsum)
 
     if (!is.null(kernel))
-        test <- t^(-2) * as.numeric(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
+        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
     else
-        test <- t^(-2) * as.numeric(t(s_t) %*% s_t) / alrvr(e)
+        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
 
     return(
         list(test = test, tb1 = tb1, tb2 = tb2)

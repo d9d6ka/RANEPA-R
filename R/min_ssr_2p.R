@@ -1,5 +1,5 @@
 #' Procedure to minimize the SSR for 2 break points
-#' 
+#'
 #' @param y (Tx1)-vector of time series
 #' @param model
 #' \describe{
@@ -9,14 +9,14 @@
 #' \item{4}{for the CC model}
 #' \item{5}{for the AC-CA model}
 #' }
-#' 
+#'
 #' @return List containing
 #' \describe{
 #' \item{resid}{(Tx1) vector of estimated OLS residuals}
 #' \item{tb1}{The first breaking point}
 #' \item{tb2}{The second breaking point}
 #' }
-#' 
+#'
 #' @importFrom zeallot %<-%
 min_ssr_2p <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -33,7 +33,7 @@ min_ssr_2p <- function(y, model) {
             for (j in (i + 2):(t - 2)) {
                 z <- determi_kpss_2p(model, t, i, j)
                 c(b, r, p) %<-% olsqr(y, z)
-                ssr <- as.numeric(t(r) %*% r)
+                ssr <- drop(t(r) %*% r)
                 if (ssr < ssr_min) {
                     r_min <- r
                     ssr_min <- ssr
@@ -48,7 +48,7 @@ min_ssr_2p <- function(y, model) {
             for (j in (i + 2):(t - 2)) {
                 z <- determi_kpss_2p(model, t, i, j)
                 c(b, r, p) %<-% olsqr(y, z)
-                ssr <- as.numeric(t(r) %*% r)
+                ssr <- drop(t(r) %*% r)
                 if (ssr < ssr_min) {
                     r_min <- r
                     ssr_min <- ssr
@@ -61,7 +61,7 @@ min_ssr_2p <- function(y, model) {
             for (i in (j + 2):(t - 2)) {
                 z <- determi_kpss_2p(model, t, i, j)
                 c(b, r, p) %<-% olsqr(y, z)
-                ssr <- as.numeric(t(r) %*% r)
+                ssr <- drop(t(r) %*% r)
                 if (ssr < ssr_min) {
                     r_min <- r
                     ssr_min <- ssr

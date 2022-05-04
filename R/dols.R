@@ -80,7 +80,7 @@ dols <- function(y, x, model, klags, kleads, tb) {
     beta <- qr.solve(t(xreg) %*% xreg) %*% t(xreg) %*%
         y[(klags + 2):(t - kleads), 1, drop = FALSE]
     e <- y[(klags + 2):(t - kleads), 1, drop = FALSE] - xreg %*% beta
-    s2 <- as.numeric(t(e) %*% e) / (nrow(xreg) - ncol(xreg))
+    s2 <- drop(t(e) %*% e) / (nrow(xreg) - ncol(xreg))
     t_beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(xreg) %*% xreg))))
 
     bic <- log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg)

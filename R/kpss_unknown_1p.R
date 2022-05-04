@@ -52,7 +52,7 @@ kpss_unknown_1p <- function(y, x, model, k2, cri) {
         if (cri[2] + 2 < i & i < t - 5 - cri[2]) {
             c(beta, tests, u, t_b) %<-% kpss_known_1p(y, x, model, i, k2, cri)
             m_SC[i - 2, 1] <- tests
-            m_SC[i - 2, 2] <- as.numeric(t(u) %*% u)
+            m_SC[i - 2, 2] <- drop(t(u) %*% u)
         }
         else {
             m_SC[i - 2, 1] <- 2 ^ 20
