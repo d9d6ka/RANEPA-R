@@ -16,7 +16,7 @@ ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
     if (!is.matrix(x)) x <- as.matrix(x)
 
     t <- nrow(y)
-    
+
     if (is.null(ssr_data))
         ssr_data <- ssr_matrix(y, x, width)
 
@@ -65,7 +65,7 @@ ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
             else if (step == m) {
                 for (v in 1:variants) {
                     tmp_ssr[v, 1] <- loop_ssr[v, 1] +
-                        ssr_data[step * width + v - 1, t]
+                        ssr_data[step * width + v, t]
                 }
                 optimal_ssr <- min(tmp_ssr)
                 optimal_index <- which.min(tmp_ssr)
@@ -87,7 +87,7 @@ ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
                     next_v <- loop_end - (step + 1) * width + 1
                     for (v in 1:variants) {
                         tmp_ssr[v, 1] <- loop_ssr[v, 1] +
-                            ssr_data[step * width + v - 1, loop_end]
+                            ssr_data[step * width + v, loop_end]
                     }
                     next_ssr[next_v, 1] <- min(tmp_ssr)
                     next_index <- which.min(tmp_ssr)

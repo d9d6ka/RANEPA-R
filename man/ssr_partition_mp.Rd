@@ -4,7 +4,7 @@
 \alias{ssr_partition_mp}
 \title{Find m + 1 optimal partitions}
 \usage{
-ssr_partition_mp(y, x, m = 1, width = 2)
+ssr_partition_mp(y, x, m = 1, width = 2, ssr_data = NULL)
 }
 \arguments{
 \item{y}{(Tx1)-vector of the dependent variable}
