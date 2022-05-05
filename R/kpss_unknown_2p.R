@@ -34,16 +34,16 @@
 kpss_unknown_2p <- function(y, model, kmax = 0, kernel = "bartlett") {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    t <- nrow(y)
+    N <- nrow(y)
 
     c(e, tb1, tb2) %<-% min_ssr_2p(y, model)
 
     s_t <- apply(e, 2, cumsum)
 
     if (!is.null(kernel))
-        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
     else
-        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
 
     return(
         list(test = test, tb1 = tb1, tb2 = tb2)

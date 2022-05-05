@@ -15,22 +15,22 @@ ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    t <- nrow(y)
+    N <- nrow(y)
 
     if (is.null(ssr_data))
         ssr_data <- ssr_matrix(y, x, width)
 
     if (m == 1) {
         tmp_result <- ssr_partition_1p(
-            1, t,
-            width, t - width + 1,
-            t, ssr_data
+            1, N,
+            width, N - width + 1,
+            N, ssr_data
         )
         optimal_ssr <- tmp_result$ssr
         optimal_break <- tmp_result$break_point
     }
     else {
-        variants <- t - (m + 1) * width + 1
+        variants <- N - (m + 1) * width + 1
         loop_ssr <- matrix(
             data = Inf,
             nrow = variants,
@@ -55,7 +55,7 @@ ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
                         loop_end,
                         width,
                         loop_end - width,
-                        t,
+                        N,
                         ssr_data
                     )
                     loop_ssr[v, 1] <- tmp_res$ssr
@@ -65,7 +65,7 @@ ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
             else if (step == m) {
                 for (v in 1:variants) {
                     tmp_ssr[v, 1] <- loop_ssr[v, 1] +
-                        ssr_data[step * width + v, t]
+                        ssr_data[step * width + v, N]
                 }
                 optimal_ssr <- min(tmp_ssr)
                 optimal_index <- which.min(tmp_ssr)
@@ -83,7 +83,7 @@ ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
                     nrow = variants,
                     ncol = m
                 )
-                for (loop_end in ((step + 1) * width):(t - (m - step) * width)) { # nolint
+                for (loop_end in ((step + 1) * width):(N - (m - step) * width)) { # nolint
                     next_v <- loop_end - (step + 1) * width + 1
                     for (v in 1:variants) {
                         tmp_ssr[v, 1] <- loop_ssr[v, 1] +

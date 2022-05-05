@@ -36,17 +36,17 @@
 kpss_known_2p <- function(y, model, tb1, tb2, kmax, kernel) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    t <- nrow(y)
+    N <- nrow(y)
 
-    z <- determi_kpss_2p(model, t, tb1, tb2)
+    z <- determi_kpss_2p(model, N, tb1, tb2)
     c(b, e, p) %<-% olsqr(y, z)
 
     s_t <- apply(e, 2, cumsum)
 
     if (!is.null(kernel))
-        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
     else
-        test <- t^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
 
     return(test)
 }

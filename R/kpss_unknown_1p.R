@@ -44,13 +44,13 @@ kpss_unknown_1p <- function(y, x, model, k2, cri) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    t <- nrow(y)
+    N <- nrow(y)
 
-    m_SC <- matrix(data = 0, nrow = t - 5, ncol = 2)
+    m_SC <- matrix(data = 0, nrow = N - 5, ncol = 2)
 
-    for (i in 3:(t-3)) {
-        if (cri[2] + 2 < i & i < t - 5 - cri[2]) {
-            c(beta, tests, u, t_b) %<-% kpss_known_1p(y, x, model, i, k2, cri)
+    for (i in 3:(N-3)) {
+        if (cri[2] + 2 < i & i < N - 5 - cri[2]) {
+            c(beta, tests, u, N_b) %<-% kpss_known_1p(y, x, model, i, k2, cri)
             m_SC[i - 2, 1] <- tests
             m_SC[i - 2, 2] <- drop(t(u) %*% u)
         }

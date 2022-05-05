@@ -12,9 +12,9 @@ ssr_recursive <- function(y, x, beg, end, width = 2) {
     if (beg < 1) beg <- 1
     if (nrow(y) < end) end <- nrow(y)
 
-    t <- nrow(y)
+    N <- nrow(y)
 
-    result <- matrix(data = Inf, nrow = t, ncol = 1)
+    result <- matrix(data = Inf, nrow = N, ncol = 1)
 
     y_0 <- y[beg:(beg + width - 1), , drop = FALSE]
     x_0 <- x[beg:(beg + width - 1), , drop = FALSE]

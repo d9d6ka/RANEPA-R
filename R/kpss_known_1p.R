@@ -51,7 +51,7 @@ kpss_known_1p <- function(y, x, model, tb, k2, cri) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    t <- nrow(y)
+    N <- nrow(y)
 
     if (model < 0 & model > 6)
         stop("ERROR: Try to specify the deterministic component again")
@@ -60,16 +60,16 @@ kpss_known_1p <- function(y, x, model, tb, k2, cri) {
         if (model == 0)
             xt <- x
         else if (1 <= model & model <= 4) {
-            deter <- determi_kpss_1p(model, t, tb)
+            deter <- determi_kpss_1p(model, N, tb)
             xt <- cbind(deter, x)
         }
         else if (model == 5) {
-            deter <- determi_kpss_1p(1, t, tb)
+            deter <- determi_kpss_1p(1, N, tb)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }
         else if (model == 6) {
-            deter <- determi_kpss_1p(4, t, tb)
+            deter <- determi_kpss_1p(4, N, tb)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }
@@ -96,7 +96,7 @@ kpss_known_1p <- function(y, x, model, tb, k2, cri) {
     }
 
     sg <- alrvr(u)
-    tests <- qr.solve((t^2) * sg) * apply(apply(u, 2, cumsum)^2, 2, sum)
+    tests <- qr.solve((N^2) * sg) * apply(apply(u, 2, cumsum)^2, 2, sum)
 
     return(
         list(

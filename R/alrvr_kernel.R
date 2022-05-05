@@ -14,9 +14,9 @@ alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
         criterion <- "bic"
     }
 
-    t <- nrow(e)
+    N <- nrow(e) # nolint
 
-    min_bic <- log(drop(t(e) %*% e) / (t - kmax))
+    min_bic <- log(drop(t(e) %*% e) / (N - kmax))
     k <- 0
     rho <- 0
     res <- e
@@ -35,14 +35,14 @@ alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
         res_temp <- temp[, 1, drop = FALSE] - x_tmp %*% rho_temp
 
         if (criterion == "bic") {
-            bic <- log(drop(t(res_temp) %*% res_temp) / (t - kmax)) +
-                (i * log(t - kmax) / (t - kmax))
+            bic <- log(drop(t(res_temp) %*% res_temp) / (N - kmax)) +
+                (i * log(N - kmax) / (N - kmax))
         } else if (criterion == "aic") {
-            bic <- log(drop(t(res_temp) %*% res_temp) / (t - kmax)) +
-                2 * i / (t - kmax)
+            bic <- log(drop(t(res_temp) %*% res_temp) / (N - kmax)) +
+                2 * i / (N - kmax)
         } else if (criterion == "lwz") {
-            bic <- log(drop(t(res_temp) %*% res_temp) / (t - kmax)) +
-                0.299 * i * (log(t - kmax))^2.1
+            bic <- log(drop(t(res_temp) %*% res_temp) / (N - kmax)) +
+                0.299 * i * (log(N - kmax))^2.1
         }
 
         if (bic < min_bic) {
@@ -55,7 +55,7 @@ alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
 
 
     if (k == 0)
-        lrv <- drop(t(res) %*% res) / t
+        lrv <- drop(t(res) %*% res) / N
     else {
         temp <- cbind(res, lagn(res, 1))
         temp <- temp[2:nrow(res), , drop = FALSE]
@@ -66,12 +66,12 @@ alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
         )
 
         if (kernel == "bartlett")
-            l <- 1.1447 * (4 * a^2 * t / ((1 + a)^2 * (1 - a)^2))^(1 / 3) # nolint
+            l <- 1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3) # nolint
         else if (kernel == "quadratic")
-            l <- 1.3221 * (4 * a^2 * t / ((1 + a)^2 * (1 - a)^2))^(1 / 5) # nolint
+            l <- 1.3221 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 5) # nolint
         l <- trunc(l)
 
-        lrv <- drop(t(res) %*% res) / t
+        lrv <- drop(t(res) %*% res) / N
         for (i in 1:l) {
             if (l == 0) break
 
@@ -85,13 +85,13 @@ alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
                         cos(6 * pi * i / (l * 5)))
             lrv <- lrv + 2 * drop(t(res[1:(nrow(res) - i), , drop = FALSE]) %*%
                                   res[(1 + i):nrow(res), , drop = FALSE]) *
-                w / t
+                w / N
         }
     }
 
     lrv_recolored <- lrv / (1 - sum(rho))^2
 
-    lrv <- min(lrv_recolored, t * 0.15 * lrv)
+    lrv <- min(lrv_recolored, N * 0.15 * lrv)
 
     return(lrv)
 }

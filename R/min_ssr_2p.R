@@ -21,7 +21,7 @@
 min_ssr_2p <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    t <- nrow(y)
+    N <- nrow(y)
 
     r_min <- 0
     ssr_min <- 1000000
@@ -29,9 +29,9 @@ min_ssr_2p <- function(y, model) {
     tb2_min <- 0
 
     if (1 <= model & model <= 4) {
-        for (i in 2:(t - 4)) {
-            for (j in (i + 2):(t - 2)) {
-                z <- determi_kpss_2p(model, t, i, j)
+        for (i in 2:(N - 4)) {
+            for (j in (i + 2):(N - 2)) {
+                z <- determi_kpss_2p(model, N, i, j)
                 c(b, r, p) %<-% olsqr(y, z)
                 ssr <- drop(t(r) %*% r)
                 if (ssr < ssr_min) {
@@ -44,9 +44,9 @@ min_ssr_2p <- function(y, model) {
         }
     }
     else if (model == 5) {
-        for (i in 2:(t - 4)) {
-            for (j in (i + 2):(t - 2)) {
-                z <- determi_kpss_2p(model, t, i, j)
+        for (i in 2:(N - 4)) {
+            for (j in (i + 2):(N - 2)) {
+                z <- determi_kpss_2p(model, N, i, j)
                 c(b, r, p) %<-% olsqr(y, z)
                 ssr <- drop(t(r) %*% r)
                 if (ssr < ssr_min) {
@@ -57,9 +57,9 @@ min_ssr_2p <- function(y, model) {
                 }
             }
         }
-        for (j in 2:(t - 4)) {
-            for (i in (j + 2):(t - 2)) {
-                z <- determi_kpss_2p(model, t, i, j)
+        for (j in 2:(N - 4)) {
+            for (i in (j + 2):(N - 2)) {
+                z <- determi_kpss_2p(model, N, i, j)
                 c(b, r, p) %<-% olsqr(y, z)
                 ssr <- drop(t(r) %*% r)
                 if (ssr < ssr_min) {
