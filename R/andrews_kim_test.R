@@ -23,24 +23,24 @@ andrews_kim_test <- function(eq, m, dataset) {
     reg_var <- all.vars(eq)
     reg_var <- reg_var[reg_var != dep_var]
 
-    N <- dim(dataset)[1] - m
+    N <- dim(dataset)[1] - m # nolint
 
-    A <- matrix(NA, m, m)
+    A <- matrix(NA, m, m) # nolint
     for (i in 1:m) for (j in 1:m) A[i, j] <- min(i, j)
 
     tmp_model <- lm(formula = eq, data = dataset)
     tmp_resid <- as.matrix(tmp_model$residuals[(N + 1):(N + m)])
 
-    result$P <- drop(t(tmp_resid) %*% tmp_resid)
-    result$R <- drop(t(tmp_resid) %*% A %*% tmp_resid)
+    result$P <- drop(t(tmp_resid) %*% tmp_resid) # nolint
+    result$R <- drop(t(tmp_resid) %*% A %*% tmp_resid) # nolint
 
-    result$Pj <- seq(0, 0, length.out = N - m + 1)
-    result$Rj <- seq(0, 0, length.out = N - m + 1)
+    result$Pj <- seq(0, 0, length.out = N - m + 1) # nolint
+    result$Rj <- seq(0, 0, length.out = N - m + 1) # nolint
 
-    for(j in seq_len(N - m + 1)) {
+    for (j in seq_len(N - m + 1)) {
         low <- j
         high <- j + ceiling(m / 2) - 1
-        tmp_data <- dataset[1:N, ][-(low:high), ]
+        tmp_data <- dataset[1:N, ][-(low:high), ] # nolint
 
         tmp_model <- lm(formula = eq, data = tmp_data)
 

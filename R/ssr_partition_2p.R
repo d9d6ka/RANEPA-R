@@ -18,7 +18,7 @@
 #' }
 #'
 #' @importFrom zeallot %<-%
-min_ssr_2p <- function(y, model) {
+ssr_partition_2p <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
@@ -32,10 +32,10 @@ min_ssr_2p <- function(y, model) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
                 z <- determi_kpss_2p(model, N, i, j)
-                c(b, r, p) %<-% olsqr(y, z)
-                ssr <- drop(t(r) %*% r)
+                c(beta, resid, p) %<-% olsqr(y, z)
+                ssr <- drop(t(resid) %*% resid)
                 if (ssr < ssr_min) {
-                    r_min <- r
+                    r_min <- resid
                     ssr_min <- ssr
                     tb1_min <- i
                     tb2_min <- j
@@ -47,10 +47,10 @@ min_ssr_2p <- function(y, model) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
                 z <- determi_kpss_2p(model, N, i, j)
-                c(b, r, p) %<-% olsqr(y, z)
-                ssr <- drop(t(r) %*% r)
+                c(beta, resid, p) %<-% olsqr(y, z)
+                ssr <- drop(t(resid) %*% resid)
                 if (ssr < ssr_min) {
-                    r_min <- r
+                    r_min <- resid
                     ssr_min <- ssr
                     tb1_min <- i
                     tb2_min <- j
@@ -60,10 +60,10 @@ min_ssr_2p <- function(y, model) {
         for (j in 2:(N - 4)) {
             for (i in (j + 2):(N - 2)) {
                 z <- determi_kpss_2p(model, N, i, j)
-                c(b, r, p) %<-% olsqr(y, z)
-                ssr <- drop(t(r) %*% r)
+                c(beta, resid, p) %<-% olsqr(y, z)
+                ssr <- drop(t(resid) %*% resid)
                 if (ssr < ssr_min) {
-                    r_min <- r
+                    r_min <- resid
                     ssr_min <- ssr
                     tb1_min <- j
                     tb2_min <- i
@@ -73,6 +73,10 @@ min_ssr_2p <- function(y, model) {
     }
 
     return(
-        list(u = r_min, tb1 = tb1_min, tb2 = tb2_min)
+        list(
+            resid = r_min,
+            tb1 = tb1_min,
+            tb2 = tb2_min
+        )
     )
 }

@@ -27,36 +27,34 @@
 #' \item{1}{if x is a matrix of I(1) variables with drift.}
 #' \item{2}{if x is a matrix of I(1) variables with a quadratic trend.}
 #' }
-#' @param cri (2x1)-vector where we specify whether the stochastic regressors are exogenous or not, and the initial number of leads and lags for the DOLS estimation.
+#' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
 #' \describe{
-#' \item{cri[1]}{\describe{
-#' \item{0}{if the regressors are weakly exogenous,}
-#' \item{1}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+#' \item{TRUE}{if the regressors are weakly exogenous,}
+#' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 #' }
-#' }
-#' \item{cri[2]}{Scalar, defines the initial number of leads and lags for DOLS}
-#' }
+#' @param k Scalar, defines the initial number of leads and lags for DOLS
 #'
 #' @return \describe{
 #' \item{beta}{DOLS estimates of the coefficients regressors.}
 #' \item{tests}{SC test (coinkpss-test).}
-#' \item{u}{Residuals of the model}
-#' \item{t_b}{Individual significance t-statistics}
+#' \item{resid}{Residuals of the model}
+#' \item{t_beta}{Individual significance t-statistics}
+#' \item{break_point}{Break points}
 #' }
 #'
 #' @import MASS
 #' @importFrom zeallot %<-%
 #' @export
-kpss_known_1p <- function(y, x, model, tb, k2, cri) {
+kpss_known_1p <- function(y, x, model, tb, weakly.exog = TRUE, k) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
+    N <- nrow(y) # nolint
 
     if (model < 0 & model > 6)
         stop("ERROR: Try to specify the deterministic component again")
 
-    if (cri[1] == 0) {
+    if (weakly.exog) {
         if (model == 0)
             xt <- x
         else if (1 <= model & model <= 4) {
@@ -74,20 +72,17 @@ kpss_known_1p <- function(y, x, model, tb, k2, cri) {
             xt <- cbind(deter, x, xdu)
         }
 
-        beta <- qr.solve(t(xt) %*% xt) %*% t(xt) %*% y
-        u <- y - xt %*% beta
-        t_b <- tb
+        c(beta, resid, p, t_b) %<-% olsqr(y, xt)
     }
-    else if (cri[1] == 1) {
-        k <- cri[2]
+    else {
         bic_op <- 100000000
         for (i in k:1) {
-            c(beta, u, bic, t_b) %<-% dols(y, x, model, k, k, tb)
+            c(beta, resid, bic, t_b) %<-% dols(y, x, model, k, k, tb)
             if (bic < bic_op) {
                 bic_op <- bic
                 beta_op <- beta
                 t_b_op <- t_b
-                u_op <- u
+                u_op <- resid
             }
         }
         u <- u_op
@@ -95,15 +90,16 @@ kpss_known_1p <- function(y, x, model, tb, k2, cri) {
         t_b <- t_b_op
     }
 
-    sg <- alrvr(u)
-    tests <- qr.solve((N^2) * sg) * apply(apply(u, 2, cumsum)^2, 2, sum)
+    sg <- alrvr(resid)
+    tests <- N^(-2) * apply(apply(resid, 2, cumsum)^2, 2, sum) / sg
 
     return(
         list(
-            beta = beta,
-            tests = tests,
-            u = u,
-            t_b = t_b
+            beta   = beta,
+            tests  = tests,
+            resid  = resid,
+            t_beta = t_b,
+            break_point = tb
         )
     )
 }

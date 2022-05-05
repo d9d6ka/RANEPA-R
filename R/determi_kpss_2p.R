@@ -30,7 +30,7 @@ determi_kpss_2p <- function(model, N, tb1, tb2) {
             matrix(data = 0, nrow = tb2, ncol = 1),
             matrix(data = 1, nrow = N - tb2, ncol = 1)
         )
-        z <- cbind(cns, du1, du2)
+        xt <- cbind(cns, du1, du2)
     }
     else if (model == 2) {
         du1 <- rbind(
@@ -41,7 +41,7 @@ determi_kpss_2p <- function(model, N, tb1, tb2) {
             matrix(data = 0, nrow = tb2, ncol = 1),
             matrix(data = 1, nrow = N - tb2, ncol = 1)
         )
-        z <- cbind(cns, tend, du1, du2)
+        xt <- cbind(cns, tend, du1, du2)
     }
     else if (model == 3) {
         dt1 <- rbind(
@@ -52,7 +52,7 @@ determi_kpss_2p <- function(model, N, tb1, tb2) {
             matrix(data = 0, nrow = tb2, ncol = 1),
             matrix(data = 1:(N - tb2), nrow = N - tb2, ncol = 1)
         )
-        z <- cbind(cns, tend, dt1, dt2)
+        xt <- cbind(cns, tend, dt1, dt2)
     }
     else if (model == 4) {
         du1 <- rbind(
@@ -71,7 +71,7 @@ determi_kpss_2p <- function(model, N, tb1, tb2) {
             matrix(data = 0, nrow = tb2, ncol = 1),
             matrix(data = 1:(N - tb2), nrow = N - tb2, ncol = 1)
         )
-        z <- cbind(cns, tend, du1, dt1, du2, dt2)
+        xt <- cbind(cns, tend, du1, dt1, du2, dt2)
     }
     else if (model == 5) {
         du1 <- rbind(
@@ -86,10 +86,10 @@ determi_kpss_2p <- function(model, N, tb1, tb2) {
             matrix(data = 0, nrow = tb1, ncol = 1),
             matrix(data = 1:(N - tb1), nrow = N - tb1, ncol = 1)
         )
-        z <- cbind(cns, tend, du1, dt1, du2)
+        xt <- cbind(cns, tend, du1, dt1, du2)
     }
     else
         stop("Try to speciy another model")
 
-    return(z)
+    return(xt)
 }

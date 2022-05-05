@@ -39,14 +39,21 @@ kpss_known_2p <- function(y, model, tb1, tb2, kmax, kernel) {
     N <- nrow(y)
 
     z <- determi_kpss_2p(model, N, tb1, tb2)
-    c(b, e, p) %<-% olsqr(y, z)
+    c(beta, resid, p, t_b) %<-% olsqr(y, z)
 
-    s_t <- apply(e, 2, cumsum)
+    s_t <- apply(resid, 2, cumsum)
 
     if (!is.null(kernel))
-        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(resid, kmax, kernel)
     else
-        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(resid)
 
-    return(test)
+    return(
+        list(
+            beta = beta,
+            test = test,
+            resid = resid,
+            break_point = c(tb1, tb2)
+        )
+    )
 }

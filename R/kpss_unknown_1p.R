@@ -26,21 +26,18 @@
 #' \item{1}{if x is a matrix of I(1) variables with drift.}
 #' \item{2}{if x is a matrix of I(1) variables with a quadratic trend.}
 #' }
-#' @param cri (2x1)-vector where we specify whether the stochastic regressors are exogenous or not, and the initial number of leads and lags for the DOLS estimation.
+#' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
 #' \describe{
-#' \item{cri[1]}{\describe{
-#' \item{0}{if the regressors are weakly exogenous,}
-#' \item{1}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+#' \item{TRUE}{if the regressors are weakly exogenous,}
+#' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 #' }
-#' }
-#' \item{cri[2]}{Scalar, defines the initial number of leads and lags for DOLS}
-#' }
+#' @param k Scalar, defines the initial number of leads and lags for DOLS
 #'
 #' @return vec_out (2x2)-matrix, where the first rows gives the value of the min(SC) test and the estimated break point; the second row gives the value of the SC statistic, where the break point is estimated as min(SSR).
 #'
 #' @importFrom zeallot %<-%
 #' @export
-kpss_unknown_1p <- function(y, x, model, k2, cri) {
+kpss_unknown_1p <- function(y, x, model, weakly.exog, k) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -49,10 +46,10 @@ kpss_unknown_1p <- function(y, x, model, k2, cri) {
     m_SC <- matrix(data = 0, nrow = N - 5, ncol = 2)
 
     for (i in 3:(N-3)) {
-        if (cri[2] + 2 < i & i < N - 5 - cri[2]) {
-            c(beta, tests, u, N_b) %<-% kpss_known_1p(y, x, model, i, k2, cri)
+        if (k + 2 < i & i < N - 5 - k) {
+            c(beta, tests, resid, t_b, tb) %<-% kpss_known_1p(y, x, model, i, weakly.exog, k)
             m_SC[i - 2, 1] <- tests
-            m_SC[i - 2, 2] <- drop(t(u) %*% u)
+            m_SC[i - 2, 2] <- drop(t(resid) %*% resid)
         }
         else {
             m_SC[i - 2, 1] <- 2 ^ 20

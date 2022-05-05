@@ -20,7 +20,7 @@ ssr_recursive <- function(y, x, beg, end, width = 2) {
     x_0 <- x[beg:(beg + width - 1), , drop = FALSE]
 
     inv_xx_0 <- qr.solve(t(x_0) %*% x_0)
-    c(beta_0, resid_0, predict_0) %<-% olsqr(y_0, x_0)
+    c(beta_0, resid_0, predict_0, t_b_0) %<-% olsqr(y_0, x_0)
 
     for (r in beg:(beg + width - 2)) result[r, 1] <- 0
 

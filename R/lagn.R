@@ -1,6 +1,6 @@
 lagn <- function(x, i) {
     if (!is.matrix(x)) x <- as.matrix(x)
-    N <- nrow(x)
+    N <- nrow(x) # nolint
     k <- ncol(x)
     if (i > 0)
         return(

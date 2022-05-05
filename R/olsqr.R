@@ -1,9 +1,16 @@
 #' @import MASS
 olsqr <- function(y, x) {
-    b <- qr.solve(t(x) %*% x) %*% t(x) %*% y
-    p <- x %*% b
-    r <- y - p
+    beta <- qr.solve(t(x) %*% x) %*% t(x) %*% y
+    predict <- x %*% beta
+    resid <- y - predict
+    s2 <- drop(t(resid) %*% resid) / (nrow(x) - ncol(x))
+    t_b <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(x) %*% x))))
     return(
-        list(beta = b, resid = r, predict = p)
+        list(
+            beta = beta,
+            resid = resid,
+            predict = predict,
+            t_beta = t_b
+        )
     )
 }

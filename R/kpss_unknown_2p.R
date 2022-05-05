@@ -36,16 +36,20 @@ kpss_unknown_2p <- function(y, model, kmax = 0, kernel = "bartlett") {
 
     N <- nrow(y)
 
-    c(e, tb1, tb2) %<-% min_ssr_2p(y, model)
+    c(resid, tb1, tb2) %<-% ssr_partition_2p(y, model)
 
-    s_t <- apply(e, 2, cumsum)
+    s_t <- apply(resid, 2, cumsum)
 
     if (!is.null(kernel))
-        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(e, kmax, kernel)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(resid, kmax, kernel)
     else
-        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(e)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(resid)
 
     return(
-        list(test = test, tb1 = tb1, tb2 = tb2)
+        list(
+            test = test,
+            tb1 = tb1,
+            tb2 = tb2
+        )
     )
 }
