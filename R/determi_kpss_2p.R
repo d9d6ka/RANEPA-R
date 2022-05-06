@@ -1,22 +1,20 @@
-## Procedure to compute deterministic terms
-## for KPSS with 2 structural breaks.
-## Sintax is as follows:
-##       detho = dekpss2(model,N,tb1,tb2); # nolint
-## INPUT:
-##    model     Scalar, determines the deterministic model that
-##              is considered under the null hypothesis. If:
-##                 model = 1   Model AAn,
-##                       = 2   Model AA,
-##                       = 3   Model BB,
-##                       = 4   Model CC,
-##                       = 5   Model AC-CA.
-##    N         Number of observations.
-##    tb1       Position for the first structural break
-##              (respective to the origin which is 1).
-##    tb2       Position for the second structural break
-##              (respective to the origin which is 1).
-## OUTPUT:
-##    detho     Matrix of deterministic terms.
+#' Procedure to compute deterministic terms
+#' for KPSS with 2 structural breaks.
+#'
+#' @param model \describe{
+#' \item{1}{for the AA (without trend) model.}
+#' \item{2}{for the AA (with trend) model.}
+#' \item{3}{for the BB model.}
+#' \item{4}{for the CC model.}
+#' \item{5}{for the AC-CA model.}
+#' }
+#' @param N Number of observations.
+#' @param tb1 Position for the first structural break
+#'            (respective to the origin which is 1).
+#' @param tb2 Position for the second structural break
+#'            (respective to the origin which is 1).
+#'
+#' @return Matrix of deterministic terms.
 determi_kpss_2p <- function(model, N, tb1, tb2) {
     cns <- matrix(data = 1, nrow = N, ncol = 1)
     tend <- matrix(data = 1:N, nrow = N, ncol = 1)

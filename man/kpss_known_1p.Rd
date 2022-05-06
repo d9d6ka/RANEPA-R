@@ -7,22 +7,20 @@
 kpss_known_1p(y, x, model, tb, weakly.exog = TRUE, k)
 }
 \arguments{
-\item{y}{(Tx1)-vector of the dependent variable}
+\item{y}{(Tx1)-vector of the dependent variable.}
 
-\item{x}{(Txk)-matrix of explanatory stochastic regressors}
+\item{x}{(Txk)-matrix of explanatory stochastic regressors.}
 
-\item{model}{(2x1)-vector, denotes the deterministic component:
-\describe{
-\item{model[1]}{\describe{
-\item{1}{for model An}
-\item{2}{for model A}
-\item{3}{for model B}
-\item{4}{for model C}
-\item{5}{for model D}
-\item{6}{for model E}}
-}
-\item{model[2]}{Position of the break point.}
+\item{model}{\describe{
+\item{1}{for model An.}
+\item{2}{for model A.}
+\item{3}{for model B.}
+\item{4}{for model C.}
+\item{5}{for model D.}
+\item{6}{for model E.}
 }}
+
+\item{tb}{Position of the break point.}
 
 \item{weakly.exog}{Boolean where we specify whether the stochastic regressors are exogenous or not
 \describe{
@@ -30,21 +28,15 @@ kpss_known_1p(y, x, model, tb, weakly.exog = TRUE, k)
 \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 }}
 
-\item{k}{Scalar, defines the initial number of leads and lags for DOLS}
-
-\item{k2}{Scalar. Indicates the deterministic component of the stochastic regressors:
-\describe{
-\item{1}{if x is a matrix of I(1) variables with drift.}
-\item{2}{if x is a matrix of I(1) variables with a quadratic trend.}
-}}
+\item{k}{Scalar, defines the initial number of leads and lags for DOLS.}
 }
 \value{
 \describe{
 \item{beta}{DOLS estimates of the coefficients regressors.}
 \item{tests}{SC test (coinkpss-test).}
-\item{resid}{Residuals of the model}
-\item{t_beta}{Individual significance t-statistics}
-\item{break_point}{Break points}
+\item{resid}{Residuals of the model.}
+\item{t_beta}{Individual significance t-statistics.}
+\item{break_point}{Break points.}
 }
 }
 \description{

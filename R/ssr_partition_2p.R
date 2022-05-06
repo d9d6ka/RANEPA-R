@@ -1,20 +1,19 @@
 #' Procedure to minimize the SSR for 2 break points
 #'
 #' @param y (Tx1)-vector of time series
-#' @param model
-#' \describe{
-#' \item{1}{for the AA (without trend) model}
-#' \item{2}{for the AA (with trend) model}
-#' \item{3}{for the BB model}
-#' \item{4}{for the CC model}
-#' \item{5}{for the AC-CA model}
+#' @param model \describe{
+#' \item{1}{for the AA (without trend) model.}
+#' \item{2}{for the AA (with trend) model.}
+#' \item{3}{for the BB model.}
+#' \item{4}{for the CC model.}
+#' \item{5}{for the AC-CA model.}
 #' }
 #'
 #' @return List containing
 #' \describe{
-#' \item{resid}{(Tx1) vector of estimated OLS residuals}
-#' \item{tb1}{The first breaking point}
-#' \item{tb2}{The second breaking point}
+#' \item{resid}{(Tx1) vector of estimated OLS residuals.}
+#' \item{tb1}{The first breaking point.}
+#' \item{tb2}{The second breaking point.}
 #' }
 #'
 #' @importFrom zeallot %<-%

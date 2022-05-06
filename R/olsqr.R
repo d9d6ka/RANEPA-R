@@ -1,3 +1,10 @@
+#' Getting OLS estimates of betas, residuals, forecasted values and t-values.
+#'
+#' @param y Dependent variable.
+#' @param x Explanatory variables.
+#'
+#' @return The list of betas, residuals, forecasted values and t-values.
+#'
 #' @import MASS
 olsqr <- function(y, x) {
     beta <- qr.solve(t(x) %*% x) %*% t(x) %*% y

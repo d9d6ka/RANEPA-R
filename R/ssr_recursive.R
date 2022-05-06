@@ -3,6 +3,14 @@
 #' @details
 #' Based on Brown, Durbin and Evans (1975).
 #'
+#' @param y (Tx1)-vector of the dependent variable.
+#' @param x (Txk)-vector of the explanatory stochastic regressors.
+#' @param beg The start of SSR calculating period.
+#' @param end The end of SSR calculating period.
+#' @param width Minimum spacing between the breaks.
+#'
+#' @return The vector of calculated recursive SSR.
+#'
 #' @import MASS
 #' @importFrom zeallot %<-%
 ssr_recursive <- function(y, x, beg, end, width = 2) {

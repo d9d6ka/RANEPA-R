@@ -3,10 +3,10 @@ dols <- function(y, x, model, klags, kleads, tb) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
+    N <- nrow(y) # nolint
 
     streg <- x
-    d_streg_step <- streg[2:N, , drop = FALSE] - streg[1:(N - 1), , drop = FALSE]
+    d_streg_step <- streg[2:N, , drop = FALSE] - streg[1:(N - 1), , drop = FALSE] # nolint
     d_streg <- d_streg_step
     d_streg_r <- d_streg_step
 
@@ -49,7 +49,7 @@ dols <- function(y, x, model, klags, kleads, tb) {
         )
     }
     else if (model >= 1 & model <= 4) {
-        deter <- determi(model, N, tb)
+        deter <- determi_kpss_1p(model, N, tb)
         xreg <- cbind(
             deter[(klags + 2):(N - kleads), , drop = FALSE],
             streg[(klags + 2):(N - kleads), , drop = FALSE],
@@ -57,7 +57,7 @@ dols <- function(y, x, model, klags, kleads, tb) {
         )
     }
     else if (model == 5) {
-        deter <- determi(1, N, tb)
+        deter <- determi_kpss_1p(1, N, tb)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
             deter[(klags + 2):(N - kleads), , drop = FALSE],
@@ -67,7 +67,7 @@ dols <- function(y, x, model, klags, kleads, tb) {
         )
     }
     else if (model == 6) {
-        deter <- determi(4, N, tb)
+        deter <- determi_kpss_1p(4, N, tb)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
             deter[(klags + 2):(N - kleads), , drop = FALSE],

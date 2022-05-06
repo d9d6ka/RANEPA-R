@@ -6,6 +6,20 @@
 \usage{
 ssr_recursive(y, x, beg, end, width = 2)
 }
+\arguments{
+\item{y}{(Tx1)-vector of the dependent variable.}
+
+\item{x}{(Txk)-vector of the explanatory stochastic regressors.}
+
+\item{beg}{The start of SSR calculating period.}
+
+\item{end}{The end of SSR calculating period.}
+
+\item{width}{Minimum spacing between the breaks.}
+}
+\value{
+The vector of calculated recursive SSR.
+}
 \description{
 Calculate SSR recursively
 }

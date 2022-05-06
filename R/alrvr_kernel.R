@@ -1,6 +1,16 @@
-## Procedure ALRVR to estimate the long-run variance as
-## in Sul, Phillips and Choi (2003).
-## Quadratic Spectral and Bartlett kernels.
+#' Procedure ALRVR to estimate the long-run variance as
+#' in Sul, Phillips and Choi (2003).
+#'
+#' @details Used are Quadratic Spectral and Bartlett kernels.
+#'
+#' @param e (Tx1) vector or residuals.
+#' @param kmax Maximum number of lags.
+#' The exact number is selected by information criterions.
+#' @param kernel Kernel for calculating long-run variance.
+#' @param criterion The information crietreion: bic, aic or lwz.
+#'
+#' @return Long-run variance.
+#'
 #' @import MASS
 alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
     if (!is.matrix(e)) e <- as.matrix(e)

@@ -1,5 +1,10 @@
-## Procedure ALRVR to estimate the long-run variance as
-## in Andrews (1991) and Kurozumi (2002).
+#' Procedure ALRVR to estimate the long-run variance
+#' as in Andrews (1991) and Kurozumi (2002).
+#'
+#' @param e (Tx1) vector or residuals.
+#'
+#' @return Long-run variance.
+#'
 #' @import MASS
 alrvr <- function(e) {
     if (!is.matrix(e)) e <- as.matrix(e)

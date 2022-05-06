@@ -1,3 +1,17 @@
+#' Procedure to minimize the SSR for 2 break points
+#'
+#' @param beg Sample begin.
+#' @param end Sample end.
+#' @param first_b First possible break point.
+#' @param last_b Last possible break point.
+#' @param len Total number of observations.
+#' @param ssr_data The matrix of recursive SSR values.
+#'
+#' @return List containing
+#' \describe{
+#' \item{ssr}{Optimal SSR value.}
+#' \item{break_point}{The breaking point.}
+#' }
 ssr_partition_1p <- function(beg, end, first_b, last_b, len, ssr_data) {
     tmp_result <- matrix(data = Inf, nrow = len, ncol = 1)
 

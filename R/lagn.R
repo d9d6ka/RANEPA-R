@@ -1,3 +1,9 @@
+#' Produce lagged vector backward of forward
+#'
+#' @param x Initial vector.
+#' @param i Size of lag (lead if negative).
+#'
+#' @return Lagged or leaded vector.
 lagn <- function(x, i) {
     if (!is.matrix(x)) x <- as.matrix(x)
     N <- nrow(x) # nolint

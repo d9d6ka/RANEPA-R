@@ -3,19 +3,19 @@
 #' @details
 #' Based on Bai and Perron (2003).
 #'
-#' @param y (Tx1)-vector of the dependent variable
-#' @param x (Txk)-vector of the explanatory stochastic regressors
-#' @param m Number of breaks
-#' @param width Minimum spacing between the breaks
+#' @param y (Tx1)-vector of the dependent variable.
+#' @param x (Txk)-vector of the explanatory stochastic regressors.
+#' @param m Number of breaks.
+#' @param width Minimum spacing between the breaks.
 #'
-#' @return List of 2 elements: optimal SSR and the vector of breaks
+#' @return List of 2 elements: optimal SSR and the vector of breaks.
 #'
 #' @export
 ssr_partition_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
+    N <- nrow(y) # nolint
 
     if (is.null(ssr_data))
         ssr_data <- ssr_matrix(y, x, width)

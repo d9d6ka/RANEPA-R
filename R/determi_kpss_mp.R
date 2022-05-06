@@ -1,6 +1,17 @@
-## model = 1 - const
-## model = 2 - trend
-## model = 3 - const + trend
+#' Procedure to compute deterministic terms
+#' for KPSS with 2 structural breaks.
+#'
+#' @param model A scalar or vector of
+#' \describe{
+#' \item{1}{for the break in const.}
+#' \item{2}{for the break in trend.}
+#' \item{3}{for the break in const and trend.}
+#' }
+#' @param N Number of observations.
+#' @param break_point Array of structural breaks.
+#' @param trend Include trend if `TRUE`.
+#'
+#' @return Matrix of deterministic terms.
 determi_kpss_mp <- function(model, N, break_point, trend = FALSE) { # nolint
     ntb <- length(break_point)
     if (length(model) == 1)
@@ -15,8 +26,8 @@ determi_kpss_mp <- function(model, N, break_point, trend = FALSE) { # nolint
             matrix(data = 1:N, nrow = N, ncol = 1)
         )
 
-    for (i in 1:ntb)
-        if (model[i] == 1)
+    for (i in 1:ntb) {
+        if (model[i] == 1) {
             xt <- cbind(
                 xt,
                 rbind(
@@ -32,7 +43,8 @@ determi_kpss_mp <- function(model, N, break_point, trend = FALSE) { # nolint
                     )
                 )
             )
-        else if (model[i] == 2)
+        }
+        else if (model[i] == 2) {
             xt <- cbind(
                 xt,
                 rbind(
@@ -48,7 +60,8 @@ determi_kpss_mp <- function(model, N, break_point, trend = FALSE) { # nolint
                     )
                 )
             )
-        else if (model[i] == 3)
+        }
+        else if (model[i] == 3) {
             xt <- cbind(
                 xt,
                 rbind(
@@ -76,6 +89,8 @@ determi_kpss_mp <- function(model, N, break_point, trend = FALSE) { # nolint
                     )
                 )
             )
+        }
+    }
 
     return(xt)
 }

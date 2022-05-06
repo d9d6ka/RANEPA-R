@@ -14,24 +14,19 @@
 #' @param x (Txk)-matrix of explanatory stochastic regressors
 #' @param model Scalar, denotes the deterministic component:
 #' \describe{
-#' \item{1}{for model An}
-#' \item{2}{for model A}
-#' \item{3}{for model B}
-#' \item{4}{for model C}
-#' \item{5}{for model D}
-#' \item{6}{for model E}
-#' }
-#' @param k2 Scalar. Indicates the deterministic component of the stochastic regressors:
-#' \describe{
-#' \item{1}{if x is a matrix of I(1) variables with drift.}
-#' \item{2}{if x is a matrix of I(1) variables with a quadratic trend.}
+#' \item{1}{for model An.}
+#' \item{2}{for model A.}
+#' \item{3}{for model B.}
+#' \item{4}{for model C.}
+#' \item{5}{for model D.}
+#' \item{6}{for model E.}
 #' }
 #' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
 #' \describe{
 #' \item{TRUE}{if the regressors are weakly exogenous,}
 #' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 #' }
-#' @param k Scalar, defines the initial number of leads and lags for DOLS
+#' @param k Scalar, defines the initial number of leads and lags for DOLS.
 #'
 #' @return vec_out (2x2)-matrix, where the first rows gives the value of the min(SC) test and the estimated break point; the second row gives the value of the SC statistic, where the break point is estimated as min(SSR).
 #'

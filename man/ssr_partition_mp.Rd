@@ -7,16 +7,16 @@
 ssr_partition_mp(y, x, m = 1, width = 2, ssr_data = NULL)
 }
 \arguments{
-\item{y}{(Tx1)-vector of the dependent variable}
+\item{y}{(Tx1)-vector of the dependent variable.}
 
-\item{x}{(Txk)-vector of the explanatory stochastic regressors}
+\item{x}{(Txk)-vector of the explanatory stochastic regressors.}
 
-\item{m}{Number of breaks}
+\item{m}{Number of breaks.}
 
-\item{width}{Minimum spacing between the breaks}
+\item{width}{Minimum spacing between the breaks.}
 }
 \value{
-List of 2 elements: optimal SSR and the vector of breaks
+List of 2 elements: optimal SSR and the vector of breaks.
 }
 \description{
 Find m + 1 optimal partitions

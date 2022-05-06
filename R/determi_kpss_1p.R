@@ -1,4 +1,17 @@
-determi_kpss_1p <- function(model, N, tb) {
+#' Construct determinant variables.
+#'
+#' @param model \describe{
+#' \item{1}{Model with trend, break in const.}
+#' \item{2}{Model with const and trend, break in const.}
+#' \item{3}{Model with const and trend, break in trend.}
+#' \item{4}{Model with const and trend, break in const and trend.}
+#' }
+#' @param N Number of observations.
+#' @param tb Break point.
+#'
+#' @return Matrix of determinant variables.
+#'
+determi_kpss_1p <- function(model, N, tb) { # nolint
     du <- rbind(
         matrix(data = 0, nrow = tb, ncol = 1),
         matrix(data = 1, nrow = N - tb, ncol = 1)
@@ -7,32 +20,34 @@ determi_kpss_1p <- function(model, N, tb) {
         matrix(data = 0, nrow = tb, ncol = 1),
         matrix(data = 1:(N - tb), nrow = N - tb, ncol = 1)
     )
+    const <- matrix(data = 1, nrow = N, ncol = 1)
+    trend <- matrix(data = 1:N, nrow = N, ncol = 1)
 
     if (model == 1) {
         xt <- cbind(
-            matrix(data = 1, nrow = N, ncol = 1),
+            trend,
             du
         )
     }
     else if (model == 2) {
         xt <- cbind(
-            matrix(data = 1, nrow = N, ncol = 1),
+            const,
             du,
-            matrix(data = 1:N, nrow = N, ncol = 1)
+            trend
         )
     }
     else if (model == 3) {
         xt <- cbind(
-            matrix(data = 1, nrow = N, ncol = 1),
-            matrix(data = 1:N, nrow = N, ncol = 1),
+            const,
+            trend,
             dt
         )
     }
     else if (model == 4) {
         xt <- cbind(
-            matrix(data = 1, nrow = N, ncol = 1),
+            const,
             du,
-            matrix(data = 1:N, nrow = N, ncol = 1),
+            trend,
             dt
         )
     }

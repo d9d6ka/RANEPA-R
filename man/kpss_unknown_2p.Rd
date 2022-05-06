@@ -10,23 +10,23 @@ kpss_unknown_2p(y, model, kmax = 0, kernel = "bartlett")
 \item{y}{(Tx1)-vector of time series}
 
 \item{model}{\describe{
-\item{1}{for the AA (without trend) model}
-\item{2}{for the AA (with trend) model}
-\item{3}{for the BB model}
-\item{4}{for the CC model}
-\item{5}{for the AC-CA model}
+\item{1}{for the AA (without trend) model.}
+\item{2}{for the AA (with trend) model.}
+\item{3}{for the BB model.}
+\item{4}{for the CC model.}
+\item{5}{for the AC-CA model.}
 }}
 
 \item{kmax}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
 
 \item{kernel}{\describe{
-\item{bartlett}{for Bartlett kernel}
-\item{quadratic}{for Quadratic Spectral kernel}
-\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel}
+\item{bartlett}{for Bartlett kernel.}
+\item{quadratic}{for Quadratic Spectral kernel.}
+\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
 }}
 }
 \value{
-Value of test statistic
+Value of test statistic.
 }
 \description{
 Procedure to compute the KPSS test with two structural breaks
