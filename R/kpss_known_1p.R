@@ -70,7 +70,7 @@ kpss_known_1p <- function(y, x, model, tb, weakly.exog = TRUE, k) {
     else {
         bic_op <- 100000000
         for (i in k:1) {
-            c(beta, resid, bic, t_b) %<-% dols(y, x, model, k, k, tb)
+            c(beta, resid, bic, t_b) %<-% dols(y, x, model, i, i, tb)
             if (bic < bic_op) {
                 bic_op <- bic
                 beta_op <- beta

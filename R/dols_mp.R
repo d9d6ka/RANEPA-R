@@ -1,7 +1,6 @@
 #' @import MASS
-dols <- function(y, x, model, klags, kleads, tb) { # nolint
+dols_mp <- function(y, x, model, break_point, const = FALSE, trend = FALSE, klags, kleads) { # nolint
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y) # nolint
@@ -42,41 +41,13 @@ dols <- function(y, x, model, klags, kleads, tb) { # nolint
     else if (klags == 0 & kleads == 0) {
         ll <- d_streg
     }
+    deter <- determi_kpss_mp(model, N, break_point, const, trend)
 
-    if (model == 0) {
-        xreg <- cbind(
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
-        )
-    }
-    else if (model >= 1 & model <= 4) {
-        deter <- determi_kpss_1p(model, N, tb)
-        xreg <- cbind(
-            deter[(klags + 2):(N - kleads), , drop = FALSE],
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
-        )
-    }
-    else if (model == 5) {
-        deter <- determi_kpss_1p(1, N, tb)
-        xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
-        xreg <- cbind(
-            deter[(klags + 2):(N - kleads), , drop = FALSE],
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            xdu[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
-        )
-    }
-    else if (model == 6) {
-        deter <- determi_kpss_1p(4, N, tb)
-        xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
-        xreg <- cbind(
-            deter[(klags + 2):(N - kleads), , drop = FALSE],
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            xdu[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
-        )
-    }
+    xreg <- cbind(
+        deter[(klags + 2):(N - kleads), , drop = FALSE],
+        streg[(klags + 2):(N - kleads), , drop = FALSE],
+        ll
+    )
     print(head(xreg))
     beta <- qr.solve(t(xreg) %*% xreg) %*% t(xreg) %*%
         y[(klags + 2):(N - kleads), 1, drop = FALSE]

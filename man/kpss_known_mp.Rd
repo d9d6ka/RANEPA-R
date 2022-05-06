@@ -4,10 +4,22 @@
 \alias{kpss_known_mp}
 \title{KPSS-test with 2 known structural breaks}
 \usage{
-kpss_known_mp(y, model, break_point, kmax, kernel, trend = FALSE)
+kpss_known_mp(
+  y,
+  x,
+  model,
+  break_point,
+  trend = FALSE,
+  weakly.exog = TRUE,
+  kinit,
+  kmax,
+  kernel
+)
 }
 \arguments{
 \item{y}{(Tx1)-vector of time series.}
+
+\item{x}{(Txk)-matrix of explanatory stochastic regressors.}
 
 \item{model}{A scalar or vector of
 \describe{
@@ -18,6 +30,16 @@ kpss_known_mp(y, model, break_point, kmax, kernel, trend = FALSE)
 
 \item{break_point}{Array of structural breaks.}
 
+\item{trend}{Include trend if `TRUE`.}
+
+\item{weakly.exog}{Boolean where we specify whether the stochastic regressors are exogenous or not
+\describe{
+\item{TRUE}{if the regressors are weakly exogenous,}
+\item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+}}
+
+\item{kinit}{Scalar, defines the initial number of leads and lags for DOLS.}
+
 \item{kmax}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
 
 \item{kernel}{\describe{
@@ -25,8 +47,6 @@ kpss_known_mp(y, model, break_point, kmax, kernel, trend = FALSE)
 \item{quadratic}{for Quadratic Spectral kernel.}
 \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
 }}
-
-\item{trend}{Include trend if `TRUE`.}
 }
 \value{
 \describe{
