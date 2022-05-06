@@ -12,14 +12,16 @@
 #' @param trend Include trend if `TRUE`.
 #'
 #' @return Matrix of deterministic terms.
-determi_kpss_mp <- function(model, N, break_point, trend = FALSE) { # nolint
+determi_kpss_mp <- function(model, N, break_point, const = FALSE, trend = FALSE) { # nolint
     ntb <- length(break_point)
     if (length(model) == 1)
         model <- rep(model, ntb)
     else if (length(model) != ntb)
         stop("ERROR! Inconsistent sizes of `model` and `break_point`")
 
-    xt <- matrix(data = 1, nrow = N, ncol = 1)
+    xt <- NULL
+    if (const)
+        xt <- matrix(data = 1, nrow = N, ncol = 1)
     if (trend)
         xt <- cbind(
             xt,

@@ -1,6 +1,7 @@
 #' @import MASS
-dols <- function(y, x, model, klags, kleads, tb) {
+dols <- function(y, x, model, klags, kleads, tb) { # nolint
     if (!is.matrix(y)) y <- as.matrix(y)
+    if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y) # nolint
@@ -79,17 +80,20 @@ dols <- function(y, x, model, klags, kleads, tb) {
 
     beta <- qr.solve(t(xreg) %*% xreg) %*% t(xreg) %*%
         y[(klags + 2):(N - kleads), 1, drop = FALSE]
+
     resid <- y[(klags + 2):(N - kleads), 1, drop = FALSE] - xreg %*% beta
+
     s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
+
     t_beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(xreg) %*% xreg))))
 
     bic <- log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
 
     return(
         list(
-            beta = beta,
-            resid = resid,
-            bic = bic,
+            beta   = beta,
+            resid  = resid,
+            bic    = bic,
             t_beta = t_beta
         )
     )

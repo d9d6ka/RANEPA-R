@@ -4,7 +4,7 @@
 \alias{kpss_known_1p}
 \title{KPSS-test with known structural break}
 \usage{
-kpss_known_1p(y, x, model, tb, weakly.exog = TRUE, k)
+kpss_known_1p(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 }
 \arguments{
 \item{y}{(Tx1)-vector of the dependent variable.}
@@ -20,7 +20,7 @@ kpss_known_1p(y, x, model, tb, weakly.exog = TRUE, k)
 \item{6}{for model E.}
 }}
 
-\item{tb}{Position of the break point.}
+\item{break.point}{Position of the break point.}
 
 \item{weakly.exog}{Boolean where we specify whether the stochastic regressors are exogenous or not
 \describe{
@@ -28,7 +28,7 @@ kpss_known_1p(y, x, model, tb, weakly.exog = TRUE, k)
 \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 }}
 
-\item{k}{Scalar, defines the initial number of leads and lags for DOLS.}
+\item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 }
 \value{
 \describe{
