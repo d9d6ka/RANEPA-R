@@ -8,11 +8,12 @@ kpss_known_mp(
   y,
   x,
   model,
-  break_point,
+  break.point,
+  const = FALSE,
   trend = FALSE,
   weakly.exog = TRUE,
-  kinit,
-  kmax,
+  ll.init,
+  corr.max,
   kernel
 )
 }
@@ -28,7 +29,7 @@ kpss_known_mp(
 \item{3}{for the break in const and trend.}
 }}
 
-\item{break_point}{Array of structural breaks.}
+\item{break.point}{Array of structural breaks.}
 
 \item{trend}{Include trend if `TRUE`.}
 
@@ -38,9 +39,9 @@ kpss_known_mp(
 \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 }}
 
-\item{kinit}{Scalar, defines the initial number of leads and lags for DOLS.}
+\item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 
-\item{kmax}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
+\item{corr.max}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
 
 \item{kernel}{\describe{
 \item{bartlett}{for Bartlett kernel.}
