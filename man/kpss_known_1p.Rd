@@ -4,7 +4,7 @@
 \alias{kpss_known_1p}
 \title{KPSS-test with known structural break}
 \usage{
-kpss_known_1p(y, x, model, tb, k2, cri)
+kpss_known_1p(y, x, model, tb, weakly.exog = TRUE, k)
 }
 \arguments{
 \item{y}{(Tx1)-vector of the dependent variable}
@@ -24,28 +24,27 @@ kpss_known_1p(y, x, model, tb, k2, cri)
 \item{model[2]}{Position of the break point.}
 }}
 
+\item{weakly.exog}{Boolean where we specify whether the stochastic regressors are exogenous or not
+\describe{
+\item{TRUE}{if the regressors are weakly exogenous,}
+\item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+}}
+
+\item{k}{Scalar, defines the initial number of leads and lags for DOLS}
+
 \item{k2}{Scalar. Indicates the deterministic component of the stochastic regressors:
 \describe{
 \item{1}{if x is a matrix of I(1) variables with drift.}
 \item{2}{if x is a matrix of I(1) variables with a quadratic trend.}
-}}
-
-\item{cri}{(2x1)-vector where we specify whether the stochastic regressors are exogenous or not, and the initial number of leads and lags for the DOLS estimation.
-\describe{
-\item{cri[1]}{\describe{
-\item{0}{if the regressors are weakly exogenous,}
-\item{1}{if the regressors are not weakly exogenous (DOLS is used in this case).}
-}
-}
-\item{cri[2]}{Scalar, defines the initial number of leads and lags for DOLS}
 }}
 }
 \value{
 \describe{
 \item{beta}{DOLS estimates of the coefficients regressors.}
 \item{tests}{SC test (coinkpss-test).}
-\item{u}{Residuals of the model}
-\item{t_b}{Individual significance t-statistics}
+\item{resid}{Residuals of the model}
+\item{t_beta}{Individual significance t-statistics}
+\item{break_point}{Break points}
 }
 }
 \description{

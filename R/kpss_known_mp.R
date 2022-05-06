@@ -1,15 +1,13 @@
 #' @importFrom zeallot %<-%
-kpss_unknown_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL, kmax = 0, kernel = "bartlett") {
+#' 
+#' @export
+kpss_known_mp <- function(y, model, break_point, kmax, kernel, trend = FALSE) {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y) # nolint
 
-    if (is.null(ssr_data))
-        ssr_data <- ssr_matrix(y, x, width)
-
-    c(ssr, tb) %<-% ssr_partition_mp(y, x, m, width, ssr_data)
-    resid <- resid_mp(y, x, tb)
+    z <- determi_kpss_mp(model, N, break_point, trend)
+    c(beta, resid, p, t_b) %<-% olsqr(y, z)
 
     s_t <- apply(resid, 2, cumsum)
 
@@ -21,7 +19,7 @@ kpss_unknown_mp <- function(y, x, m = 1, width = 2, ssr_data = NULL, kmax = 0, k
     return(
         list(
             test = test,
-            break_point = tb
+            break_point = break_point
         )
     )
 }

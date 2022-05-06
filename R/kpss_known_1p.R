@@ -47,7 +47,8 @@
 #' @export
 kpss_known_1p <- function(y, x, model, tb, weakly.exog = TRUE, k) {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (!is.matrix(x)) x <- as.matrix(x)
+    if (!is.null(x))
+        if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y) # nolint
 

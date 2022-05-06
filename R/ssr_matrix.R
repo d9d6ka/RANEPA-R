@@ -1,3 +1,4 @@
+#' @export
 ssr_matrix <- function(y, x, width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)

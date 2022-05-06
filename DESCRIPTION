@@ -4,7 +4,7 @@ Date: 2022-04-28
 Title: My First Collection of Functions
 Authors@R: c(person("Anton", "Skrobotov", role = c("aut", "ctb"),
                     email = "antonskrobotov@gmail.com"),
-             person("Alexey", "Tsarev", role = role = c("aut", "ctb")),
+             person("Alexey", "Tsarev", role = c("aut", "ctb")),
              person("Vadim", "Zyamalov", role = c("aut", "cre", "ctb"),
                     email = "zyamalov@ranepa.ru"))
 Author: Anton Skrobotov [aut, ctb],
