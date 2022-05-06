@@ -26,13 +26,13 @@
 #' \item{TRUE}{if the regressors are weakly exogenous,}
 #' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 #' }
-#' @param k Scalar, defines the initial number of leads and lags for DOLS.
+#' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
 #'
 #' @return vec_out (2x2)-matrix, where the first rows gives the value of the min(SC) test and the estimated break point; the second row gives the value of the SC statistic, where the break point is estimated as min(SSR).
 #'
 #' @importFrom zeallot %<-%
 #' @export
-kpss_unknown_1p <- function(y, x, model, weakly.exog, k) {
+kpss_unknown_1p <- function(y, x, model, weakly.exog, ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -41,8 +41,8 @@ kpss_unknown_1p <- function(y, x, model, weakly.exog, k) {
     m_SC <- matrix(data = 0, nrow = N - 5, ncol = 2)
 
     for (i in 3:(N-3)) {
-        if (k + 2 < i & i < N - 5 - k) {
-            c(beta, tests, resid, t_b, tb) %<-% kpss_known_1p(y, x, model, i, weakly.exog, k)
+        if (ll.init + 2 < i & i < N - 5 - ll.init) {
+            c(beta, tests, resid, t_b, tb) %<-% kpss_known_1p(y, x, model, i, weakly.exog, ll.init)
             m_SC[i - 2, 1] <- tests
             m_SC[i - 2, 2] <- drop(t(resid) %*% resid)
         }

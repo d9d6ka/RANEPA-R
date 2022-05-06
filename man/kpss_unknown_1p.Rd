@@ -4,7 +4,7 @@
 \alias{kpss_unknown_1p}
 \title{KPSS-test of cointegration}
 \usage{
-kpss_unknown_1p(y, x, model, weakly.exog, k)
+kpss_unknown_1p(y, x, model, weakly.exog, ll.init)
 }
 \arguments{
 \item{y}{(Tx1)-vector of the dependent variable}
@@ -27,7 +27,7 @@ kpss_unknown_1p(y, x, model, weakly.exog, k)
 \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
 }}
 
-\item{k}{Scalar, defines the initial number of leads and lags for DOLS.}
+\item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 }
 \value{
 vec_out (2x2)-matrix, where the first rows gives the value of the min(SC) test and the estimated break point; the second row gives the value of the SC statistic, where the break point is estimated as min(SSR).

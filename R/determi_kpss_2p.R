@@ -9,80 +9,83 @@
 #' \item{5}{for the AC-CA model.}
 #' }
 #' @param N Number of observations.
-#' @param tb1 Position for the first structural break
-#'            (respective to the origin which is 1).
-#' @param tb2 Position for the second structural break
+#' @param break.point Positions for the first and second structural breaks
 #'            (respective to the origin which is 1).
 #'
 #' @return Matrix of deterministic terms.
-determi_kpss_2p <- function(model, N, tb1, tb2) {
+determi_kpss_2p <- function(model, N, break.point) {
     cns <- matrix(data = 1, nrow = N, ncol = 1)
     tend <- matrix(data = 1:N, nrow = N, ncol = 1)
 
     if (model == 1) {
         du1 <- rbind(
-            matrix(data = 0, nrow = tb1, ncol = 1),
-            matrix(data = 1, nrow = N - tb1, ncol = 1)
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[1], ncol = 1)
         )
         du2 <- rbind(
-            matrix(data = 0, nrow = tb2, ncol = 1),
-            matrix(data = 1, nrow = N - tb2, ncol = 1)
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[2], ncol = 1)
         )
         xt <- cbind(cns, du1, du2)
     }
     else if (model == 2) {
         du1 <- rbind(
-            matrix(data = 0, nrow = tb1, ncol = 1),
-            matrix(data = 1, nrow = N - tb1, ncol = 1)
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[1], ncol = 1)
         )
         du2 <- rbind(
-            matrix(data = 0, nrow = tb2, ncol = 1),
-            matrix(data = 1, nrow = N - tb2, ncol = 1)
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[2], ncol = 1)
         )
         xt <- cbind(cns, tend, du1, du2)
     }
     else if (model == 3) {
         dt1 <- rbind(
-            matrix(data = 0, nrow = tb1, ncol = 1),
-            matrix(data = 1:(N - tb1), nrow = N - tb1, ncol = 1)
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1:(N - break.point[1]),
+                   nrow = N - break.point[1], ncol = 1)
         )
         dt2 <- rbind(
-            matrix(data = 0, nrow = tb2, ncol = 1),
-            matrix(data = 1:(N - tb2), nrow = N - tb2, ncol = 1)
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1:(N - break.point[2]),
+                   nrow = N - break.point[2], ncol = 1)
         )
         xt <- cbind(cns, tend, dt1, dt2)
     }
     else if (model == 4) {
         du1 <- rbind(
-            matrix(data = 0, nrow = tb1, ncol = 1),
-            matrix(data = 1, nrow = N - tb1, ncol = 1)
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[1], ncol = 1)
         )
         du2 <- rbind(
-            matrix(data = 0, nrow = tb2, ncol = 1),
-            matrix(data = 1, nrow = N - tb2, ncol = 1)
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[2], ncol = 1)
         )
         dt1 <- rbind(
-            matrix(data = 0, nrow = tb1, ncol = 1),
-            matrix(data = 1:(N - tb1), nrow = N - tb1, ncol = 1)
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1:(N - break.point[1]),
+                   nrow = N - break.point[1], ncol = 1)
         )
         dt2 <- rbind(
-            matrix(data = 0, nrow = tb2, ncol = 1),
-            matrix(data = 1:(N - tb2), nrow = N - tb2, ncol = 1)
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1:(N - break.point[2]),
+                   nrow = N - break.point[2], ncol = 1)
         )
         xt <- cbind(cns, tend, du1, dt1, du2, dt2)
     }
     else if (model == 5) {
         du1 <- rbind(
-            matrix(data = 0, nrow = tb1, ncol = 1),
-            matrix(data = 1, nrow = N - tb1, ncol = 1)
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[1], ncol = 1)
         )
         du2 <- rbind(
-            matrix(data = 0, nrow = tb2, ncol = 1),
-            matrix(data = 1, nrow = N - tb2, ncol = 1)
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[2], ncol = 1)
         )
         dt1 <- rbind(
-            matrix(data = 0, nrow = tb1, ncol = 1),
-            matrix(data = 1:(N - tb1), nrow = N - tb1, ncol = 1)
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1:(N - break.point[1]),
+                   nrow = N - break.point[1], ncol = 1)
         )
         xt <- cbind(cns, tend, du1, dt1, du2)
     }

@@ -5,12 +5,12 @@
 \title{Procedure ALRVR to estimate the long-run variance as
 in Sul, Phillips and Choi (2003).}
 \usage{
-alrvr_kernel(e, kmax = 0, kernel = "bartlett", criterion = "bic")
+alrvr_kernel(e, max.lag = 0, kernel = "bartlett", criterion = "bic")
 }
 \arguments{
 \item{e}{(Tx1) vector or residuals.}
 
-\item{kmax}{Maximum number of lags.
+\item{max.lag}{Maximum number of lags.
 The exact number is selected by information criterions.}
 
 \item{kernel}{Kernel for calculating long-run variance.}

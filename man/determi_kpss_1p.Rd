@@ -4,7 +4,7 @@
 \alias{determi_kpss_1p}
 \title{Construct determinant variables.}
 \usage{
-determi_kpss_1p(model, N, tb)
+determi_kpss_1p(model, N, break.point)
 }
 \arguments{
 \item{model}{\describe{
@@ -16,7 +16,7 @@ determi_kpss_1p(model, N, tb)
 
 \item{N}{Number of observations.}
 
-\item{tb}{Break point.}
+\item{break.point}{Break point.}
 }
 \value{
 Matrix of determinant variables.

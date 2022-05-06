@@ -1,87 +1,88 @@
 #' @import MASS
-dols <- function(y, x, model, klags, kleads, tb) { # nolint
+dols <- function(y, x, model, break.point, k.lags, k.leads) { # nolint
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y) # nolint
 
-    streg <- x
-    d_streg_step <- streg[2:N, , drop = FALSE] - streg[1:(N - 1), , drop = FALSE] # nolint
-    d_streg <- d_streg_step
-    d_streg_r <- d_streg_step
+    d_x_step <- x[2:N, , drop = FALSE] - x[1:(N - 1), , drop = FALSE] # nolint
+    d_x <- d_x_step
+    d_x_r <- d_x_step
 
-    for (i in 1:klags) {
-        d_streg <- cbind(
-            d_streg,
-            lagn(d_streg_step, i)
+    for (i in 1:k.lags) {
+        d_x <- cbind(
+            d_x,
+            lagn(d_x_step, i)
         )
     }
 
-    for (i in 1:kleads) {
-        d_streg_r <- cbind(
-            d_streg_r,
-            lagn(d_streg_step, -i)
+    for (i in 1:k.leads) {
+        d_x_r <- cbind(
+            d_x_r,
+            lagn(d_x_step, -i)
         )
     }
 
-    if (klags != 0 & kleads != 0) {
-        lags <- d_streg
-        leads <- d_streg_r[, (ncol(streg) + 1):(ncol(d_streg_r)), drop = FALSE]
-        ll <- cbind(lags, leads)[(klags + 1):(N - 1 - kleads), , drop = FALSE]
+    if (k.lags != 0 & k.leads != 0) {
+        lags <- d_x
+        leads <- d_x_r[, (ncol(x) + 1):(ncol(d_x_r)), drop = FALSE]
+        lags_leads <- cbind(lags, leads)
+        lags_leads <- lags_leads[(k.lags + 1):(N - 1 - k.leads), , drop = FALSE]
     }
-    else if (klags != 0 & kleads == 0) {
-        lags <- d_streg
-        ll <- lags[(klags + 1):(N - 1), , drop = FALSE]
+    else if (k.lags != 0 & k.leads == 0) {
+        lags <- d_x
+        lags_leads <- lags[(k.lags + 1):(N - 1), , drop = FALSE]
     }
-    else if (klags == 0 & kleads != 0) {
-        lags <- d_streg
-        leads <- d_streg_r[, (ncol(streg) + 1):(ncol(d_streg_r)), drop = FALSE]
-        ll <- cbind(lags, leads)[1:(N - 1 - kleads), , drop = FALSE]
+    else if (k.lags == 0 & k.leads != 0) {
+        lags <- d_x
+        leads <- d_x_r[, (ncol(x) + 1):(ncol(d_x_r)), drop = FALSE]
+        lags_leads <- cbind(lags, leads)
+        lags_leads <- lags_leads[1:(N - 1 - k.leads), , drop = FALSE]
     }
-    else if (klags == 0 & kleads == 0) {
-        ll <- d_streg
+    else if (k.lags == 0 & k.leads == 0) {
+        lags_leads <- d_x
     }
 
     if (model == 0) {
         xreg <- cbind(
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
+            x[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            lags_leads
         )
     }
     else if (model >= 1 & model <= 4) {
-        deter <- determi_kpss_1p(model, N, tb)
+        deter <- determi_kpss_1p(model, N, break.point)
         xreg <- cbind(
-            deter[(klags + 2):(N - kleads), , drop = FALSE],
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
+            deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            x[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            lags_leads
         )
     }
     else if (model == 5) {
-        deter <- determi_kpss_1p(1, N, tb)
+        deter <- determi_kpss_1p(1, N, break.point)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
-            deter[(klags + 2):(N - kleads), , drop = FALSE],
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            xdu[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
+            deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            x[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            xdu[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            lags_leads
         )
     }
     else if (model == 6) {
-        deter <- determi_kpss_1p(4, N, tb)
+        deter <- determi_kpss_1p(4, N, break.point)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
-            deter[(klags + 2):(N - kleads), , drop = FALSE],
-            streg[(klags + 2):(N - kleads), , drop = FALSE],
-            xdu[(klags + 2):(N - kleads), , drop = FALSE],
-            ll
+            deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            x[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            xdu[(k.lags + 2):(N - k.leads), , drop = FALSE],
+            lags_leads
         )
     }
 
     beta <- qr.solve(t(xreg) %*% xreg) %*% t(xreg) %*%
-        y[(klags + 2):(N - kleads), 1, drop = FALSE]
+        y[(k.lags + 2):(N - k.leads), 1, drop = FALSE]
 
-    resid <- y[(klags + 2):(N - kleads), 1, drop = FALSE] - xreg %*% beta
+    resid <- y[(k.lags + 2):(N - k.leads), 1, drop = FALSE] - xreg %*% beta
 
     s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
 

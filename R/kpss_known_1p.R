@@ -70,7 +70,7 @@ kpss_known_1p <- function(y, x, model, break.point, weakly.exog = TRUE, ll.init)
     else {
         bic_min <- 100000000
         for (i in ll.init:1) {
-            c(beta, resid, bic, t_beta) %<-% dols(y, x, model, i, i, break.point)
+            c(beta, resid, bic, t_beta) %<-% dols(y, x, model, break.point, i, i)
             if (bic < bic_min) {
                 bic_min <- bic
                 beta_min <- beta

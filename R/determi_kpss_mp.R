@@ -8,16 +8,16 @@
 #' \item{3}{for the break in const and trend.}
 #' }
 #' @param N Number of observations.
-#' @param break_point Array of structural breaks.
+#' @param break.point Array of structural breaks.
 #' @param trend Include trend if `TRUE`.
 #'
 #' @return Matrix of deterministic terms.
-determi_kpss_mp <- function(model, N, break_point, const = FALSE, trend = FALSE) { # nolint
-    ntb <- length(break_point)
+determi_kpss_mp <- function(model, N, break.point, const = FALSE, trend = FALSE) { # nolint
+    ntb <- length(break.point)
     if (length(model) == 1)
         model <- rep(model, ntb)
     else if (length(model) != ntb)
-        stop("ERROR! Inconsistent sizes of `model` and `break_point`")
+        stop("ERROR! Inconsistent sizes of `model` and `break.point`")
 
     xt <- NULL
     if (const)
@@ -35,12 +35,12 @@ determi_kpss_mp <- function(model, N, break_point, const = FALSE, trend = FALSE)
                 rbind(
                     matrix(
                         data = 0,
-                        nrow = break_point[i],
+                        nrow = break.point[i],
                         ncol = 1
                     ),
                     matrix(
                         data = 1,
-                        nrow = N - break_point[i],
+                        nrow = N - break.point[i],
                         ncol = 1
                     )
                 )
@@ -52,12 +52,12 @@ determi_kpss_mp <- function(model, N, break_point, const = FALSE, trend = FALSE)
                 rbind(
                     matrix(
                         data = 0,
-                        nrow = break_point[i],
+                        nrow = break.point[i],
                         ncol = 1
                     ),
                     matrix(
-                        data = 1:(N - break_point[i]),
-                        nrow = N - break_point[i],
+                        data = 1:(N - break.point[i]),
+                        nrow = N - break.point[i],
                         ncol = 1
                     )
                 )
@@ -69,24 +69,24 @@ determi_kpss_mp <- function(model, N, break_point, const = FALSE, trend = FALSE)
                 rbind(
                     matrix(
                         data = 0,
-                        nrow = break_point[i],
+                        nrow = break.point[i],
                         ncol = 1
                     ),
                     matrix(
                         data = 1,
-                        nrow = N - break_point[i],
+                        nrow = N - break.point[i],
                         ncol = 1
                     )
                 ),
                 rbind(
                     matrix(
                         data = 0,
-                        nrow = break_point[i],
+                        nrow = break.point[i],
                         ncol = 1
                     ),
                     matrix(
-                        data = 1:(N - break_point[i]),
-                        nrow = N - break_point[i],
+                        data = 1:(N - break.point[i]),
+                        nrow = N - break.point[i],
                         ncol = 1
                     )
                 )

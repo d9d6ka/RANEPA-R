@@ -5,7 +5,7 @@
 \title{Procedure to compute deterministic terms
 for KPSS with 2 structural breaks.}
 \usage{
-determi_kpss_mp(model, N, break_point, const = FALSE, trend = FALSE)
+determi_kpss_mp(model, N, break.point, const = FALSE, trend = FALSE)
 }
 \arguments{
 \item{model}{A scalar or vector of
@@ -17,7 +17,7 @@ determi_kpss_mp(model, N, break_point, const = FALSE, trend = FALSE)
 
 \item{N}{Number of observations.}
 
-\item{break_point}{Array of structural breaks.}
+\item{break.point}{Array of structural breaks.}
 
 \item{trend}{Include trend if `TRUE`.}
 }

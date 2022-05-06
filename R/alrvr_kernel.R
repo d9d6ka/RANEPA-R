@@ -4,7 +4,7 @@
 #' @details Used are Quadratic Spectral and Bartlett kernels.
 #'
 #' @param e (Tx1) vector or residuals.
-#' @param kmax Maximum number of lags.
+#' @param max.lag Maximum number of lags.
 #' The exact number is selected by information criterions.
 #' @param kernel Kernel for calculating long-run variance.
 #' @param criterion The information crietreion: bic, aic or lwz.
@@ -12,9 +12,9 @@
 #' @return Long-run variance.
 #'
 #' @import MASS
-alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
+alrvr_kernel <- function(e, max.lag = 0, kernel = "bartlett", criterion = "bic") {
     if (!is.matrix(e)) e <- as.matrix(e)
-    if (kmax < 0) kmax <- 0
+    if (max.lag < 0) max.lag <- 0
     if (! kernel %in% c("bartlett", "quadratic")) {
         warning("WARNING! Unknown kernel, Barlett is used")
         kernel <- "bartlett"
@@ -26,33 +26,35 @@ alrvr_kernel <- function(e, kmax = 0, kernel = "bartlett", criterion = "bic") {
 
     N <- nrow(e) # nolint
 
-    min_bic <- log(drop(t(e) %*% e) / (N - kmax))
+    min_bic <- log(drop(t(e) %*% e) / (N - max.lag))
     k <- 0
     rho <- 0
     res <- e
 
 
-    for (i in 1:kmax) {
-        if (kmax == 0) break
+    for (i in 1:max.lag) {
+        if (max.lag == 0) break
 
         temp <- e
         for (j in 1:i) temp <- cbind(temp, lagn(e, j))
         temp <- temp[(1 + i):nrow(temp), , drop = FALSE]
 
         x_tmp <- temp[, 2:ncol(temp), drop = FALSE]
+
         rho_temp <- qr.solve(t(x_tmp) %*% x_tmp) %*%
             t(x_tmp) %*% temp[, 1, drop = FALSE]
+
         res_temp <- temp[, 1, drop = FALSE] - x_tmp %*% rho_temp
 
         if (criterion == "bic") {
-            bic <- log(drop(t(res_temp) %*% res_temp) / (N - kmax)) +
-                (i * log(N - kmax) / (N - kmax))
+            bic <- log(drop(t(res_temp) %*% res_temp) / (N - max.lag)) +
+                (i * log(N - max.lag) / (N - max.lag))
         } else if (criterion == "aic") {
-            bic <- log(drop(t(res_temp) %*% res_temp) / (N - kmax)) +
-                2 * i / (N - kmax)
+            bic <- log(drop(t(res_temp) %*% res_temp) / (N - max.lag)) +
+                2 * i / (N - max.lag)
         } else if (criterion == "lwz") {
-            bic <- log(drop(t(res_temp) %*% res_temp) / (N - kmax)) +
-                0.299 * i * (log(N - kmax))^2.1
+            bic <- log(drop(t(res_temp) %*% res_temp) / (N - max.lag)) +
+                0.299 * i * (log(N - max.lag))^2.1
         }
 
         if (bic < min_bic) {

@@ -5,7 +5,7 @@
 \title{Procedure to compute deterministic terms
 for KPSS with 2 structural breaks.}
 \usage{
-determi_kpss_2p(model, N, tb1, tb2)
+determi_kpss_2p(model, N, break.point)
 }
 \arguments{
 \item{model}{\describe{
@@ -18,10 +18,7 @@ determi_kpss_2p(model, N, tb1, tb2)
 
 \item{N}{Number of observations.}
 
-\item{tb1}{Position for the first structural break
-(respective to the origin which is 1).}
-
-\item{tb2}{Position for the second structural break
+\item{break.point}{Positions for the first and second structural breaks
 (respective to the origin which is 1).}
 }
 \value{
