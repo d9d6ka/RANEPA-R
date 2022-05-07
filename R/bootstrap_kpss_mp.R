@@ -4,26 +4,12 @@
 #' @importFrom zeallot %<-%
 #'
 #' @export
-bootstrap_kpss_mp <- function(y, x,
-                          model, break.point, const = FALSE, trend = FALSE,
-                          weakly.exog = TRUE,
-                          ll.init, corr.max, kernel, iter = 10000) {
-    if (!is.matrix(y)) y <- as.matrix(y)
-    if (!is.null(x))
-        if (!is.matrix(x)) x <- as.matrix(x)
-
-    N <- nrow(y) # nolint
-
-    c(., test, resid, ., .) %<-%
-        kpss_known_mp(
-            y, x, model, break.point,
-            const, trend, weakly.exog,
-            ll.init, corr.max, kernel
-        )
+bootstrap_kpss_mp <- function(y, ..., iter = 10000) {
+    c(., test, resid, ., .) %<-% kpss_known_mp(y, ...)
 
     cores <- detectCores() # nolint
 
-    progress_bar <- txtProgressBar(max = length(iter), style = 3)
+    progress_bar <- txtProgressBar(max = iter, style = 3)
     progress <- function(n) setTxtProgressBar(progress_bar, n)
 
     cluster <- makeCluster(max(cores - 1, 1))
@@ -36,18 +22,13 @@ bootstrap_kpss_mp <- function(y, x,
     ) %dopar% {
         z <- rnorm(length(resid))
         tmp_y <- z * resid
-        c(., tmp_test, ., ., .) %<-%
-            kpss_known_mp(
-                tmp_y, x, model, break.point,
-                const, trend, weakly.exog,
-                ll.init, corr.max, kernel
-            )
+        c(., tmp_test, ., ., .) %<-% kpss_known_mp(tmp_y, ...)
         tmp_test
     }
-    
+
     stopCluster(cluster)
-    
-    p_value <- (1 / N) *  sum(I(test <= result))
+
+    p_value <- (1 / iter) * sum(I(test <= result))
 
     return(
         list(
