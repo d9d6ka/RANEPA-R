@@ -65,7 +65,7 @@ kpss_known_1p <- function(y, x, model, break.point, weakly.exog = TRUE, ll.init)
             xt <- cbind(deter, x, xdu)
         }
 
-        c(beta, resid, p, t_b) %<-% olsqr(y, xt)
+        c(beta, resid, ., t_beta) %<-% olsqr(y, xt)
     }
     else {
         bic_min <- 100000000

@@ -59,7 +59,7 @@ kpss_known_mp <- function(y, x,
             determi_kpss_mp(model, N, break.point, const, trend)
         )
 
-        c(beta, resid, p, t_beta) %<-% olsqr(y, xt)
+        c(beta, resid, ., t_beta) %<-% olsqr(y, xt)
     }
     else {
         bic_min <- 100000000

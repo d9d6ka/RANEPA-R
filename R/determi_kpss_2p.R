@@ -13,7 +13,7 @@
 #'            (respective to the origin which is 1).
 #'
 #' @return Matrix of deterministic terms.
-determi_kpss_2p <- function(model, N, break.point) {
+determi_kpss_2p <- function(model, N, break.point) { # nolint
     cns <- matrix(data = 1, nrow = N, ncol = 1)
     tend <- matrix(data = 1:N, nrow = N, ncol = 1)
 

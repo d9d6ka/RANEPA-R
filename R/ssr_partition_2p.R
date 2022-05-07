@@ -30,7 +30,7 @@ ssr_partition_2p <- function(y, model) {
     if (1 <= model & model <= 4) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
-                z <- determi_kpss_2p(model, N, i, j)
+                z <- determi_kpss_2p(model, N, c(i, j))
                 c(beta, resid, p) %<-% olsqr(y, z)
                 ssr <- drop(t(resid) %*% resid)
                 if (ssr < ssr_min) {
@@ -45,7 +45,7 @@ ssr_partition_2p <- function(y, model) {
     else if (model == 5) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
-                z <- determi_kpss_2p(model, N, i, j)
+                z <- determi_kpss_2p(model, N, c(i, j))
                 c(beta, resid, p) %<-% olsqr(y, z)
                 ssr <- drop(t(resid) %*% resid)
                 if (ssr < ssr_min) {
@@ -58,7 +58,7 @@ ssr_partition_2p <- function(y, model) {
         }
         for (j in 2:(N - 4)) {
             for (i in (j + 2):(N - 2)) {
-                z <- determi_kpss_2p(model, N, i, j)
+                z <- determi_kpss_2p(model, N, c(i, j))
                 c(beta, resid, p) %<-% olsqr(y, z)
                 ssr <- drop(t(resid) %*% resid)
                 if (ssr < ssr_min) {

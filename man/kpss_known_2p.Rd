@@ -4,7 +4,7 @@
 \alias{kpss_known_2p}
 \title{KPSS-test with 2 known structural breaks}
 \usage{
-kpss_known_2p(y, model, tb1, tb2, kmax, kernel)
+kpss_known_2p(y, model, break.point, kmax, kernel)
 }
 \arguments{
 \item{y}{(Tx1)-vector of time series}
@@ -17,10 +17,6 @@ kpss_known_2p(y, model, tb1, tb2, kmax, kernel)
 \item{5}{for the AC-CA model.}
 }}
 
-\item{tb1}{First break point.}
-
-\item{tb2}{Second break point.}
-
 \item{kmax}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
 
 \item{kernel}{\describe{
@@ -28,6 +24,10 @@ kpss_known_2p(y, model, tb1, tb2, kmax, kernel)
 \item{quadratic}{for Quadratic Spectral kernel.}
 \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
 }}
+
+\item{tb1}{First break point.}
+
+\item{tb2}{Second break point.}
 }
 \value{
 \describe{
