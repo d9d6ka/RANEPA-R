@@ -1,3 +1,43 @@
+#' Calculating p-values using bootstrap
+#'
+#' @description
+#' Procedure to compute the KPSS test with two structural breaks
+#'
+#' @details
+#' The break points are known.
+#'
+#' See Cavaliere and Taylor (2006) for further details.
+#'
+#' @param y (Tx1)-vector of time series.
+#' @param x (Txk)-matrix of explanatory stochastic regressors.
+#' @param model A scalar or vector of
+#' \describe{
+#' \item{1}{for the break in const.}
+#' \item{2}{for the break in trend.}
+#' \item{3}{for the break in const and trend.}
+#' }
+#' @param break.point Array of structural breaks.
+#' @param trend Include trend if `TRUE`.
+#' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
+#' \describe{
+#' \item{TRUE}{if the regressors are weakly exogenous,}
+#' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+#' }
+#' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
+#' @param corr.max scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.
+#' @param kernel \describe{
+#' \item{bartlett}{for Bartlett kernel.}
+#' \item{quadratic}{for Quadratic Spectral kernel.}
+#' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+#' }
+#' @param iter Number of bootstrap iterations.
+#'
+#' @return List of 3 elements:
+#' \describe{
+#' \item{test}{The value of KPSS test statistic.}
+#' \item{p_value}{The estimates p-value.}
+#' \item{bootstrapped}{Bootstrapped auxiliary statistics.}}
+#'
 #' @import doSNOW
 #' @import foreach
 #' @import parallel

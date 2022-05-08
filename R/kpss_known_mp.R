@@ -4,7 +4,7 @@
 #' Procedure to compute the KPSS test with two structural breaks
 #'
 #' @details
-#' The break points are known
+#' The break points are known.
 #'
 #' The code provided is the original GAUSS code ported to R.
 #'
@@ -37,6 +37,8 @@
 #' \item{beta}{DOLS estimates of the coefficients regressors.}
 #' \item{tests}{SC test (coinkpss-test).}
 #' \item{resid}{Residuals of the model.}
+#' \item{t_beta}{t-statistics for `beta`.}
+#' \item{dols_lags}{The estimated number of lags and leads in DOLS.}
 #' \item{break_point}{Break points.}
 #' }
 #'
