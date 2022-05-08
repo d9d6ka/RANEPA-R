@@ -4,8 +4,42 @@
 #' @importFrom zeallot %<-%
 #'
 #' @export
-bootstrap_kpss_mp <- function(y, ..., iter = 10000) {
-    c(., test, resid, ., .) %<-% kpss_known_mp(y, ...)
+bootstrap_kpss_mp <- function(y, x,
+                              model, break.point,
+                              const = FALSE, trend = FALSE,
+                              weakly.exog = TRUE,
+                              ll.init, corr.max, kernel,
+                              iter = 10000) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.null(x))
+        if (!is.matrix(x)) x <- as.matrix(x)
+
+    N <- nrow(y)
+
+    c(., test, u, ., dols_lags, .) %<-%
+        kpss_known_mp(
+            y, x,
+            model, break.point,
+            const, trend,
+            weakly.exog,
+            ll.init, corr.max, kernel
+        )
+
+    if (weakly.exog) {
+        xreg <- cbind(
+            x,
+            determi_kpss_mp(model, N, break.point, const, trend)
+        )
+    }
+    else {
+        c(., xreg) %<-%
+            dols_prepare_mp(
+                y, x,
+                model, break.point,
+                const, trend,
+                dols_lags, dols_lags
+            )
+    }
 
     cores <- detectCores() # nolint
 
@@ -20,9 +54,17 @@ bootstrap_kpss_mp <- function(y, ..., iter = 10000) {
         .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
-        z <- rnorm(length(resid))
-        tmp_y <- z * resid
-        c(., tmp_test, ., ., .) %<-% kpss_known_mp(tmp_y, ...)
+        z <- rnorm(length(u))
+        tmp_y <- z * u
+
+        c(beta, resid, ., t_beta) %<-% olsqr(tmp_y, xreg)
+
+        s_t <- apply(resid, 2, cumsum)
+        if (!is.null(kernel))
+            tmp_test <- N^(-2) * drop(t(s_t) %*% s_t) /
+                alrvr_kernel(resid, corr.max, kernel)
+        else
+            tmp_test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(resid)
         tmp_test
     }
 
