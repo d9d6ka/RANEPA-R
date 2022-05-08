@@ -15,7 +15,8 @@ bootstrap_kpss_mp(
   ll.init,
   corr.max,
   kernel,
-  iter = 10000
+  iter = 9999,
+  bootstrap = "sample"
 )
 }
 \arguments{
@@ -51,6 +52,13 @@ bootstrap_kpss_mp(
 }}
 
 \item{iter}{Number of bootstrap iterations.}
+
+\item{bootstrap}{Type of bootstrapping:
+\describe{
+\item{sample}{sampling from residuals with replacement.}
+\item{Cavaliere-Taylor}{multiplying residuals by N(0, 1)-distributed variable.}
+\item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
+}}
 }
 \value{
 List of 3 elements:

@@ -31,6 +31,12 @@
 #' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
 #' }
 #' @param iter Number of bootstrap iterations.
+#' @param bootstrap Type of bootstrapping:
+#' \describe{
+#' \item{sample}{sampling from residuals with replacement.}
+#' \item{Cavaliere-Taylor}{multiplying residuals by N(0, 1)-distributed variable.}
+#' \item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
+#' }
 #'
 #' @return List of 3 elements:
 #' \describe{
@@ -49,7 +55,8 @@ bootstrap_kpss_mp <- function(y, x,
                               const = FALSE, trend = FALSE,
                               weakly.exog = TRUE,
                               ll.init, corr.max, kernel,
-                              iter = 10000) {
+                              iter = 9999,
+                              bootstrap = "sample") {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.null(x))
         if (!is.matrix(x)) x <- as.matrix(x)
@@ -94,8 +101,17 @@ bootstrap_kpss_mp <- function(y, x,
         .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
-        z <- rnorm(length(u))
-        tmp_y <- z * u
+        if (bootstrap == "sample") {
+            tmp_y <- sample(u, length(u), replace = TRUE)
+        }
+        else if (bootstrap == "Cavaliere-Taylor") {
+            z <- rnorm(length(u))
+            tmp_y <- z * u
+        }
+        else if (bootstrap == "Rademacher") {
+            z <- sample(c(-1, 1), length(u), replace = TRUE)
+            tmp_y <- z * u
+        }
 
         c(beta, resid, ., t_beta) %<-% olsqr(tmp_y, xreg)
 
