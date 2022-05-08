@@ -98,22 +98,22 @@ kpss.1.2b <- kpss_known_mp(data$Y_ab,
                            data$dY_ab,
                            model = 1,
                            break.point = res.1.2$break_point,
-                           const = FALSE,
-                           trend = TRUE,
+                           const = TRUE,
+                           trend = FALSE,
                            ll.init = 4,
                            corr.max = 0,
                            kernel = NULL,
-                           weakly.exog = TRUE)
+                           weakly.exog = FALSE)
 kpss.1.2boot <- bootstrap_kpss_mp(data$Y_ab,
                                   data$dY_ab,
                                   model = 1,
                                   break.point = res.1.2$break_point,
-                                  const = FALSE,
-                                  trend = TRUE,
+                                  const = TRUE,
+                                  trend = FALSE,
                                   ll.init = 4,
                                   corr.max = 0,
                                   kernel = NULL,
-                                  weakly.exog = TRUE)
+                                  weakly.exog = FALSE)
 
 ##################
 # Tests 2 breaks #

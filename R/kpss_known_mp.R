@@ -44,7 +44,8 @@
 #'
 #' @export
 kpss_known_mp <- function(y, x,
-                          model, break.point, const = FALSE, trend = FALSE,
+                          model, break.point,
+                          const = FALSE, trend = FALSE,
                           weakly.exog = TRUE,
                           ll.init, corr.max, kernel) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -60,16 +61,19 @@ kpss_known_mp <- function(y, x,
         )
 
         c(beta, resid, ., t_beta) %<-% olsqr(y, xt)
+        dols_lags <- 0
     }
     else {
         bic_min <- 100000000
         for (i in ll.init:1) {
-            c(beta, resid, bic, t_beta) %<-% dols_mp(y, x, model, break.point, const, trend, i, i)
+            c(beta, resid, bic, t_beta) %<-%
+                dols_mp(y, x, model, break.point, const, trend, i, i)
             if (bic < bic_min) {
                 bic_min <- bic
                 beta_min <- beta
                 t_beta_min <- t_beta
                 resid_min <- resid
+                dols_lags <- i
             }
         }
         resid <- resid_min
@@ -89,6 +93,7 @@ kpss_known_mp <- function(y, x,
             test   = test,
             resid  = resid,
             t_beta = t_beta,
+            dols_lags = dols_lags,
             break.point = break.point
         )
     )
