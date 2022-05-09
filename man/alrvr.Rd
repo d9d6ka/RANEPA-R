@@ -2,8 +2,7 @@
 % Please edit documentation in R/alrvr.R
 \name{alrvr}
 \alias{alrvr}
-\title{Procedure ALRVR to estimate the long-run variance
-as in Andrews (1991) and Kurozumi (2002).}
+\title{Calculating long-run variance}
 \usage{
 alrvr(e)
 }

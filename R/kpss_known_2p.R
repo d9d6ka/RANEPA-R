@@ -18,10 +18,13 @@
 #' \item{4}{for the CC model.}
 #' \item{5}{for the AC-CA model.}
 #' }
-#' @param tb1 First break point.
-#' @param tb2 Second break point.
-#' @param kmax scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.
-#' @param kernel \describe{
+#' @param tb1 The first break point.
+#' @param tb2 The second break point.
+#' @param kmax scalar, with the maximum order of the parametric correction.
+#' The final order of the parametric correction is selected using the
+#' BIC information criterion.
+#' @param kernel Kernel for calculating long-run variance
+#' \describe{
 #' \item{bartlett}{for Bartlett kernel.}
 #' \item{quadratic}{for Quadratic Spectral kernel.}
 #' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
@@ -47,7 +50,8 @@ kpss_known_2p <- function(y, model, break.point, kmax, kernel) {
     s_t <- apply(resid, 2, cumsum)
 
     if (!is.null(kernel))
-        test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr_kernel(resid, corr.max, kernel)
+        test <- N^(-2) * drop(t(s_t) %*% s_t) /
+            alrvr_kernel(resid, corr.max, kernel)
     else
         test <- N^(-2) * drop(t(s_t) %*% s_t) / alrvr(resid)
 

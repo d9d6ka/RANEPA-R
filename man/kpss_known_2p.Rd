@@ -17,17 +17,20 @@ kpss_known_2p(y, model, break.point, kmax, kernel)
 \item{5}{for the AC-CA model.}
 }}
 
-\item{kmax}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
+\item{kmax}{scalar, with the maximum order of the parametric correction.
+The final order of the parametric correction is selected using the
+BIC information criterion.}
 
-\item{kernel}{\describe{
+\item{kernel}{Kernel for calculating long-run variance
+\describe{
 \item{bartlett}{for Bartlett kernel.}
 \item{quadratic}{for Quadratic Spectral kernel.}
 \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
 }}
 
-\item{tb1}{First break point.}
+\item{tb1}{The first break point.}
 
-\item{tb2}{Second break point.}
+\item{tb2}{The second break point.}
 }
 \value{
 \describe{

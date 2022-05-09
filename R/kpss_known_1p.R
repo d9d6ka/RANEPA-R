@@ -19,10 +19,11 @@
 #' \item{6}{for model E.}
 #' }
 #' @param break.point Position of the break point.
-#' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
+#' @param weakly.exog Exogeneity of the stochastic regressors
 #' \describe{
 #' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+#' \item{FALSE}{if the regressors are not weakly exogenous
+#' (DOLS is used in this case).}
 #' }
 #' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
 #'
@@ -37,7 +38,9 @@
 #' @import MASS
 #' @importFrom zeallot %<-%
 #' @export
-kpss_known_1p <- function(y, x, model, break.point, weakly.exog = TRUE, ll.init) {
+kpss_known_1p <- function(y, x,
+                          model, break.point,
+                          weakly.exog = TRUE, ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.null(x))
         if (!is.matrix(x)) x <- as.matrix(x)
@@ -70,7 +73,8 @@ kpss_known_1p <- function(y, x, model, break.point, weakly.exog = TRUE, ll.init)
     else {
         bic_min <- 100000000
         for (i in ll.init:1) {
-            c(beta, resid, bic, t_beta) %<-% dols(y, x, model, break.point, i, i)
+            c(beta, resid, bic, t_beta) %<-%
+                dols(y, x, model, break.point, i, i)
             if (bic < bic_min) {
                 bic_min <- bic
                 beta_min <- beta

@@ -2,8 +2,7 @@
 % Please edit documentation in R/determi_kpss_mp.R
 \name{determi_kpss_mp}
 \alias{determi_kpss_mp}
-\title{Procedure to compute deterministic terms
-for KPSS with 2 structural breaks.}
+\title{Deterministic terms for multi-break KPSS}
 \usage{
 determi_kpss_mp(model, N, break.point, const = FALSE, trend = FALSE)
 }
@@ -19,12 +18,18 @@ determi_kpss_mp(model, N, break.point, const = FALSE, trend = FALSE)
 
 \item{break.point}{Array of structural breaks.}
 
-\item{trend}{Include trend if `TRUE`.}
+\item{const}{Include constant if **TRUE**.}
+
+\item{trend}{Include trend if **TRUE**.}
 }
 \value{
 Matrix of deterministic terms.
 }
 \description{
-Procedure to compute deterministic terms
-for KPSS with 2 structural breaks.
+Procedure to compute deterministic terms for KPSS with 2 structural breaks.
+}
+\details{
+**model** should be either a scalar or a vector of the same size as the
+**break.point**. If scalar **model** will be repeated till the length of
+**break.point** is achieved.
 }

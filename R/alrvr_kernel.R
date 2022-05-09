@@ -1,3 +1,7 @@
+#' @title
+#' Calculating long-run variance
+#'
+#' @description
 #' Procedure ALRVR to estimate the long-run variance as
 #' in Sul, Phillips and Choi (2003).
 #'
@@ -6,7 +10,12 @@
 #' @param e (Tx1) vector or residuals.
 #' @param max.lag Maximum number of lags.
 #' The exact number is selected by information criterions.
-#' @param kernel Kernel for calculating long-run variance.
+#' @param kernel Kernel for calculating long-run variance
+#' \describe{
+#' \item{bartlett}{for Bartlett kernel.}
+#' \item{quadratic}{for Quadratic Spectral kernel.}
+#' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+#' }
 #' @param criterion The information crietreion: bic, aic or lwz.
 #'
 #' @return Long-run variance.

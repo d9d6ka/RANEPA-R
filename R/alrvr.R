@@ -1,3 +1,7 @@
+#' @title
+#' Calculating long-run variance
+#'
+#' @description
 #' Procedure ALRVR to estimate the long-run variance
 #' as in Andrews (1991) and Kurozumi (2002).
 #'

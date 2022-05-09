@@ -2,7 +2,7 @@
 % Please edit documentation in R/ssr_partition_mp.R
 \name{ssr_partition_mp}
 \alias{ssr_partition_mp}
-\title{Find m + 1 optimal partitions}
+\title{Find \eqn{m + 1} optimal partitions}
 \usage{
 ssr_partition_mp(y, x, m = 1, width = 2, ssr_data = NULL)
 }
@@ -19,7 +19,7 @@ ssr_partition_mp(y, x, m = 1, width = 2, ssr_data = NULL)
 List of 2 elements: optimal SSR and the vector of breaks.
 }
 \description{
-Find m + 1 optimal partitions
+Find \eqn{m + 1} optimal partitions
 }
 \details{
 Based on Bai and Perron (2003).

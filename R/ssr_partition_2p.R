@@ -1,3 +1,4 @@
+#' @title
 #' Procedure to minimize the SSR for 2 break points
 #'
 #' @param y (Tx1)-vector of time series

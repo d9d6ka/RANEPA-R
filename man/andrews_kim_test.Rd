@@ -2,7 +2,7 @@
 % Please edit documentation in R/andrews_kim_test.R
 \name{andrews_kim_test}
 \alias{andrews_kim_test}
-\title{Test for structural break at the sample end}
+\title{Andrews-Kim (2006) test}
 \usage{
 andrews_kim_test(eq, m, dataset)
 }
@@ -16,9 +16,9 @@ andrews_kim_test(eq, m, dataset)
 \value{
 The list, containing
 \itemize{
-\item `m`
-\item estimated values of P- and R-tests
-\item sequences of auxiliary statistics Pj and Rj
+\item **m**
+\item estimated values of P- and R-tests.
+\item sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j}.
 \item the corresponding p-values.
 }
 }

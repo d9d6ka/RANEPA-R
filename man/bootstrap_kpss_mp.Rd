@@ -33,19 +33,25 @@ bootstrap_kpss_mp(
 
 \item{break.point}{Array of structural breaks.}
 
-\item{trend}{Include trend if `TRUE`.}
+\item{const}{Include constant if **TRUE**.}
 
-\item{weakly.exog}{Boolean where we specify whether the stochastic regressors are exogenous or not
+\item{trend}{Include trend if **TRUE**.}
+
+\item{weakly.exog}{Exogeneity of the stochastic regressors
 \describe{
 \item{TRUE}{if the regressors are weakly exogenous,}
-\item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+\item{FALSE}{if the regressors are not weakly exogenous
+(DOLS is used in this case).}
 }}
 
 \item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 
-\item{corr.max}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
+\item{corr.max}{scalar, with the maximum order of the parametric correction.
+The final order of the parametric correction is selected using the BIC
+information criterion.}
 
-\item{kernel}{\describe{
+\item{kernel}{Kernel for calculating long-run variance
+\describe{
 \item{bartlett}{for Bartlett kernel.}
 \item{quadratic}{for Quadratic Spectral kernel.}
 \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
@@ -56,7 +62,8 @@ bootstrap_kpss_mp(
 \item{bootstrap}{Type of bootstrapping:
 \describe{
 \item{sample}{sampling from residuals with replacement.}
-\item{Cavaliere-Taylor}{multiplying residuals by N(0, 1)-distributed variable.}
+\item{Cavaliere-Taylor}{multiplying residuals by \eqn{N(0, 1)}-distributed
+variable.}
 \item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
 }}
 }

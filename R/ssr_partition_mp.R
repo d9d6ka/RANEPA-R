@@ -1,4 +1,5 @@
-#' Find m + 1 optimal partitions
+#' @title
+#' Find \eqn{m + 1} optimal partitions
 #'
 #' @details
 #' Based on Bai and Perron (2003).

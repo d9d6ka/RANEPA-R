@@ -2,8 +2,7 @@
 % Please edit documentation in R/alrvr_kernel.R
 \name{alrvr_kernel}
 \alias{alrvr_kernel}
-\title{Procedure ALRVR to estimate the long-run variance as
-in Sul, Phillips and Choi (2003).}
+\title{Calculating long-run variance}
 \usage{
 alrvr_kernel(e, max.lag = 0, kernel = "bartlett", criterion = "bic")
 }
@@ -13,7 +12,12 @@ alrvr_kernel(e, max.lag = 0, kernel = "bartlett", criterion = "bic")
 \item{max.lag}{Maximum number of lags.
 The exact number is selected by information criterions.}
 
-\item{kernel}{Kernel for calculating long-run variance.}
+\item{kernel}{Kernel for calculating long-run variance
+\describe{
+\item{bartlett}{for Bartlett kernel.}
+\item{quadratic}{for Quadratic Spectral kernel.}
+\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+}}
 
 \item{criterion}{The information crietreion: bic, aic or lwz.}
 }

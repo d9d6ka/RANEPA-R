@@ -1,3 +1,4 @@
+#' @title
 #' Produce lagged vector backward of forward
 #'
 #' @param x Initial vector.

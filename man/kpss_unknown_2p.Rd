@@ -7,7 +7,7 @@
 kpss_unknown_2p(y, model, kmax = 0, kernel = "bartlett")
 }
 \arguments{
-\item{y}{(Tx1)-vector of time series}
+\item{y}{(Tx1)-vector of time series.}
 
 \item{model}{\describe{
 \item{1}{for the AA (without trend) model.}
@@ -17,9 +17,12 @@ kpss_unknown_2p(y, model, kmax = 0, kernel = "bartlett")
 \item{5}{for the AC-CA model.}
 }}
 
-\item{kmax}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
+\item{kmax}{scalar, with the maximum order of the parametric correction.
+The final order of the parametric correction is selected using
+the BIC information criterion.}
 
-\item{kernel}{\describe{
+\item{kernel}{Kernel for calculating long-run variance
+\describe{
 \item{bartlett}{for Bartlett kernel.}
 \item{quadratic}{for Quadratic Spectral kernel.}
 \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}

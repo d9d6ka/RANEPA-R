@@ -1,3 +1,4 @@
+#' @title
 #' Calculating p-values using bootstrap
 #'
 #' @description
@@ -17,15 +18,20 @@
 #' \item{3}{for the break in const and trend.}
 #' }
 #' @param break.point Array of structural breaks.
-#' @param trend Include trend if `TRUE`.
-#' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
+#' @param const Include constant if **TRUE**.
+#' @param trend Include trend if **TRUE**.
+#' @param weakly.exog Exogeneity of the stochastic regressors
 #' \describe{
 #' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+#' \item{FALSE}{if the regressors are not weakly exogenous
+#' (DOLS is used in this case).}
 #' }
 #' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
-#' @param corr.max scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.
-#' @param kernel \describe{
+#' @param corr.max scalar, with the maximum order of the parametric correction.
+#' The final order of the parametric correction is selected using the BIC
+#' information criterion.
+#' @param kernel Kernel for calculating long-run variance
+#' \describe{
 #' \item{bartlett}{for Bartlett kernel.}
 #' \item{quadratic}{for Quadratic Spectral kernel.}
 #' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
@@ -34,7 +40,8 @@
 #' @param bootstrap Type of bootstrapping:
 #' \describe{
 #' \item{sample}{sampling from residuals with replacement.}
-#' \item{Cavaliere-Taylor}{multiplying residuals by N(0, 1)-distributed variable.}
+#' \item{Cavaliere-Taylor}{multiplying residuals by \eqn{N(0, 1)}-distributed
+#' variable.}
 #' \item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
 #' }
 #'

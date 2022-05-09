@@ -1,3 +1,7 @@
+#' @title
+#' Custom OLS with extra information
+#'
+#' @description
 #' Getting OLS estimates of betas, residuals, forecasted values and t-values.
 #'
 #' @param y Dependent variable.

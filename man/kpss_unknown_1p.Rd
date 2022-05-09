@@ -21,22 +21,30 @@ kpss_unknown_1p(y, x, model, weakly.exog, ll.init)
 \item{6}{for model E.}
 }}
 
-\item{weakly.exog}{Boolean where we specify whether the stochastic regressors are exogenous or not
+\item{weakly.exog}{Exogeneity of the stochastic regressors
 \describe{
 \item{TRUE}{if the regressors are weakly exogenous,}
-\item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+\item{FALSE}{if the regressors are not weakly exogenous
+(DOLS is used in this case).}
 }}
 
 \item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 }
 \value{
-vec_out (2x2)-matrix, where the first rows gives the value of the min(SC) test and the estimated break point; the second row gives the value of the SC statistic, where the break point is estimated as min(SSR).
+vec_out (2x2)-matrix, where the first rows gives the value of
+the min(SC) test and the estimated break point;
+the second row gives the value of the SC statistic,
+where the break point is estimated as min(SSR).
 }
 \description{
-Procedure for testing the null of cointegration in the possible presence of structural breaks
+Procedure for testing the null of cointegration in the possible presence of
+structural breaks.
 }
 \details{
-Computes the cointegration test with one unknown structural break where the break point is estimated either minimizing the value of the statistic or the sum of the squared residuals. The estimation of the cointegrating relationship bases on DOLS.
+Computes the cointegration test with one unknown structural break
+where the break point is estimated either minimizing the value of
+the statistic or the sum of the squared residuals.
+The estimation of the cointegrating relationship bases on DOLS.
 
 The code provided is the original GAUSS code ported to R.
 

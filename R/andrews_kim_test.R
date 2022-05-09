@@ -1,3 +1,7 @@
+#' @title
+#' Andrews-Kim (2006) test
+#'
+#' @description
 #' Test for structural break at the sample end
 #'
 #' @details
@@ -9,9 +13,9 @@
 #'
 #' @return The list, containing
 #' \itemize{
-#' \item `m`
-#' \item estimated values of P- and R-tests
-#' \item sequences of auxiliary statistics Pj and Rj
+#' \item **m**
+#' \item estimated values of P- and R-tests.
+#' \item sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j}.
 #' \item the corresponding p-values.
 #' }
 #'

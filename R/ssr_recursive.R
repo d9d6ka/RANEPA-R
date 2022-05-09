@@ -1,3 +1,4 @@
+#' @title
 #' Calculate SSR recursively
 #'
 #' @details

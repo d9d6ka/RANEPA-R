@@ -43,7 +43,8 @@ kpss_known_mp(
 
 \item{corr.max}{scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.}
 
-\item{kernel}{\describe{
+\item{kernel}{Kernel for calculating long-run variance
+\describe{
 \item{bartlett}{for Bartlett kernel.}
 \item{quadratic}{for Quadratic Spectral kernel.}
 \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}

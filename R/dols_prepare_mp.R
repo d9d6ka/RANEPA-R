@@ -1,7 +1,7 @@
 dols_prepare_mp <- function(y, x,
                             model, break.point,
                             const = FALSE, trend = FALSE,
-                            k.lags, k.leads) {
+                            k.lags, k.leads) { # nolint
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)

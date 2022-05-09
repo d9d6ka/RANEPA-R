@@ -1,3 +1,4 @@
+#' @title
 #' KPSS-test with 2 unknown structural breaks
 #'
 #' @description
@@ -10,7 +11,7 @@
 #'
 #' See Carrion-i-Silvestre and Sansó (2006) for further details.
 #'
-#' @param y (Tx1)-vector of time series
+#' @param y (Tx1)-vector of time series.
 #' @param model \describe{
 #' \item{1}{for the AA (without trend) model.}
 #' \item{2}{for the AA (with trend) model.}
@@ -18,8 +19,11 @@
 #' \item{4}{for the CC model.}
 #' \item{5}{for the AC-CA model.}
 #' }
-#' @param kmax scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.
-#' @param kernel \describe{
+#' @param kmax scalar, with the maximum order of the parametric correction.
+#' The final order of the parametric correction is selected using
+#' the BIC information criterion.
+#' @param kernel Kernel for calculating long-run variance
+#' \describe{
 #' \item{bartlett}{for Bartlett kernel.}
 #' \item{quadratic}{for Quadratic Spectral kernel.}
 #' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}

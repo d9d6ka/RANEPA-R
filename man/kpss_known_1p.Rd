@@ -22,10 +22,11 @@ kpss_known_1p(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 
 \item{break.point}{Position of the break point.}
 
-\item{weakly.exog}{Boolean where we specify whether the stochastic regressors are exogenous or not
+\item{weakly.exog}{Exogeneity of the stochastic regressors
 \describe{
 \item{TRUE}{if the regressors are weakly exogenous,}
-\item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+\item{FALSE}{if the regressors are not weakly exogenous
+(DOLS is used in this case).}
 }}
 
 \item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}

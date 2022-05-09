@@ -1,10 +1,15 @@
+#' @title
 #' KPSS-test of cointegration
 #'
 #' @description
-#' Procedure for testing the null of cointegration in the possible presence of structural breaks
+#' Procedure for testing the null of cointegration in the possible presence of
+#' structural breaks.
 #'
 #' @details
-#' Computes the cointegration test with one unknown structural break where the break point is estimated either minimizing the value of the statistic or the sum of the squared residuals. The estimation of the cointegrating relationship bases on DOLS.
+#' Computes the cointegration test with one unknown structural break
+#' where the break point is estimated either minimizing the value of
+#' the statistic or the sum of the squared residuals.
+#' The estimation of the cointegrating relationship bases on DOLS.
 #'
 #' The code provided is the original GAUSS code ported to R.
 #'
@@ -21,14 +26,18 @@
 #' \item{5}{for model D.}
 #' \item{6}{for model E.}
 #' }
-#' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
+#' @param weakly.exog Exogeneity of the stochastic regressors
 #' \describe{
 #' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+#' \item{FALSE}{if the regressors are not weakly exogenous
+#' (DOLS is used in this case).}
 #' }
 #' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
 #'
-#' @return vec_out (2x2)-matrix, where the first rows gives the value of the min(SC) test and the estimated break point; the second row gives the value of the SC statistic, where the break point is estimated as min(SSR).
+#' @return vec_out (2x2)-matrix, where the first rows gives the value of
+#' the min(SC) test and the estimated break point;
+#' the second row gives the value of the SC statistic,
+#' where the break point is estimated as min(SSR).
 #'
 #' @importFrom zeallot %<-%
 #' @export
@@ -42,7 +51,8 @@ kpss_unknown_1p <- function(y, x, model, weakly.exog, ll.init) {
 
     for (i in 3:(N-3)) {
         if (ll.init + 2 < i & i < N - 5 - ll.init) {
-            c(beta, tests, resid, t_b, tb) %<-% kpss_known_1p(y, x, model, i, weakly.exog, ll.init)
+            c(beta, tests, resid, t_b, tb) %<-%
+                kpss_known_1p(y, x, model, i, weakly.exog, ll.init)
             m_SC[i - 2, 1] <- tests
             m_SC[i - 2, 2] <- drop(t(resid) %*% resid)
         }

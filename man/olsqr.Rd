@@ -2,7 +2,7 @@
 % Please edit documentation in R/olsqr.R
 \name{olsqr}
 \alias{olsqr}
-\title{Getting OLS estimates of betas, residuals, forecasted values and t-values.}
+\title{Custom OLS with extra information}
 \usage{
 olsqr(y, x)
 }

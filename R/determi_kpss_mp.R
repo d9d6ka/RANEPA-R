@@ -1,5 +1,13 @@
-#' Procedure to compute deterministic terms
-#' for KPSS with 2 structural breaks.
+#' @title
+#' Deterministic terms for multi-break KPSS
+#'
+#' @description
+#' Procedure to compute deterministic terms for KPSS with 2 structural breaks.
+#'
+#' @details
+#' **model** should be either a scalar or a vector of the same size as the
+#' **break.point**. If scalar **model** will be repeated till the length of
+#' **break.point** is achieved.
 #'
 #' @param model A scalar or vector of
 #' \describe{
@@ -9,15 +17,17 @@
 #' }
 #' @param N Number of observations.
 #' @param break.point Array of structural breaks.
-#' @param trend Include trend if `TRUE`.
+#' @param const Include constant if **TRUE**.
+#' @param trend Include trend if **TRUE**.
 #'
 #' @return Matrix of deterministic terms.
-determi_kpss_mp <- function(model, N, break.point, const = FALSE, trend = FALSE) { # nolint
+determi_kpss_mp <- function(model, N, break.point, # nolint
+                            const = FALSE, trend = FALSE) {
     ntb <- length(break.point)
     if (length(model) == 1)
         model <- rep(model, ntb)
     else if (length(model) != ntb)
-        stop("ERROR! Inconsistent sizes of `model` and `break.point`")
+        stop("ERROR! Inconsistent sizes of model and break.point")
 
     xt <- NULL
     if (const)

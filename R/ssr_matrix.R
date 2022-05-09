@@ -1,3 +1,4 @@
+#' @title
 #' Pre-calculate matrix of recursive SSR values.
 #'
 #' @param y Dependent variable.
