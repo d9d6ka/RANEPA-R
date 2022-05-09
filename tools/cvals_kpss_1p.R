@@ -1,4 +1,4 @@
-coi_end_vc = list(
+.cval_kpss_1p = list(
     list(
         matrix(
             data = c(0.0182, 0.0180, 0.0177, 0.0177, 0.0174, 0.0172, 0.0175, 0.0178, 0.0182,
@@ -300,5 +300,3 @@ coi_end_vc = list(
         )
     )
 )
-
-save(coi_end_vc, file = "sysdata.rda")

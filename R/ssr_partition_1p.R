@@ -1,5 +1,5 @@
 #' @title
-#' Procedure to minimize the SSR for 2 break points
+#' Procedure to minimize the SSR for 1 break point
 #'
 #' @param beg Sample begin.
 #' @param end Sample end.

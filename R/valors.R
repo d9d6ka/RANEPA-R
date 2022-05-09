@@ -1,6 +1,6 @@
 #' @export
-valors <- function(model, lambda, k) {
-    m_vc <- coi_end_vc[[model]][[k]]
+critical_values_kpss_1p <- function(model, lambda, k) {
+    m_vc <- .cval_kpss_1p[[model]][[k]]
     if (0 < lambda & lambda <= 0.15)
         v_vc <- m_vc[, 1, drop = FALSE]
     else if (0.15 < lambda & lambda <= 0.25)
@@ -23,4 +23,9 @@ valors <- function(model, lambda, k) {
         stop("ERROR! Try to specify the value of lambda again")
 
     return(v_vc)
+}
+
+#' export
+critical_values_kpss_2p <- function(model, lambda1, lambda2) {
+    return(0)
 }
