@@ -14,6 +14,8 @@ determi_kpss_2p(model, N, break.point)
 \item{3}{for the BB model.}
 \item{4}{for the CC model.}
 \item{5}{for the AC-CA model.}
+\item{6}{for the AC-CA model.}
+\item{7}{for the AC-CA model.}
 }}
 
 \item{N}{Number of observations.}

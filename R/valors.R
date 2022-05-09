@@ -10,7 +10,7 @@ critical_values_kpss_1p <- function(model, break.point, N, k) { # nolint
     return(m_vc[, i, drop = FALSE])
 }
 
-#' export
+#' @export
 critical_values_kpss_2p <- function(model, break.point, N) {
     lambda1 <- round(break.point[1] / N, 1)
     i <- trunc(lambda1 * 10)

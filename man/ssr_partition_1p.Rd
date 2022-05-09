@@ -2,7 +2,7 @@
 % Please edit documentation in R/ssr_partition_1p.R
 \name{ssr_partition_1p}
 \alias{ssr_partition_1p}
-\title{Procedure to minimize the SSR for 2 break points}
+\title{Procedure to minimize the SSR for 1 break point}
 \usage{
 ssr_partition_1p(beg, end, first_b, last_b, len, ssr_data)
 }
@@ -27,5 +27,5 @@ List containing
 }
 }
 \description{
-Procedure to minimize the SSR for 2 break points
+Procedure to minimize the SSR for 1 break point
 }
