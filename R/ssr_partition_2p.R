@@ -43,7 +43,7 @@ ssr_partition_2p <- function(y, model) {
             }
         }
     }
-    else if (model == 5) {
+    else if (5 <= model & model <= 7) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
                 z <- determi_kpss_2p(model, N, c(i, j))

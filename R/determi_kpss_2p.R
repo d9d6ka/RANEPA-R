@@ -7,6 +7,8 @@
 #' \item{3}{for the BB model.}
 #' \item{4}{for the CC model.}
 #' \item{5}{for the AC-CA model.}
+#' \item{6}{for the AC-CA model.}
+#' \item{7}{for the AC-CA model.}
 #' }
 #' @param N Number of observations.
 #' @param break.point Positions for the first and second structural breaks
@@ -78,6 +80,18 @@ determi_kpss_2p <- function(model, N, break.point) { # nolint
             matrix(data = 0, nrow = break.point[1], ncol = 1),
             matrix(data = 1, nrow = N - break.point[1], ncol = 1)
         )
+        dt2 <- rbind(
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1:(N - break.point[2]),
+                   nrow = N - break.point[2], ncol = 1)
+        )
+        xt <- cbind(cns, tend, du1, dt2)
+    }
+    else if (model == 6) {
+        du1 <- rbind(
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[1], ncol = 1)
+        )
         du2 <- rbind(
             matrix(data = 0, nrow = break.point[2], ncol = 1),
             matrix(data = 1, nrow = N - break.point[2], ncol = 1)
@@ -88,6 +102,23 @@ determi_kpss_2p <- function(model, N, break.point) { # nolint
                    nrow = N - break.point[1], ncol = 1)
         )
         xt <- cbind(cns, tend, du1, dt1, du2)
+    }
+    else if (model == 7) {
+        du1 <- rbind(
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1, nrow = N - break.point[1], ncol = 1)
+        )
+        dt1 <- rbind(
+            matrix(data = 0, nrow = break.point[1], ncol = 1),
+            matrix(data = 1:(N - break.point[1]),
+                   nrow = N - break.point[1], ncol = 1)
+        )
+        dt2 <- rbind(
+            matrix(data = 0, nrow = break.point[2], ncol = 1),
+            matrix(data = 1:(N - break.point[2]),
+                   nrow = N - break.point[2], ncol = 1)
+        )
+        xt <- cbind(cns, tend, du1, dt1, dt2)
     }
     else
         stop("Try to speciy another model")
