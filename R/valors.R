@@ -1,31 +1,33 @@
 #' @export
-critical_values_kpss_1p <- function(model, lambda, k) {
-    m_vc <- .cval_kpss_1p[[model]][[k]]
-    if (0 < lambda & lambda <= 0.15)
-        v_vc <- m_vc[, 1, drop = FALSE]
-    else if (0.15 < lambda & lambda <= 0.25)
-        v_vc <- m_vc[, 2, drop = FALSE]
-    else if (0.25 < lambda & lambda <= 0.35)
-        v_vc <- m_vc[, 3, drop = FALSE]
-    else if (0.35 < lambda & lambda <= 0.45)
-        v_vc <- m_vc[, 4, drop = FALSE]
-    else if (0.45 < lambda & lambda <= 0.55)
-        v_vc <- m_vc[, 5, drop = FALSE]
-    else if (0.55 < lambda & lambda <= 0.65)
-        v_vc <- m_vc[, 6, drop = FALSE]
-    else if (0.65 < lambda & lambda <= 0.75)
-        v_vc <- m_vc[, 7, drop = FALSE]
-    else if (0.75 < lambda & lambda <= 0.85)
-        v_vc <- m_vc[, 8, drop = FALSE]
-    else if (0.85 < lambda & lambda < 1)
-        v_vc <- m_vc[, 9, drop = FALSE]
-    else
-        stop("ERROR! Try to specify the value of lambda again")
+critical_values_kpss_1p <- function(model, break.point, N, k) { # nolint
+    lambda <- break.point / N
+    i <- trunc(lambda * 10)
+    if (i == 0) i <- 1
+    if (i == 10) i <- 9
 
-    return(v_vc)
+    m_vc <- .cval_kpss_1p[[model]][[k]]
+
+    return(m_vc[, i, drop = FALSE])
 }
 
 #' export
-critical_values_kpss_2p <- function(model, lambda1, lambda2) {
-    return(0)
+critical_values_kpss_2p <- function(model, break.point, N) {
+    lambda1 <- round(break.point[1] / N, 1)
+    i <- trunc(lambda1 * 10)
+
+    lambda2 <- round(break.point[2] / N, 1)
+    j <- trunc(lambda2 * 10)
+    if (1 <= model & model <= 4)
+        j <- j - 1
+
+    v_vc <- .cval_kpss_2p[[model]]
+
+    return(
+        c(
+            v_vc[1][i, j],
+            v_vc[2][i, j],
+            v_vc[3][i, j],
+            v_vc[4][i, j]
+        )
+    )
 }
