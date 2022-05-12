@@ -1,4 +1,9 @@
+#' @title
 #' Construct determinant variables.
+#'
+#' @details
+#' Procedure to compute deterministic terms
+#' for KPSS with 1 structural break.
 #'
 #' @param model \describe{
 #' \item{1}{Model with trend, break in const.}

@@ -26,7 +26,8 @@ determi_kpss_mp(model, N, break.point, const = FALSE, trend = FALSE)
 Matrix of deterministic terms.
 }
 \description{
-Procedure to compute deterministic terms for KPSS with 2 structural breaks.
+Procedure to compute deterministic terms
+for KPSS with \eqn{m} structural breaks.
 }
 \details{
 **model** should be either a scalar or a vector of the same size as the

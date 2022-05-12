@@ -24,3 +24,7 @@ Matrix of determinant variables.
 \description{
 Construct determinant variables.
 }
+\details{
+Procedure to compute deterministic terms
+for KPSS with 1 structural break.
+}

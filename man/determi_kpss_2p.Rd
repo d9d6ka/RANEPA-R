@@ -2,8 +2,7 @@
 % Please edit documentation in R/determi_kpss_2p.R
 \name{determi_kpss_2p}
 \alias{determi_kpss_2p}
-\title{Procedure to compute deterministic terms
-for KPSS with 2 structural breaks.}
+\title{Construct determinant variables.}
 \usage{
 determi_kpss_2p(model, N, break.point)
 }
@@ -27,6 +26,9 @@ determi_kpss_2p(model, N, break.point)
 Matrix of deterministic terms.
 }
 \description{
+Construct determinant variables.
+}
+\details{
 Procedure to compute deterministic terms
 for KPSS with 2 structural breaks.
 }

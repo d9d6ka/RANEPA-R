@@ -1,6 +1,9 @@
 #' @title
 #' Procedure to minimize the SSR for 1 break point
 #'
+#' @details
+#' See Carrion-i-Silvestre and Sansó (2006) for further details.
+#'
 #' @param beg Sample begin.
 #' @param end Sample end.
 #' @param first_b First possible break point.

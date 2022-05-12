@@ -8,7 +8,7 @@
 #'
 #' The code provided is the original GAUSS code ported to R.
 #'
-#' See Carrion-i-Silvestre and Sansó (2006) for further details.
+#' See Carrion-i-Silvestre and Sansó (2007) for further details.
 #'
 #' @param y (Tx1)-vector of time series
 #' @param model \describe{

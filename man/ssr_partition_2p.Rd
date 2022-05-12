@@ -28,3 +28,6 @@ List containing
 \description{
 Procedure to minimize the SSR for 2 break points
 }
+\details{
+See Carrion-i-Silvestre and Sansó (2007) for further details.
+}

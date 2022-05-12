@@ -13,6 +13,8 @@ m  <- 5
 
 e <- rnorm(N + m + 10, mean = 0, sd = sd)
 
+library(breaktest)
+
 # 1 break
 
 end_0 <- N + 10

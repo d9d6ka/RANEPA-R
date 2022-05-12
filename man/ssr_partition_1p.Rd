@@ -29,3 +29,6 @@ List containing
 \description{
 Procedure to minimize the SSR for 1 break point
 }
+\details{
+See Carrion-i-Silvestre and Sansó (2006) for further details.
+}

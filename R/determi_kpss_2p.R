@@ -1,3 +1,7 @@
+#' @title
+#' Construct determinant variables.
+#'
+#' @details
 #' Procedure to compute deterministic terms
 #' for KPSS with 2 structural breaks.
 #'
