@@ -13,13 +13,13 @@
 alrvr <- function(e) {
     if (!is.matrix(e)) e <- as.matrix(e)
 
-    N <- nrow(e) # nolint
+    N <- nrow(e)
     k <- 0.8
     a <- qr.solve(t(e[1:(N - 1)]) %*% e[1:(N - 1)]) %*%
         t(e[1:(N - 1)]) %*% e[2:N]
     l <- min(
-        1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3), # nolint
-        1.1447 * (4 * k^2 * N / ((1 + k)^2 * (1 - k)^2))^(1 / 3)  # nolint
+        1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3),
+        1.1447 * (4 * k^2 * N / ((1 + k)^2 * (1 - k)^2))^(1 / 3) 
     )
     l <- trunc(l)
     lrv <- drop(t(e) %*% e) / N

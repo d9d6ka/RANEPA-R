@@ -1,5 +1,5 @@
 #' @export
-critical_values_kpss_1p <- function(model, break.point, N, k) { # nolint
+critical_values_kpss_1p <- function(model, break.point, N, k) {
     lambda <- round(break.point / N, 1)
     i <- trunc(lambda * 10)
     if (i == 0) i <- 1

@@ -7,7 +7,7 @@
 #' @return Lagged or leaded vector.
 lagn <- function(x, i) {
     if (!is.matrix(x)) x <- as.matrix(x)
-    N <- nrow(x) # nolint
+    N <- nrow(x)
     k <- ncol(x)
     if (i > 0)
         return(

@@ -1,81 +1,81 @@
 #' @import MASS
-dols <- function(y, x, model, break.point, k.lags, k.leads) { # nolint
+dols <- function(y, x, model, break.point, k.lags, k.leads) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y) # nolint
+    N <- nrow(y)
 
-    d_x_step <- x[2:N, , drop = FALSE] - x[1:(N - 1), , drop = FALSE] # nolint
-    d_x <- d_x_step
-    d_x_r <- d_x_step
+    d.x.step <- x[2:N, , drop = FALSE] - x[1:(N - 1), , drop = FALSE]
+    d.x.lag <- d.x.step
+    d.x.lead <- d.x.step
 
     for (i in 1:k.lags) {
-        d_x <- cbind(
-            d_x,
-            lagn(d_x_step, i)
+        d.x.lag <- cbind(
+            d.x.lag,
+            lagn(d.x.step, i)
         )
     }
 
     for (i in 1:k.leads) {
-        d_x_r <- cbind(
-            d_x_r,
-            lagn(d_x_step, -i)
+        d.x.lead <- cbind(
+            d.x.lead,
+            lagn(d.x.step, -i)
         )
     }
 
     if (k.lags != 0 & k.leads != 0) {
-        lags <- d_x
-        leads <- d_x_r[, (ncol(x) + 1):(ncol(d_x_r)), drop = FALSE]
-        lags_leads <- cbind(lags, leads)
-        lags_leads <- lags_leads[(k.lags + 1):(N - 1 - k.leads), , drop = FALSE]
+        lags <- d.x.lag
+        leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
+        lags.leads <- cbind(lags, leads)
+        lags.leads <- lags.leads[(k.lags + 1):(N - 1 - k.leads), , drop = FALSE]
     }
     else if (k.lags != 0 & k.leads == 0) {
-        lags <- d_x
-        lags_leads <- lags[(k.lags + 1):(N - 1), , drop = FALSE]
+        lags <- d.x.lag
+        lags.leads <- lags[(k.lags + 1):(N - 1), , drop = FALSE]
     }
     else if (k.lags == 0 & k.leads != 0) {
-        lags <- d_x
-        leads <- d_x_r[, (ncol(x) + 1):(ncol(d_x_r)), drop = FALSE]
-        lags_leads <- cbind(lags, leads)
-        lags_leads <- lags_leads[1:(N - 1 - k.leads), , drop = FALSE]
+        lags <- d.x.lag
+        leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
+        lags.leads <- cbind(lags, leads)
+        lags.leads <- lags.leads[1:(N - 1 - k.leads), , drop = FALSE]
     }
     else if (k.lags == 0 & k.leads == 0) {
-        lags_leads <- d_x
+        lags.leads <- d.x.lag
     }
 
     if (model == 0) {
         xreg <- cbind(
             x[(k.lags + 2):(N - k.leads), , drop = FALSE],
-            lags_leads
+            lags.leads
         )
     }
     else if (model >= 1 & model <= 4) {
-        deter <- determi_kpss_1p(model, N, break.point)
+        deter <- determinants.kpss.1.break(model, N, break.point)
         xreg <- cbind(
             deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
             x[(k.lags + 2):(N - k.leads), , drop = FALSE],
-            lags_leads
+            lags.leads
         )
     }
     else if (model == 5) {
-        deter <- determi_kpss_1p(1, N, break.point)
+        deter <- determinants.kpss.1.break(1, N, break.point)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
             deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
             x[(k.lags + 2):(N - k.leads), , drop = FALSE],
             xdu[(k.lags + 2):(N - k.leads), , drop = FALSE],
-            lags_leads
+            lags.leads
         )
     }
     else if (model == 6) {
-        deter <- determi_kpss_1p(4, N, break.point)
+        deter <- determinants.kpss.1.break(4, N, break.point)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
             deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
             x[(k.lags + 2):(N - k.leads), , drop = FALSE],
             xdu[(k.lags + 2):(N - k.leads), , drop = FALSE],
-            lags_leads
+            lags.leads
         )
     }
 
@@ -86,7 +86,7 @@ dols <- function(y, x, model, break.point, k.lags, k.leads) { # nolint
 
     s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
 
-    t_beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(xreg) %*% xreg))))
+    t.beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(xreg) %*% xreg))))
 
     bic <- log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
 
@@ -95,7 +95,7 @@ dols <- function(y, x, model, break.point, k.lags, k.leads) { # nolint
             beta   = beta,
             resid  = resid,
             bic    = bic,
-            t_beta = t_beta
+            t.beta = t.beta
         )
     )
 }

@@ -15,13 +15,13 @@ olsqr <- function(y, x) {
     predict <- x %*% beta
     resid <- y - predict
     s2 <- drop(t(resid) %*% resid) / (nrow(x) - ncol(x))
-    t_b <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(x) %*% x))))
+    t.beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(x) %*% x))))
     return(
         list(
             beta = beta,
             resid = resid,
             predict = predict,
-            t_beta = t_b
+            t.beta = t.beta
         )
     )
 }
