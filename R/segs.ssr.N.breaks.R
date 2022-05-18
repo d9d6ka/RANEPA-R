@@ -12,27 +12,27 @@
 #' @return List of 2 elements: optimal SSR and the vector of breaks.
 #'
 #' @export
-segs.ssr.N.breaks <- function(y, x, m = 1, width = 2, ssr.data = NULL) {
+segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y)
 
-    if (is.null(ssr.data))
-        ssr.data <- ssr.matrix(y, x, width)
+    if (is.null(SSR.data))
+        SSR.data <- SSR.matrix(y, x, width)
 
     if (m == 1) {
-        tmp.result <- segs.ssr.1.break(
+        tmp.result <- segs.SSR.1.break(
             1, N,
             width, N - width + 1,
-            N, ssr.data
+            N, SSR.data
         )
-        optimal.ssr <- tmp.result$ssr
+        optimal.SSR <- tmp.result$SSR
         optimal.break <- tmp.result$break.point
     }
     else {
         variants <- N - (m + 1) * width + 1
-        step.ssr <- matrix(
+        step.SSR <- matrix(
             data = Inf,
             nrow = variants,
             ncol = 1
@@ -43,7 +43,7 @@ segs.ssr.N.breaks <- function(y, x, m = 1, width = 2, ssr.data = NULL) {
             ncol = m
         )
         for (step in 1:m) {
-            temp.ssr <- matrix(
+            temp.SSR <- matrix(
                 data = Inf,
                 nrow = variants,
                 ncol = 1
@@ -51,30 +51,30 @@ segs.ssr.N.breaks <- function(y, x, m = 1, width = 2, ssr.data = NULL) {
             if (step == 1) {
                 for (v in 1:variants) {
                     step.end <- 2 * width + v - 1
-                    tmp_res <- segs.ssr.1.break(
+                    tmp_res <- segs.SSR.1.break(
                         1,
                         step.end,
                         width,
                         step.end - width,
                         N,
-                        ssr.data
+                        SSR.data
                     )
-                    step.ssr[v, 1] <- tmp_res$ssr
+                    step.SSR[v, 1] <- tmp_res$SSR
                     step.break[v, 1] <- tmp_res$break.point
                 }
             }
             else if (step == m) {
                 for (v in 1:variants) {
-                    temp.ssr[v, 1] <- step.ssr[v, 1] +
-                        ssr.data[step * width + v, N]
+                    temp.SSR[v, 1] <- step.SSR[v, 1] +
+                        SSR.data[step * width + v, N]
                 }
-                optimal.ssr <- min(temp.ssr)
-                optimal.index <- which.min(temp.ssr)
+                optimal.SSR <- min(temp.SSR)
+                optimal.index <- which.min(temp.SSR)
                 optimal.break <- step.break[optimal.index, ]
                 optimal.break[m] <- step * width + optimal.index - 1
             }
             else {
-                next.ssr <- matrix(
+                next.SSR <- matrix(
                     data = Inf,
                     nrow = variants,
                     ncol = 1
@@ -87,15 +87,15 @@ segs.ssr.N.breaks <- function(y, x, m = 1, width = 2, ssr.data = NULL) {
                 for (step.end in ((step + 1) * width):(N - (m - step) * width)) {
                     next.v <- step.end - (step + 1) * width + 1
                     for (v in 1:variants) {
-                        temp.ssr[v, 1] <- step.ssr[v, 1] +
-                            ssr.data[step * width + v, step.end]
+                        temp.SSR[v, 1] <- step.SSR[v, 1] +
+                            SSR.data[step * width + v, step.end]
                     }
-                    next.ssr[next.v, 1] <- min(temp.ssr)
-                    next.index <- which.min(temp.ssr)
+                    next.SSR[next.v, 1] <- min(temp.SSR)
+                    next.index <- which.min(temp.SSR)
                     next.break[next.v, 1:m] <- step.break[next.index, ]
                     next.break[next.v, step] <- step * width + next.index - 1
                 }
-                step.ssr <- next.ssr
+                step.SSR <- next.SSR
                 step.break <- next.break
             }
         }
@@ -103,7 +103,7 @@ segs.ssr.N.breaks <- function(y, x, m = 1, width = 2, ssr.data = NULL) {
 
     return(
         list(
-            ssr = optimal.ssr,
+            SSR = optimal.SSR,
             break.point = optimal.break
         )
     )

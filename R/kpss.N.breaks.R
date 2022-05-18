@@ -36,17 +36,17 @@
 #'
 #' @return \describe{
 #' \item{beta}{DOLS estimates of the coefficients regressors.}
-#' \item{tests}{SC test (coinkpss-test).}
+#' \item{tests}{SC test (coinKPSS-test).}
 #' \item{resid}{Residuals of the model.}
 #' \item{t.beta}{t-statistics for `beta`.}
-#' \item{dols.lags}{The estimated number of lags and leads in DOLS.}
+#' \item{DOLS.lags}{The estimated number of lags and leads in DOLS.}
 #' \item{break_point}{Break points.}
 #' }
 #'
 #' @importFrom zeallot %<-%
 #'
 #' @export
-kpss.N.breaks <- function(y, x,
+KPSS.N.breaks <- function(y, x,
                           model, break.point,
                           const = FALSE, trend = FALSE,
                           weakly.exog = TRUE,
@@ -60,23 +60,23 @@ kpss.N.breaks <- function(y, x,
     if (weakly.exog) {
         xt <- cbind(
             x,
-            determinants.kpss.N.breaks(model, N, break.point, const, trend)
+            determinants.KPSS.N.breaks(model, N, break.point, const, trend)
         )
 
-        c(beta, resid, ., t.beta) %<-% olsqr(y, xt)
-        dols.lags <- 0
+        c(beta, resid, ., t.beta) %<-% OLS(y, xt)
+        DOLS.lags <- 0
     }
     else {
         bic.min <- 100000000
         for (i in ll.init:1) {
             c(beta, resid, bic, t.beta) %<-%
-                dols.N.breaks(y, x, model, break.point, const, trend, i, i)
+                DOLS.N.breaks(y, x, model, break.point, const, trend, i, i)
             if (bic < bic.min) {
                 bic.min <- bic
                 beta.min <- beta
                 t.beta.min <- t.beta
                 resid.min <- resid
-                dols.lags <- i
+                DOLS.lags <- i
             }
         }
         resid <- resid.min
@@ -96,7 +96,7 @@ kpss.N.breaks <- function(y, x,
             test   = test,
             resid  = resid,
             t.beta = t.beta,
-            dols.lags = dols.lags,
+            DOLS.lags = DOLS.lags,
             break.point = break.point
         )
     )

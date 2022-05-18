@@ -29,7 +29,7 @@
 #'
 #' @return \describe{
 #' \item{beta}{DOLS estimates of the coefficients regressors.}
-#' \item{tests}{SC test (coinkpss-test).}
+#' \item{tests}{SC test (coinKPSS-test).}
 #' \item{resid}{Residuals of the model.}
 #' \item{t.beta}{Individual significance t-statistics.}
 #' \item{break_point}{Break points.}
@@ -38,7 +38,7 @@
 #' @import MASS
 #' @importFrom zeallot %<-%
 #' @export
-kpss.1.break <- function(y, x,
+KPSS.1.break <- function(y, x,
                           model, break.point,
                           weakly.exog = TRUE, ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -54,27 +54,27 @@ kpss.1.break <- function(y, x,
         if (model == 0)
             xt <- x
         else if (1 <= model & model <= 4) {
-            deter <- determinants.kpss.1.break(model, N, break.point)
+            deter <- determinants.KPSS.1.break(model, N, break.point)
             xt <- cbind(deter, x)
         }
         else if (model == 5) {
-            deter <- determinants.kpss.1.break(1, N, break.point)
+            deter <- determinants.KPSS.1.break(1, N, break.point)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }
         else if (model == 6) {
-            deter <- determinants.kpss.1.break(4, N, break.point)
+            deter <- determinants.KPSS.1.break(4, N, break.point)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }
 
-        c(beta, resid, ., t.beta) %<-% olsqr(y, xt)
+        c(beta, resid, ., t.beta) %<-% OLS(y, xt)
     }
     else {
         bic.min <- 100000000
         for (i in ll.init:1) {
             c(beta, resid, bic, t.beta) %<-%
-                dols(y, x, model, break.point, i, i)
+                DOLS(y, x, model, break.point, i, i)
             if (bic < bic.min) {
                 bic.min <- bic
                 beta.min <- beta

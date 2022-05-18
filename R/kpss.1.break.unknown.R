@@ -41,7 +41,7 @@
 #'
 #' @importFrom zeallot %<-%
 #' @export
-kpss.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
+KPSS.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -52,7 +52,7 @@ kpss.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
     for (i in 3:(N-3)) {
         if (ll.init + 2 < i & i < N - 5 - ll.init) {
             c(beta, tests, resid, t_b, tb) %<-%
-                kpss.1.break(y, x, model, i, weakly.exog, ll.init)
+                KPSS.1.break(y, x, model, i, weakly.exog, ll.init)
             temp.result[i - 2, 1] <- tests
             temp.result[i - 2, 2] <- drop(t(resid) %*% resid)
         }

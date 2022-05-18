@@ -22,7 +22,7 @@
 #' @param trend Include trend if **TRUE**.
 #'
 #' @return Matrix of deterministic terms.
-determinants.kpss.N.breaks <- function(model, N, break.point,
+determinants.KPSS.N.breaks <- function(model, N, break.point,
                             const = FALSE, trend = FALSE) {
     ntb <- length(break.point)
     if (length(model) == 1)

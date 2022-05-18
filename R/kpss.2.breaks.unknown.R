@@ -33,12 +33,12 @@
 #'
 #' @importFrom zeallot %<-%
 #' @export
-kpss.2.breaks.unknown <- function(y, model, kmax = 0, kernel = "bartlett") {
+KPSS.2.breaks.unknown <- function(y, model, kmax = 0, kernel = "bartlett") {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
 
-    c(resid, tb1, tb2) %<-% segs.ssr.2.breaks(y, model)
+    c(resid, tb1, tb2) %<-% segs.SSR.2.breaks(y, model)
 
     S.t <- apply(resid, 2, cumsum)
 

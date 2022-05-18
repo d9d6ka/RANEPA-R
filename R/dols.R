@@ -1,5 +1,5 @@
 #' @import MASS
-dols <- function(y, x, model, break.point, k.lags, k.leads) {
+DOLS <- function(y, x, model, break.point, k.lags, k.leads) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)
@@ -51,7 +51,7 @@ dols <- function(y, x, model, break.point, k.lags, k.leads) {
         )
     }
     else if (model >= 1 & model <= 4) {
-        deter <- determinants.kpss.1.break(model, N, break.point)
+        deter <- determinants.KPSS.1.break(model, N, break.point)
         xreg <- cbind(
             deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
             x[(k.lags + 2):(N - k.leads), , drop = FALSE],
@@ -59,7 +59,7 @@ dols <- function(y, x, model, break.point, k.lags, k.leads) {
         )
     }
     else if (model == 5) {
-        deter <- determinants.kpss.1.break(1, N, break.point)
+        deter <- determinants.KPSS.1.break(1, N, break.point)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
             deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
@@ -69,7 +69,7 @@ dols <- function(y, x, model, break.point, k.lags, k.leads) {
         )
     }
     else if (model == 6) {
-        deter <- determinants.kpss.1.break(4, N, break.point)
+        deter <- determinants.KPSS.1.break(4, N, break.point)
         xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
         xreg <- cbind(
             deter[(k.lags + 2):(N - k.leads), , drop = FALSE],

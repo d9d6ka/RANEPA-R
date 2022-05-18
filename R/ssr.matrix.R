@@ -8,7 +8,7 @@
 #' @return The matrix of recursive SSR values.
 #'
 #' @export
-ssr.matrix <- function(y, x, width = 2) {
+SSR.matrix <- function(y, x, width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -17,7 +17,7 @@ ssr.matrix <- function(y, x, width = 2) {
     result <- matrix(data = Inf, nrow = N, ncol = N)
 
     for (i in 1:(N - width + 1)) {
-        result[i, 1:N] <- ssr.recursive(
+        result[i, 1:N] <- SSR.recursive(
             y, x, i, N, width
         )
     }

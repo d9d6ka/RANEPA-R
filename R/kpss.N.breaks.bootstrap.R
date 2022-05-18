@@ -57,7 +57,7 @@
 #' @importFrom zeallot %<-%
 #'
 #' @export
-kpss.N.breaks.bootstrap <- function(y, x,
+KPSS.N.breaks.bootstrap <- function(y, x,
                               model, break.point,
                               const = FALSE, trend = FALSE,
                               weakly.exog = TRUE,
@@ -70,8 +70,8 @@ kpss.N.breaks.bootstrap <- function(y, x,
 
     N <- nrow(y)
 
-    c(., test, u, ., dols.lags, .) %<-%
-        kpss.N.breaks(
+    c(., test, u, ., DOLS.lags, .) %<-%
+        KPSS.N.breaks(
             y, x,
             model, break.point,
             const, trend,
@@ -82,16 +82,16 @@ kpss.N.breaks.bootstrap <- function(y, x,
     if (weakly.exog) {
         xreg <- cbind(
             x,
-            determinants.kpss.N.breaks(model, N, break.point, const, trend)
+            determinants.KPSS.N.breaks(model, N, break.point, const, trend)
         )
     }
     else {
         c(., xreg) %<-%
-            dols.vars.N.breaks(
+            DOLS.vars.N.breaks(
                 y, x,
                 model, break.point,
                 const, trend,
-                dols.lags, dols.lags
+                DOLS.lags, DOLS.lags
             )
     }
 
@@ -120,7 +120,7 @@ kpss.N.breaks.bootstrap <- function(y, x,
             temp.y <- z * u
         }
 
-        c(beta, resid, ., t.beta) %<-% olsqr(temp.y, xreg)
+        c(beta, resid, ., t.beta) %<-% OLS(temp.y, xreg)
 
         S.t <- apply(resid, 2, cumsum)
         if (!is.null(kernel))

@@ -19,7 +19,7 @@
 #'            (respective to the origin which is 1).
 #'
 #' @return Matrix of deterministic terms.
-determinants.kpss.2.breaks <- function(model, N, break.point) {
+determinants.KPSS.2.breaks <- function(model, N, break.point) {
     cns <- matrix(data = 1, nrow = N, ncol = 1)
     tend <- matrix(data = 1:N, nrow = N, ncol = 1)
 

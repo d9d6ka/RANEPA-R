@@ -16,7 +16,7 @@
 #'
 #' @return Matrix of determinant variables.
 #'
-determinants.kpss.1.break <- function(model, N, break.point) {
+determinants.KPSS.1.break <- function(model, N, break.point) {
     du <- rbind(
         matrix(data = 0, nrow = break.point, ncol = 1),
         matrix(data = 1, nrow = N - break.point, ncol = 1)

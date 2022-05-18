@@ -83,20 +83,20 @@ data2 <- data.frame(C = rep(1, 1005),
 #################
 # Tests 1 break #
 #################
-ssr.1 <- ssr.matrix(data$Y_ab, cbind(data$C, data$dY_ab), width = 4)
+SSR.1 <- SSR.matrix(data$Y_ab, cbind(data$C, data$dY_ab), width = 4)
 
 res.1.1 <- dating(as.matrix(data$Y_ab), as.matrix(cbind(data$C, data$dY_ab)), 4, 1, 1, 1005)
-res.1.2 <- segs.ssr.N.breaks(data$Y_ab, cbind(data$C, data$dY_ab), 1, width = 4, ssr.data = ssr.1)
+res.1.2 <- segs.SSR.N.breaks(data$Y_ab, cbind(data$C, data$dY_ab), 1, width = 4, SSR.data = SSR.1)
 
 res.1.1$datevec
 res.1.1$glb
 
 res.1.2$break.point
-res.1.2$ssr
+res.1.2$SSR
 
 # Carrion-i-Silvestre and Sansó 2006 OBES
-kpss.1.2 <- kpss.1.break(data$Y_ab, data$dY_ab, 1, res.1.2$break.point, FALSE, 4)
-kpss.1.2b <- kpss.N.breaks(data$Y_ab,
+KPSS.1.2 <- KPSS.1.break(data$Y_ab, data$dY_ab, 1, res.1.2$break.point, FALSE, 4)
+KPSS.1.2b <- KPSS.N.breaks(data$Y_ab,
                            data$dY_ab,
                            model = 1,
                            break.point = res.1.2$break.point,
@@ -106,7 +106,7 @@ kpss.1.2b <- kpss.N.breaks(data$Y_ab,
                            corr.max = 0,
                            kernel = NULL,
                            weakly.exog = FALSE)
-kpss.1.2boot <- kpss.N.breaks.bootstrap(data$Y_ab,
+KPSS.1.2boot <- KPSS.N.breaks.bootstrap(data$Y_ab,
                                         data$dY_ab,
                                         model = 1,
                                         break.point = res.1.2$break.point,
@@ -122,17 +122,17 @@ kpss.1.2boot <- kpss.N.breaks.bootstrap(data$Y_ab,
 ##################
 
 res.2.1 <- dating(as.matrix(data$Y_ab), as.matrix(cbind(data$C, data$dY_ab)), 4, 2, 1, 1005)
-res.2.2 <- segs.ssr.N.breaks(data2$Y_ab, cbind(data$C, data$dY_ab), 2, width = 4, ssr.data = ssr.1)
+res.2.2 <- segs.SSR.N.breaks(data2$Y_ab, cbind(data$C, data$dY_ab), 2, width = 4, SSR.data = SSR.1)
 
 res.2.1$datevec
 res.2.1$glb
 
 res.2.2$break.point
-res.2.2$ssr
+res.2.2$SSR
 
 # Carrion-i-Silvestre and Sansó 2007
-kpss.2.2 <- kpss.2.breaks(as.matrix(data$Y_ab), 1, res.2.2$break.point[1], res.2.2$break.point[2], 4, NULL)
-kpss.2.2b <- kpss.N.breaks(data$Y_ab,
+KPSS.2.2 <- KPSS.2.breaks(as.matrix(data$Y_ab), 1, res.2.2$break.point[1], res.2.2$break.point[2], 4, NULL)
+KPSS.2.2b <- KPSS.N.breaks(data$Y_ab,
                            data$dY_ab,
                            model = c(1, 1),
                            break.point = res.2.2$break.point,
@@ -142,7 +142,7 @@ kpss.2.2b <- kpss.N.breaks(data$Y_ab,
                            corr.max = 0,
                            kernel = NULL,
                            weakly.exog = FALSE)
-kpss.2.2boot <- kpss.N.breaks.bootstrap(data$Y_ab,
+KPSS.2.2boot <- KPSS.N.breaks.bootstrap(data$Y_ab,
                                         data$dY_ab,
                                         model = c(1, 1),
                                         break.point = res.2.2$break.point,

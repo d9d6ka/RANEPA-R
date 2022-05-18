@@ -40,7 +40,6 @@ alrvr.kernel <- function(e, max.lag = 0, kernel = "bartlett", criterion = "bic")
     rho <- 0
     res <- e
 
-
     for (i in 1:max.lag) {
         if (max.lag == 0) break
 

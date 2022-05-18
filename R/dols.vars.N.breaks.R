@@ -1,4 +1,4 @@
-dols.vars.N.breaks <- function(y, x,
+DOLS.vars.N.breaks <- function(y, x,
                             model, break.point,
                             const = FALSE, trend = FALSE,
                             k.lags, k.leads) {
@@ -45,7 +45,7 @@ dols.vars.N.breaks <- function(y, x,
     else if (k.lags == 0 & k.leads == 0) {
         lags.leads <- d.x.lag
     }
-    deter <- determinants.kpss.N.breaks(model, N, break.point, const, trend)
+    deter <- determinants.KPSS.N.breaks(model, N, break.point, const, trend)
 
     xreg <- cbind(
         deter[(k.lags + 2):(N - k.leads), , drop = FALSE],

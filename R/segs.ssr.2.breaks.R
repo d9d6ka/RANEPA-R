@@ -21,25 +21,25 @@
 #' }
 #'
 #' @importFrom zeallot %<-%
-segs.ssr.2.breaks <- function(y, model) {
+segs.SSR.2.breaks <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
 
     r.min <- 0
-    ssr.min <- 1000000
+    SSR.min <- 1000000
     tb1.min <- 0
     tb2.min <- 0
 
     if (1 <= model & model <= 4) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
-                z <- determinants.kpss.2.breaks(model, N, c(i, j))
-                c(., resid, p, .) %<-% olsqr(y, z)
-                ssr <- drop(t(resid) %*% resid)
-                if (ssr < ssr.min) {
+                z <- determinants.KPSS.2.breaks(model, N, c(i, j))
+                c(., resid, p, .) %<-% OLS(y, z)
+                SSR <- drop(t(resid) %*% resid)
+                if (SSR < SSR.min) {
                     r.min <- resid
-                    ssr.min <- ssr
+                    SSR.min <- SSR
                     tb1.min <- i
                     tb2.min <- j
                 }
@@ -49,12 +49,12 @@ segs.ssr.2.breaks <- function(y, model) {
     else if (5 <= model & model <= 7) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
-                z <- determinants.kpss.2.breaks(model, N, c(i, j))
-                c(beta, resid, p) %<-% olsqr(y, z)
-                ssr <- drop(t(resid) %*% resid)
-                if (ssr < ssr.min) {
+                z <- determinants.KPSS.2.breaks(model, N, c(i, j))
+                c(beta, resid, p) %<-% OLS(y, z)
+                SSR <- drop(t(resid) %*% resid)
+                if (SSR < SSR.min) {
                     r.min <- resid
-                    ssr.min <- ssr
+                    SSR.min <- SSR
                     tb1.min <- i
                     tb2.min <- j
                 }
@@ -62,12 +62,12 @@ segs.ssr.2.breaks <- function(y, model) {
         }
         for (j in 2:(N - 4)) {
             for (i in (j + 2):(N - 2)) {
-                z <- determinants.kpss.2.breaks(model, N, c(i, j))
-                c(beta, resid, p) %<-% olsqr(y, z)
-                ssr <- drop(t(resid) %*% resid)
-                if (ssr < ssr.min) {
+                z <- determinants.KPSS.2.breaks(model, N, c(i, j))
+                c(beta, resid, p) %<-% OLS(y, z)
+                SSR <- drop(t(resid) %*% resid)
+                if (SSR < SSR.min) {
                     r.min <- resid
-                    ssr.min <- ssr
+                    SSR.min <- SSR
                     tb1.min <- j
                     tb2.min <- i
                 }

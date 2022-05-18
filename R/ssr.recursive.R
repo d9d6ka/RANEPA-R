@@ -14,7 +14,7 @@
 #'
 #' @import MASS
 #' @importFrom zeallot %<-%
-ssr.recursive <- function(y, x, beg, end, width = 2) {
+SSR.recursive <- function(y, x, beg, end, width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -29,7 +29,7 @@ ssr.recursive <- function(y, x, beg, end, width = 2) {
     x.0 <- x[beg:(beg + width - 1), , drop = FALSE]
 
     inv.XX.0 <- qr.solve(t(x.0) %*% x.0)
-    c(beta.0, resid.0, ., .) %<-% olsqr(y.0, x.0)
+    c(beta.0, resid.0, ., .) %<-% OLS(y.0, x.0)
 
     for (step in beg:(beg + width - 2)) result[step, 1] <- 0
 

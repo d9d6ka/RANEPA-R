@@ -1,17 +1,17 @@
 #' @export
-critical_values_kpss_1p <- function(model, break.point, N, k) {
+critical_values_KPSS_1p <- function(model, break.point, N, k) {
     lambda <- round(break.point / N, 1)
     i <- trunc(lambda * 10)
     if (i == 0) i <- 1
     if (i == 10) i <- 9
 
-    m_vc <- .cval_kpss_1p[[model]][[k]]
+    m_vc <- .cval_KPSS_1p[[model]][[k]]
 
     return(m_vc[, i, drop = FALSE])
 }
 
 #' @export
-critical_values_kpss_2p <- function(model, break.point, N) {
+critical_values_KPSS_2p <- function(model, break.point, N) {
     lambda1 <- round(break.point[1] / N, 1)
     i <- trunc(lambda1 * 10)
 
@@ -20,7 +20,7 @@ critical_values_kpss_2p <- function(model, break.point, N) {
     if (1 <= model & model <= 4)
         j <- j - 1
 
-    v_vc <- .cval_kpss_2p[[model]]
+    v_vc <- .cval_KPSS_2p[[model]]
 
     return(
         c(

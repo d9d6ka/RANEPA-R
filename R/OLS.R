@@ -10,7 +10,7 @@
 #' @return The list of betas, residuals, forecasted values and t-values.
 #'
 #' @import MASS
-olsqr <- function(y, x) {
+OLS <- function(y, x) {
     beta <- qr.solve(t(x) %*% x) %*% t(x) %*% y
     predict <- x %*% beta
     resid <- y - predict

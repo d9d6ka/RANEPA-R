@@ -1,5 +1,5 @@
 #' @import MASS
-dols.N.breaks <- function(y, x,
+DOLS.N.breaks <- function(y, x,
                     model, break.point,
                     const = FALSE, trend = FALSE,
                     k.lags, k.leads) {
@@ -10,12 +10,12 @@ dols.N.breaks <- function(y, x,
     N <- nrow(y)
 
     c(yreg, xreg) %<-%
-        dols.vars.N.breaks(y, x,
+        DOLS.vars.N.breaks(y, x,
                            model, break.point,
                            const, trend,
                            k.lags, k.leads)
 
-    c(beta, resid, ., t.beta) %<-% olsqr(yreg, xreg)
+    c(beta, resid, ., t.beta) %<-% OLS(yreg, xreg)
 
     s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
 

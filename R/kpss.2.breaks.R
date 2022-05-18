@@ -32,20 +32,20 @@
 #'
 #' @return \describe{
 #' \item{beta}{DOLS estimates of the coefficients regressors.}
-#' \item{tests}{SC test (coinkpss-test).}
+#' \item{tests}{SC test (coinKPSS-test).}
 #' \item{resid}{Residuals of the model.}
 #' \item{break_point}{Break points.}
 #' }
 #'
 #' @importFrom zeallot %<-%
 #' @export
-kpss.2.breaks <- function(y, model, break.point, kmax, kernel) {
+KPSS.2.breaks <- function(y, model, break.point, kmax, kernel) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
 
-    z <- determinants.kpss.2.breaks(model, N, break.point)
-    c(beta, resid, ., t.beta) %<-% olsqr(y, z)
+    z <- determinants.KPSS.2.breaks(model, N, break.point)
+    c(beta, resid, ., t.beta) %<-% OLS(y, z)
 
     S.t <- apply(resid, 2, cumsum)
 
