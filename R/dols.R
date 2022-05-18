@@ -86,7 +86,7 @@ dols <- function(y, x, model, break.point, k.lags, k.leads) {
 
     s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
 
-    t.beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(xreg) %*% xreg))))
+    t.beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(xreg) %*% xreg))), `/`)
 
     bic <- log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
 
