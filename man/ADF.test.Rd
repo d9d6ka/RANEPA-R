@@ -4,7 +4,7 @@
 \alias{ADF.test}
 \title{ADF.test - simple implementation of ADF test}
 \usage{
-ADF.test(y, const = TRUE, trend = FALSE, max.lag = 0)
+ADF.test(y, const = TRUE, trend = FALSE, max.lag = 0, criterion = "bic")
 }
 \arguments{
 \item{y}{A variable of interest.}
@@ -14,6 +14,8 @@ ADF.test(y, const = TRUE, trend = FALSE, max.lag = 0)
 \item{trend}{Include trend to the model if TRUE.}
 
 \item{max.lag}{Maximum lag number}
+
+\item{criterion}{A criterion used to select number of lags.}
 }
 \value{
 List containing:
@@ -25,6 +27,7 @@ List containing:
 \item coefficient estimates
 \item t-statistic value
 \item critical value
+\item Number of lags
 \item indicator of stationarity}
 }
 \description{
