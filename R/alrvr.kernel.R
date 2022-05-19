@@ -55,14 +55,14 @@ alrvr.kernel <- function(e, max.lag = 0, kernel = "bartlett", criterion = "bic")
         res.temp <- temp[, 1, drop = FALSE] - x.temp %*% rho.temp
 
         if (criterion == "bic") {
-            bic <- log(drop(t(res.temp) %*% res.temp) / (N - max.lag)) +
-                (i * log(N - max.lag) / (N - max.lag))
+            bic <- log(drop(t(res.temp) %*% res.temp) / (N - i)) +
+                (i * log(N - i) / (N - i))
         } else if (criterion == "aic") {
-            bic <- log(drop(t(res.temp) %*% res.temp) / (N - max.lag)) +
-                2 * i / (N - max.lag)
+            bic <- log(drop(t(res.temp) %*% res.temp) / (N - i)) +
+                2 * i / (N - i)
         } else if (criterion == "lwz") {
-            bic <- log(drop(t(res.temp) %*% res.temp) / (N - max.lag)) +
-                0.299 * i * (log(N - max.lag))^2.1
+            bic <- log(drop(t(res.temp) %*% res.temp) / (N - i)) +
+                0.299 * i * (log(N - i))^2.1
         }
 
         if (bic < bic.min) {
