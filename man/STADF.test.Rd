@@ -11,7 +11,7 @@ STADF.test(
   omega.est = TRUE,
   h = "auto_CV",
   truncated = TRUE,
-  is_reindex = TRUE,
+  is.reindex = TRUE,
   ksi.input = "auto",
   hc = 1,
   pc = 1,

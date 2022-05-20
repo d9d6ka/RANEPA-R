@@ -1,3 +1,7 @@
+library(parallel)
+library(doSNOW)
+library(breaktest)
+
 hbm.sim <- function(N,
                     mu = 0,
                     tau,
@@ -70,14 +74,22 @@ sigma1 <- 1
 # delta_b1_sim - Bubble size.
 delta_b1_sim <- 0
 # NN_sim - Number of simulations.
-NN_sim <- 999
+NN_sim <- 9999
 
 progress.bar <- txtProgressBar(max = NN_sim, style = 3)
 progress <- function(n) setTxtProgressBar(progress.bar, n)
 
+cores <- detectCores()
+cluster <- makeCluster(max(cores - 1, 1))
+clusterExport(cluster, c("STADF.test", "GSTADF.test"))
+registerDoSNOW(cluster)
+
 # tau.break - Bubble period.
-.cval_SADF_without_const <- c()
-for (i in 1:NN_sim) {
+.cval_SADF_without_const <- foreach(
+    i = 1:NN_sim,
+    .combine = rbind,
+    .options.snow = list(progress = progress)
+) %dopar% {
     y <- hbm.sim(
         N = N_sim, tau = tau_sim, sigma0 = sigma0, sigma1 = sigma1,
         tau.break = c(0.4, 0.6, 1), delta.break = c(delta_b1_sim, 0)
@@ -85,13 +97,14 @@ for (i in 1:NN_sim) {
 
     model <- STADF.test(y$y, r0 = 0.1, const = FALSE, add.p.value = FALSE)
 
-    .cval_SADF_without_const[i] <- model$stadf.value
-
-    progress(i)
+    model$stadf.value
 }
 
-.cval_SADF_with_const <- c()
-for (i in 1:NN_sim) {
+.cval_SADF_with_const <- foreach(
+    i = 1:NN_sim,
+    .combine = rbind,
+    .options.snow = list(progress = progress)
+) %dopar% {
     y <- hbm.sim(
         N = N_sim, tau = tau_sim, sigma0 = sigma0, sigma1 = sigma1,
         tau.break = c(0.4, 0.6, 1), delta.break = c(delta_b1_sim, 0)
@@ -99,14 +112,15 @@ for (i in 1:NN_sim) {
 
     model <- STADF.test(y$y, r0 = 0.1, const = TRUE, add.p.value = FALSE)
 
-    .cval_SADF_with_const[i] <- model$stadf.value
-
-    progress(i)
+    model$stadf.value
 }
 
 # tau.break - Bubble period.
-.cval_GSADF_without_const <- c()
-for (i in 1:NN_sim) {
+.cval_GSADF_without_const <- foreach(
+    i = 1:NN_sim,
+    .combine = rbind,
+    .options.snow = list(progress = progress)
+) %dopar% {
     y <- hbm.sim(
         N = N_sim, tau = tau_sim, sigma0 = sigma0, sigma1 = sigma1,
         tau.break = c(0.4, 0.6, 1), delta.break = c(delta_b1_sim, 0)
@@ -114,13 +128,14 @@ for (i in 1:NN_sim) {
 
     model <- GSTADF.test(y$y, r0 = 0.1, const = FALSE, add.p.value = FALSE)
 
-    .cval_GSADF_without_const[i] <- model$gstadf.value
-
-    progress(i)
+    model$gstadf.value
 }
 
-.cval_GSADF_with_const <- c()
-for (i in 1:NN_sim) {
+.cval_GSADF_with_const <- foreach(
+    i = 1:NN_sim,
+    .combine = rbind,
+    .options.snow = list(progress = progress)
+) %dopar% {
     y <- hbm.sim(
         N = N_sim, tau = tau_sim, sigma0 = sigma0, sigma1 = sigma1,
         tau.break = c(0.4, 0.6, 1), delta.break = c(delta_b1_sim, 0)
@@ -128,7 +143,7 @@ for (i in 1:NN_sim) {
 
     model <- GSTADF.test(y$y, r0 = 0.1, const = TRUE, add.p.value = FALSE)
 
-    .cval_GSADF_with_const[i] <- model$gstadf.value
-
-    progress(i)
+    model$gstadf.value
 }
+
+stopCluster(cluster)
