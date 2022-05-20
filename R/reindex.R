@@ -13,7 +13,8 @@ reindex <- function(u) {
     eta.hat <- rep(0, (N + 1))
     for (i in 2:(N + 1)) {
         sT <- floor(s[i] * N)
-        eta.hat[i] <- (sum(u.2[1:sT]) + (s[i] * N - sT) * u.2[sT + 1]) / sum(u.2)
+        eta.hat[i] <- (sum(u.2[1:sT]) + (s[i] * N - sT) * u.2[sT + 1]) /
+            sum(u.2)
     }
     eta.hat[N + 1] <- 1
 

@@ -20,15 +20,13 @@ NW.loocv <- function(y, x, kernel = "unif") {
     HT <- seq(N ^ (-0.5), N ^ (-0.3), by = 0.01)
     cv0 <- Inf
 
-    for (hi in seq_len(HT)) {
-        h1 <- HT[hi]
-
+    for (hi in HT) {
         rho <- rep(0, N)
         for (k in 1:N) {
             if (kernel == "unif") {
-                W <- ifelse(abs(((1:N) - k) / N / h1) <= 1, 1, 0)
+                W <- ifelse(abs(((1:N) - k) / N / hi) <= 1, 1, 0)
             } else if (kernel == "gauss") {
-                W <- pnorm(((1:N) - k) / N / h1)
+                W <- pnorm(((1:N) - k) / N / hi)
             }
             W[k] <- 0
             rho[k] <- sum(x * W * y) / sum(x * W * x)
@@ -37,7 +35,7 @@ NW.loocv <- function(y, x, kernel = "unif") {
         cv1 <- sum((y - rho * x)^2)
         if (cv1 < cv0) {
             cv0 <- cv1
-            h <- h1
+            h <- hi
         }
     }
 
@@ -46,7 +44,7 @@ NW.loocv <- function(y, x, kernel = "unif") {
             my = y,
             mx = x,
             kernel = kernel,
-            h.est = h
+            h = h
         )
     )
 }
