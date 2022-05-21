@@ -99,6 +99,8 @@ registerDoSNOW(cluster)
 
     model$stadf.value
 }
+.cval_SADF_without_const <- drop(.cval_SADF_without_const)
+names(.cval_SADF_without_const) <- NULL
 
 .cval_SADF_with_const <- foreach(
     i = 1:NN_sim,
@@ -114,6 +116,8 @@ registerDoSNOW(cluster)
 
     model$stadf.value
 }
+.cval_SADF_with_const <- drop(.cval_SADF_with_const)
+names(.cval_SADF_with_const) <- NULL
 
 # tau.break - Bubble period.
 .cval_GSADF_without_const <- foreach(
@@ -130,6 +134,8 @@ registerDoSNOW(cluster)
 
     model$gstadf.value
 }
+.cval_GSADF_without_const <- drop(.cval_GSADF_without_const)
+names(.cval_GSADF_without_const) <- NULL
 
 .cval_GSADF_with_const <- foreach(
     i = 1:NN_sim,
@@ -145,5 +151,7 @@ registerDoSNOW(cluster)
 
     model$gstadf.value
 }
+.cval_GSADF_with_const <- drop(.cval_GSADF_with_const)
+names(.cval_GSADF_with_const) <- NULL
 
 stopCluster(cluster)
