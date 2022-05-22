@@ -32,27 +32,27 @@ sb.GSADF.test <- function(y,
                              ".cval_GSADF_with_const"))
     registerDoSNOW(cluster)
 
-    SADF.supSBADF.bootstrap.values <- foreach(
+    GSADF.supSBADF.bootstrap.values <- foreach(
         step = 1:iter,
-        .combine = "rbind",
+        .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
-        sadf.value <- NA
+        tmp.gsadf.value <- NA
         supSBADF.value <- NA
         if (urs == TRUE) {
             gsadf.model <- GSADF.test(y.star, r0, const)
-            sadf.value <- gsadf.model$sadf.value
+            tmp.gsadf.value <- gsadf.model$sadf.value
         }
         supSBADF.model <- supSBADF.statistic(y.star, r0)
-        supSBADF.value <- supSBADF.model$supSBADF.value
-        c(sadf.value, supSBADF.value)
+        tmp.supSBADF.value <- supSBADF.model$supSBADF.value
+        c(tmp.gsadf.value, tmp.supSBADF.value)
     }
 
     stopCluster(cluster)
 
     # Get sadf_supSBADF_bootstrap_values
-    supSBADF.bootstrap.values <- SADF.supSBADF.bootstrap.values[, 2]
+    supSBADF.bootstrap.values <- GSADF.supSBADF.bootstrap.values[, 2]
 
     # Find critical value.
     supSBADF.cr.value <- as.numeric(quantile(
@@ -60,42 +60,34 @@ sb.GSADF.test <- function(y,
         1 - alpha
     ))
 
-    t.values <- NULL
-    sadf.value <- NULL
-    SADF.bootstrap.values <- NULL
-    SADF.cr.value <- NULL
-    U.value <- NULL
-    U.bootstrap.values <- NULL
-    U.cr.value <- NULL
-
     # A union of rejections strategy.
     if (urs == TRUE) {
         # Find sadf_value.
         gsadf.model <- GSADF.test(y, r0, const)
         t.values <- gsadf.model$t.values
-        sadf.value <- gsadf.model$sadf.value
+        gsadf.value <- gsadf.model$gsadf.value
 
         # Get sadf_supSBADF_bootstrap_values
-        SADF.bootstrap.values <- SADF.supSBADF.bootstrap.values[, 1]
+        GSADF.bootstrap.values <- SGADF.supSBADF.bootstrap.values[, 1]
 
         # Find critical value.
-        SADF.cr.value <- as.numeric(quantile(
-            SADF.bootstrap.values,
+        GSADF.cr.value <- as.numeric(quantile(
+            GSADF.bootstrap.values,
             1 - alpha
         ))
 
         # Calculate U value.
         U.value <- max(
-            sadf.value,
-            SADF.cr.value / supSBADF.cr.value * supSBADF.value
+            gsadf.value,
+            GSADF.cr.value / supSBADF.cr.value * supSBADF.value
         )
 
         # Find U_bootstrap_values.
         U.bootstrap.values <- c()
         for (b in 1:iter) {
             U.bootstrap.values[b] <- max(
-                SADF.bootstrap.values[b],
-                SADF.cr.value / supSBADF.cr.value * supSBADF.bootstrap.values[b]
+                GSADF.bootstrap.values[b],
+                GSADF.cr.value / supSBADF.cr.value * supSBADF.bootstrap.values[b]
             )
         }
 
@@ -112,7 +104,7 @@ sb.GSADF.test <- function(y,
         is.explosive <- ifelse(supSBADF.value > supSBADF.cr.value, 1, 0)
     }
 
-    return(
+    result <- c(
         list(
             y = y,
             r0 = r0,
@@ -125,15 +117,23 @@ sb.GSADF.test <- function(y,
             supSBADF.value = supSBADF.model$supSBADF_value,
             supSBADF.bootstrap.values = supSBADF.bootstrap.values,
             supSBADF.cr.value = supSBADF.cr.value,
-            t.values = t.values,
-            sadf.value = sadf.value,
-            SADF.bootstrap.values = SADF.bootstrap.values,
-            SADF.cr.value = SADF.cr.value,
-            U.value = U.value,
-            U.bootstrap.values = U.bootstrap.values,
-            U.cr.value = U.cr.value,
             p.value = p.value,
             is.explosive = is.explosive
-        )
+        ),
+        if (urs) {
+            list(
+                t.values = t.values,
+                gsadf.value = gsadf.value,
+                GSADF.bootstrap.values = SADF.bootstrap.values,
+                GSADF.cr.value = SADF.cr.value,
+                U.value = U.value,
+                U.bootstrap.values = U.bootstrap.values,
+                U.cr.value = U.cr.value
+            )
+        } else NULL
     )
+
+    class(result) <- "sadf"
+
+    return(result)
 }

@@ -30,7 +30,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
     }
 
     N <- nrow(y)
-    pos <- ifelse(const & trend, 3, ifelse(const, 2, 1))
+    pos <- ifelse(const && trend, 3, ifelse(const, 2, 1))
 
     d.y <- diff(y)
     x <- y[1:(N - 1), , drop = FALSE]
@@ -106,7 +106,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
         }
     }
 
-    critical.value <- ifelse(const & trend, -3.14, ifelse(const, -2.86, -1.95))
+    critical.value <- ifelse(const && trend, -3.14, ifelse(const, -2.86, -1.95))
 
     return(
         list(

@@ -29,7 +29,6 @@ GSADF.test <- function(y,
     } else {
         cr.value <- 2.781
     }
-    p.value <- NULL
 
     if (add.p.value) {
         if (const == TRUE) {
@@ -42,15 +41,22 @@ GSADF.test <- function(y,
 
     is.explosive <- ifelse(gsadf.value > cr.value, 1, 0)
 
-    return(
+    result <- c(
         list(
             y = y,
             r0 = r0,
             const = const,
             t.values = t.values,
             gsadf.value = gsadf.value,
-            p.value = p.value,
+            cr.value = cr.value,
             is.explosive = is.explosive
-        )
+        ),
+        if (add.p.value) {
+            list(p.value = p.value)
+        } else NULL
     )
+
+    class(result) <- "sadf"
+
+    return(result)
 }

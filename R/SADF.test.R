@@ -27,7 +27,6 @@ SADF.test <- function(y,
     } else {
         cr.value <- 3.36 # modify
     }
-    p.value <- NULL
 
     if (add.p.value) {
         if (const == TRUE) {
@@ -40,15 +39,21 @@ SADF.test <- function(y,
 
     is.explosive <- ifelse(sadf.value > cr.value, 1, 0)
 
-    return(
+    result <- c(
         list(
             y = y,
             r0 = r0,
             const = const,
             t.values = t.values,
             sadf.value = sadf.value,
-            p.value = p.value,
             is.explosive = is.explosive
-        )
+        ),
+        if (add.p.value) {
+            list(p.value = p.value)
+        } else NULL
     )
+
+    class(result) <- "sadf"
+
+    return(result)
 }

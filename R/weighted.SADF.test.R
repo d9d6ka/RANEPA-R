@@ -36,19 +36,19 @@ weighted.SADF.test <- function(y,
     registerDoSNOW(cluster)
 
     SADF.supBZ.bootstrap.values <- foreach(
-        step = 1:iter,
-        .combine = "rbind",
+        i = 1:iter,
+        .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
         tmp.sadf.value <- NA
-        if (urs == TRUE) {
-            sadf.model <- SADF.test(y.star, r0, const)
-            tmp.sadf.value <- sadf.model$sadf.value
+        if (urs) {
+            tmp.sadf.model <- SADF.test(y.star, r0, const)
+            tmp.sadf.value <- tmp.sadf.model$sadf.value
         }
-        supBZ.model <- supBZ.statistic(y.star, r0, sigma.sq)
-        tmp.supBZ.value <- supBZ.model$supBZ.value
-        c(tmp.sadf.value, tmp.subBZ.value)
+        tmp.supBZ.model <- supBZ.statistic(y.star, r0, sigma.sq)
+        tmp.supBZ.value <- tmp.supBZ.model$supBZ.value
+        c(tmp.sadf.value, tmp.supBZ.value)
     }
 
     stopCluster(cluster)
@@ -61,14 +61,6 @@ weighted.SADF.test <- function(y,
         supBZ.bootstrap.values,
         1 - alpha
     ))
-
-    t.values <- NULL
-    sadf.value <- NULL
-    SADF.bootstrap.values <- NULL
-    SADF.cr.value <- NULL
-    U.value <- NULL
-    U.bootstrap.values <- NULL
-    U.cr.value <- NULL
 
     # A union of rejections strategy.
     if (urs == TRUE) {
@@ -95,8 +87,8 @@ weighted.SADF.test <- function(y,
             U.bootstrap.values[b] <- max(
                 SADF.bootstrap.values[b],
                 SADF.cr.value /
-                    supBZ.cr.value *
-                    supBZ.bootstrap.values[b]
+                supBZ.cr.value *
+                supBZ.bootstrap.values[b]
             )
         }
 
@@ -112,7 +104,7 @@ weighted.SADF.test <- function(y,
         is.explosive <- ifelse(supBZ.value > supBZ.cr.value, 1, 0)
     }
 
-    return(
+    result <- c(
         list(
             y = y,
             r0 = r0,
@@ -126,14 +118,23 @@ weighted.SADF.test <- function(y,
             supBZ.value = supBZ.value,
             supBZ.bootstrap.values = supBZ.bootstrap.values,
             supBZ.cr.value = supBZ.cr.value,
-            t.values = t.values,
-            sadf.value = sadf.value,
-            SADF.cr.value = SADF.cr.value,
-            U.value = U.value,
-            U.bootstrap.values = U.bootstrap.values,
-            U.cr.value = U.cr.value,
             p.value = p.value,
             is.explosive = is.explosive
-        )
+        ),
+        if (urs) {
+            list(
+                t.values = t.values,
+                sadf.value = sadf.value,
+                SADF.bootstrap.values = SADF.bootstrap.values,
+                SADF.cr.value = SADF.cr.value,
+                U.value = U.value,
+                U.bootstrap.values = U.bootstrap.values,
+                U.cr.value = U.cr.value
+            )
+        } else NULL
     )
+
+    class(result) <- "sadf"
+
+    return(result)
 }

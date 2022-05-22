@@ -37,7 +37,7 @@ weighted.GSADF.test <- function(y,
 
     SADF.supBZ.bootstrap.values <- foreach(
         step = 1:iter,
-        .combine = "rbind",
+        .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
@@ -48,7 +48,7 @@ weighted.GSADF.test <- function(y,
         }
         supBZ.model <- supBZ.statistic(y.star, r0, sigma.sq)
         tmp.supBZ.value <- supBZ.model$supBZ.value
-        c(tmp.gsadf.value, tmp.subBZ.value)
+        c(tmp.gsadf.value, tmp.supBZ.value)
     }
 
     stopCluster(cluster)
@@ -61,14 +61,6 @@ weighted.GSADF.test <- function(y,
         supBZ.bootstsrap.values,
         1 - alpha
     ))
-
-    t.values <- NULL
-    gsadf.value <- NULL
-    GSADF.bootstsrap.values <- NULL
-    GSADF.cr.value <- NULL
-    U.value <- NULL
-    U.bootstsrap.values <- NULL
-    U.cr.value <- NULL
 
     # A union of rejections strategy.
     if (urs == TRUE) {
@@ -113,7 +105,7 @@ weighted.GSADF.test <- function(y,
         is.explosive <- ifelse(supBZ.value > supBZ.cr.value, 1, 0)
     }
 
-    return(
+    result <- c(
         list(
             y = y,
             r0 = r0,
@@ -127,14 +119,23 @@ weighted.GSADF.test <- function(y,
             supBZ.value = supBZ.value,
             supBZ.bootstsrap.values = supBZ.bootstsrap.values,
             supBZ.cr.value = supBZ.cr.value,
-            t.values = t.values,
-            gsadf.value = gsadf.value,
-            GSADF.cr.value = GSADF.cr.value,
-            U.value = U.value,
-            U.bootstsrap.values = U.bootstsrap.values,
-            U.cr.value = U.cr.value,
             p.value = p.value,
             is.explosive = is.explosive
-        )
+        ),
+        if (urs) {
+            list(
+                t.values = t.values,
+                gsadf.value = gsadf.value,
+                GSADF.bootstsrap.values = GSADF.bootstsrap.values,
+                GSADF.cr.value = GSADF.cr.value,
+                U.value = U.value,
+                U.bootstsrap.values = U.bootstsrap.values,
+                U.cr.value = U.cr.value
+            )
+        } else NULL
     )
+
+    class(result) <- "sadf"
+
+    return(result)
 }

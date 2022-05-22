@@ -43,13 +43,11 @@ STADF.test <- function(y,
             }
             ksi <- pc * sigma * (N - 1) ^ (1 / 7)
         } else {
-            sigma <- NULL
             ksi <- ksi.input
         }
         u.hat.truncated <- ifelse(abs(u.hat) < ksi, u.hat, 0)
         u.hat.star <- u.hat.truncated
     } else {
-        u.hat.truncated <- NULL
         u.hat.star <- u.hat
     }
 
@@ -64,7 +62,6 @@ STADF.test <- function(y,
     if (is.reindex == TRUE) {
         c(., ., eta.hat, ., new.index) %<-% reindex(u.hat.star)
     } else {
-        eta.hat <- NULL
         new.index <- c(0:(N - 1))
     }
     y.tt <- y[new.index + 1]
@@ -82,7 +79,7 @@ STADF.test <- function(y,
         }
 
         t.values[m] <- (y.tt.norm[j]^2 - y.tt.norm[1]^2 - w.sq * (j - 1)) /
-            (w.sq^0.5 * 2 * sum(y.tt.norm[1:(j - 1)]^2)^0.5)
+        (w.sq^0.5 * 2 * sum(y.tt.norm[1:(j - 1)]^2)^0.5)
         m <- m + 1
     }
 
@@ -95,7 +92,6 @@ STADF.test <- function(y,
     } else {
         cr.value <- 3.36 # modify
     }
-    p.value <- NULL
 
     if (add.p.value) {
         if (const == TRUE) {
@@ -109,7 +105,7 @@ STADF.test <- function(y,
     # If stadf_value > cr_value, we reject the null hypothesis.
     is.explosive <- ifelse(stadf.value > cr.value, 1, 0)
 
-    return(
+    result <- c(
         list(
             y = y,
             N = N,
@@ -119,21 +115,32 @@ STADF.test <- function(y,
             h = h,
             truncated = truncated,
             is.reindex = is.reindex,
-            eta.hat = eta.hat,
             new.index = new.index,
             ksi.input = ksi.input,
-            ksi = ksi,
             hc = hc,
             h.est = h.est,
             u.hat = u.hat,
-            u.hat.truncated = u.hat.truncated,
             pc = pc,
-            sigma = sigma,
             w.sq = w.sq,
             t.values = t.values,
             stadf.value = stadf.value,
-            p.value = p.value,
             is.explosive = is.explosive
-        )
+        ),
+        if (truncated) {
+            list(u.hat.truncated = u.hat.truncated)
+        } else NULL,
+        if (ksi.input == "auto") {
+            list(ksi = ksi, sigma = sigma)
+        } else NULL,
+        if (is.reindex) {
+            list(eta.hat = eta.hat)
+        } else NULL,
+        if (add.p.value) {
+            list(p.value = p.value)
+        } else NULL
     )
+
+    class(result) <- "sadf"
+    
+    return(result)
 }

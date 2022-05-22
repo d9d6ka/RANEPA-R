@@ -31,7 +31,7 @@ SADF.bootstrap.test <- function(y,
 
     SADF.bootstrap.values <- foreach(
         step = 1:iter,
-        .combine = "c",
+        .combine = c,
         .options.snow = list(progress = progress)
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
@@ -48,20 +48,22 @@ SADF.bootstrap.test <- function(y,
 
     is.explosive <- ifelse(sadf.value > cr.value, 1, 0)
 
-    return(
-        list(
-            y = y,
-            r0 = r0,
-            const = const,
-            alpha = alpha,
-            iter = iter,
-            seed = seed,
-            t.values = t.values,
-            sadf.value = sadf.value,
-            SADF.bootstrap.values = SADF.bootstrap.values,
-            cr.value = cr.value,
-            p.value = p.value,
-            is.explosive = is.explosive
-        )
+    result <- list(
+        y = y,
+        r0 = r0,
+        const = const,
+        alpha = alpha,
+        iter = iter,
+        seed = seed,
+        t.values = t.values,
+        sadf.value = sadf.value,
+        SADF.bootstrap.values = SADF.bootstrap.values,
+        cr.value = cr.value,
+        p.value = p.value,
+        is.explosive = is.explosive
     )
+
+    class(result) <- "sadf"
+
+    return(result)
 }
