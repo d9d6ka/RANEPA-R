@@ -14,10 +14,10 @@ GSADF.bootstrap.test <- function(y,
                                  seed = round(10^4 * sd(y))) {
     N <- length(y)
 
-    # Find sadf.value.
+    # Find SADF.value.
     model <- GSADF.test(y, r0, const)
     t.values <- model$t.values
-    gsadf.value <- model$gsadf.value
+    GSADF.value <- model$GSADF.value
 
     # Do parallel.
     cores <- detectCores()
@@ -36,16 +36,16 @@ GSADF.bootstrap.test <- function(y,
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
         model <- GSADF.test(y.star, r0, const)
-        model$gsadf.value
+        model$GSADF.value
     }
     stopCluster(cluster)
 
     # Find critical value.
     cr.value <- as.numeric(quantile(SADF.bootstsrap.values, 1 - alpha))
 
-    p.value <- round(sum(SADF.bootstsrap.values > gsadf.value) / iter, 4)
+    p.value <- round(sum(SADF.bootstsrap.values > GSADF.value) / iter, 4)
 
-    is.explosive <- ifelse(gsadf.value > cr.value, 1, 0)
+    is.explosive <- ifelse(GSADF.value > cr.value, 1, 0)
 
     result <- list(
         y = y,
@@ -55,13 +55,13 @@ GSADF.bootstrap.test <- function(y,
         iter = iter,
         seed = seed,
         t.values = t.values,
-        gsadf.value = gsadf.value,
+        GSADF.value = GSADF.value,
         SADF.bootstsrap.values = SADF.bootstsrap.values,
         cr.value = cr.value,
         p.value = p.value,
         is.explosive = is.explosive
     )
-    
+
     class(result) <- "sadf"
 
     return(result)

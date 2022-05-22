@@ -2,16 +2,16 @@
 print.sadf <- function(object) {
     test.name <- NULL
 
-    if ("sadf.value" %in% names(object)) {
-        test.statistic <- object$sadf.value
+    if ("SADF.value" %in% names(object)) {
+        test.statistic <- object$SADF.value
         test.name <- "SADF"
     }
     else if ("stadf.value" %in% names(object)) {
         test.statistic <- object$stadf.value
         test.name <- "STADF"
     }
-    else if ("gsadf.value" %in% names(object)) {
-        test.statistic <- object$gsadf.value
+    else if ("GSADF.value" %in% names(object)) {
+        test.statistic <- object$GSADF.value
         test.name <- "GSADF"
     }
     else if ("gstadf.value" %in% names(object)) {

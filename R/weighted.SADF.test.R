@@ -41,14 +41,14 @@ weighted.SADF.test <- function(y,
         .options.snow = list(progress = progress)
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
-        tmp.sadf.value <- NA
+        tmp.SADF.value <- NA
         if (urs) {
             tmp.sadf.model <- SADF.test(y.star, r0, const)
-            tmp.sadf.value <- tmp.sadf.model$sadf.value
+            tmp.SADF.value <- tmp.sadf.model$SADF.value
         }
         tmp.supBZ.model <- supBZ.statistic(y.star, r0, sigma.sq)
         tmp.supBZ.value <- tmp.supBZ.model$supBZ.value
-        c(tmp.sadf.value, tmp.supBZ.value)
+        c(tmp.SADF.value, tmp.supBZ.value)
     }
 
     stopCluster(cluster)
@@ -64,10 +64,10 @@ weighted.SADF.test <- function(y,
 
     # A union of rejections strategy.
     if (urs == TRUE) {
-        # Find sadf_value.
+        # Find SADF.value.
         sadf.model <- SADF.test(y, r0, const)
         t.values <- sadf.model$t.values
-        sadf.value <- sadf.model$sadf.value
+        SADF.value <- sadf.model$SADF.value
 
         # Get sadf_supBZ.bootstrap.values.
         SADF.bootstrap.values <- SADF.supBZ.bootstrap.values[, 1]
@@ -77,7 +77,7 @@ weighted.SADF.test <- function(y,
 
         # Calculate U value.
         U.value <- max(
-            sadf.value,
+            SADF.value,
             SADF.cr.value / supBZ.cr.value * supBZ.value
         )
 
@@ -124,7 +124,7 @@ weighted.SADF.test <- function(y,
         if (urs) {
             list(
                 t.values = t.values,
-                sadf.value = sadf.value,
+                SADF.value = SADF.value,
                 SADF.bootstrap.values = SADF.bootstrap.values,
                 SADF.cr.value = SADF.cr.value,
                 U.value = U.value,

@@ -7,7 +7,7 @@
 supBZ.statistic(
   y,
   r0 = 0.01 + 1.8/sqrt(length(y)),
-  sigma.sq = "auto",
+  sigma.sq = NULL,
   generalized = FALSE
 )
 }

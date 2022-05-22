@@ -20,7 +20,7 @@ SADF.test <- function(y,
         m <- m + 1
     }
 
-    sadf.value <- max(t.values)
+    SADF.value <- max(t.values)
 
     if (const == TRUE) {
         cr.value <- 2.2 # modify
@@ -34,10 +34,10 @@ SADF.test <- function(y,
         } else {
             cr.values <- .cval_SADF_without_const
         }
-        p.value <- round(sum(cr.values > sadf.value) / length(cr.values), 4)
+        p.value <- round(sum(cr.values > SADF.value) / length(cr.values), 4)
     }
 
-    is.explosive <- ifelse(sadf.value > cr.value, 1, 0)
+    is.explosive <- ifelse(SADF.value > cr.value, 1, 0)
 
     result <- c(
         list(
@@ -45,7 +45,7 @@ SADF.test <- function(y,
             r0 = r0,
             const = const,
             t.values = t.values,
-            sadf.value = sadf.value,
+            SADF.value = SADF.value,
             is.explosive = is.explosive
         ),
         if (add.p.value) {

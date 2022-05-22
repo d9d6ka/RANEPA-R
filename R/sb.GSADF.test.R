@@ -38,15 +38,15 @@ sb.GSADF.test <- function(y,
         .options.snow = list(progress = progress)
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
-        tmp.gsadf.value <- NA
+        tmp.GSADF.value <- NA
         supSBADF.value <- NA
         if (urs == TRUE) {
             gsadf.model <- GSADF.test(y.star, r0, const)
-            tmp.gsadf.value <- gsadf.model$sadf.value
+            tmp.GSADF.value <- gsadf.model$sadf.value
         }
         supSBADF.model <- supSBADF.statistic(y.star, r0)
         tmp.supSBADF.value <- supSBADF.model$supSBADF.value
-        c(tmp.gsadf.value, tmp.supSBADF.value)
+        c(tmp.GSADF.value, tmp.supSBADF.value)
     }
 
     stopCluster(cluster)
@@ -65,7 +65,7 @@ sb.GSADF.test <- function(y,
         # Find sadf_value.
         gsadf.model <- GSADF.test(y, r0, const)
         t.values <- gsadf.model$t.values
-        gsadf.value <- gsadf.model$gsadf.value
+        GSADF.value <- gsadf.model$GSADF.value
 
         # Get sadf_supSBADF_bootstrap_values
         GSADF.bootstrap.values <- SGADF.supSBADF.bootstrap.values[, 1]
@@ -78,7 +78,7 @@ sb.GSADF.test <- function(y,
 
         # Calculate U value.
         U.value <- max(
-            gsadf.value,
+            GSADF.value,
             GSADF.cr.value / supSBADF.cr.value * supSBADF.value
         )
 
@@ -123,7 +123,7 @@ sb.GSADF.test <- function(y,
         if (urs) {
             list(
                 t.values = t.values,
-                gsadf.value = gsadf.value,
+                GSADF.value = GSADF.value,
                 GSADF.bootstrap.values = SADF.bootstrap.values,
                 GSADF.cr.value = SADF.cr.value,
                 U.value = U.value,

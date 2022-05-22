@@ -14,10 +14,10 @@ SADF.bootstrap.test <- function(y,
                                 seed = round(10^4 * sd(y))) {
     N <- length(y)
 
-    # Find sadf_value.
+    # Find SADF.value.
     model <- SADF.test(y, r0, const)
     t.values <- model$t.values
-    sadf.value <- model$sadf.value
+    SADF.value <- model$SADF.value
 
     # Do parallel.
     cores <- detectCores()
@@ -36,7 +36,7 @@ SADF.bootstrap.test <- function(y,
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
         model <- SADF.test(y.star, r0, const)
-        model$sadf.value
+        model$SADF.value
     }
 
     stopCluster(cluster)
@@ -44,9 +44,9 @@ SADF.bootstrap.test <- function(y,
     # Find critical value.
     cr.value <- as.numeric(quantile(SADF.bootstrap.values, 1 - alpha))
 
-    p.value <- round(sum(SADF.bootstrap.values > sadf.value) / iter, 4)
+    p.value <- round(sum(SADF.bootstrap.values > SADF.value) / iter, 4)
 
-    is.explosive <- ifelse(sadf.value > cr.value, 1, 0)
+    is.explosive <- ifelse(SADF.value > cr.value, 1, 0)
 
     result <- list(
         y = y,
@@ -56,7 +56,7 @@ SADF.bootstrap.test <- function(y,
         iter = iter,
         seed = seed,
         t.values = t.values,
-        sadf.value = sadf.value,
+        SADF.value = SADF.value,
         SADF.bootstrap.values = SADF.bootstrap.values,
         cr.value = cr.value,
         p.value = p.value,

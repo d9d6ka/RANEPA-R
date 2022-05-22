@@ -22,7 +22,7 @@ GSADF.test <- function(y,
         }
     }
 
-    gsadf.value <- max(t.values)
+    GSADF.value <- max(t.values)
 
     if (const == TRUE) {
         cr.value <- 1.524
@@ -36,10 +36,10 @@ GSADF.test <- function(y,
         } else {
             cr.values <- .cval_GSADF_without_const
         }
-        p.value <- round(sum(cr.values > gsadf.value) / length(cr.values), 4)
+        p.value <- round(sum(cr.values > GSADF.value) / length(cr.values), 4)
     }
 
-    is.explosive <- ifelse(gsadf.value > cr.value, 1, 0)
+    is.explosive <- ifelse(GSADF.value > cr.value, 1, 0)
 
     result <- c(
         list(
@@ -47,7 +47,7 @@ GSADF.test <- function(y,
             r0 = r0,
             const = const,
             t.values = t.values,
-            gsadf.value = gsadf.value,
+            GSADF.value = GSADF.value,
             cr.value = cr.value,
             is.explosive = is.explosive
         ),
