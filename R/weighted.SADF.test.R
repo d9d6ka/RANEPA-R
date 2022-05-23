@@ -28,11 +28,13 @@ weighted.SADF.test <- function(y,
     progress <- function(n) setTxtProgressBar(progress.bar, n)
 
     cluster <- makeCluster(max(cores - 1, 1))
-    clusterExport(cluster, c("ADF.test",
-                             "SADF.test",
-                             "supBZ.statistic",
-                             ".cval_SADF_without_const",
-                             ".cval_SADF_with_const"))
+    clusterExport(cluster, c(
+        "ADF.test",
+        "SADF.test",
+        "supBZ.statistic",
+        ".cval_SADF_without_const",
+        ".cval_SADF_with_const"
+    ))
     registerDoSNOW(cluster)
 
     SADF.supBZ.bootstrap.values <- foreach(
@@ -87,8 +89,8 @@ weighted.SADF.test <- function(y,
             U.bootstrap.values[b] <- max(
                 SADF.bootstrap.values[b],
                 SADF.cr.value /
-                supBZ.cr.value *
-                supBZ.bootstrap.values[b]
+                    supBZ.cr.value *
+                    supBZ.bootstrap.values[b]
             )
         }
 
@@ -131,7 +133,9 @@ weighted.SADF.test <- function(y,
                 U.bootstrap.values = U.bootstrap.values,
                 U.cr.value = U.cr.value
             )
-        } else NULL
+        } else {
+            NULL
+        }
     )
 
     class(result) <- "sadf"

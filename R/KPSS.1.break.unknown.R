@@ -49,16 +49,15 @@ KPSS.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
 
     temp.result <- matrix(data = 0, nrow = N - 5, ncol = 2)
 
-    for (i in 3:(N-3)) {
+    for (i in 3:(N - 3)) {
         if (ll.init + 2 < i & i < N - 5 - ll.init) {
             c(beta, tests, resid, t_b, tb) %<-%
                 KPSS.1.break(y, x, model, i, weakly.exog, ll.init)
             temp.result[i - 2, 1] <- tests
             temp.result[i - 2, 2] <- drop(t(resid) %*% resid)
-        }
-        else {
-            temp.result[i - 2, 1] <- 2 ^ 20
-            temp.result[i - 2, 2] <- 2 ^ 20
+        } else {
+            temp.result[i - 2, 1] <- 2^20
+            temp.result[i - 2, 2] <- 2^20
         }
     }
 

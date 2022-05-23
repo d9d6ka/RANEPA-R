@@ -15,7 +15,6 @@ STADF.test <- function(y,
                        hc = 1,
                        pc = 1,
                        add.p.value = TRUE) {
-
     N <- length(y)
 
     # Part 4.1. NW estimation.
@@ -41,7 +40,7 @@ STADF.test <- function(y,
                     sigma <- sigma1
                 }
             }
-            ksi <- pc * sigma * (N - 1) ^ (1 / 7)
+            ksi <- pc * sigma * (N - 1)^(1 / 7)
         } else {
             ksi <- ksi.input
         }
@@ -79,7 +78,7 @@ STADF.test <- function(y,
         }
 
         t.values[m] <- (y.tt.norm[j]^2 - y.tt.norm[1]^2 - w.sq * (j - 1)) /
-        (w.sq^0.5 * 2 * sum(y.tt.norm[1:(j - 1)]^2)^0.5)
+            (w.sq^0.5 * 2 * sum(y.tt.norm[1:(j - 1)]^2)^0.5)
         m <- m + 1
     }
 
@@ -128,19 +127,27 @@ STADF.test <- function(y,
         ),
         if (truncated) {
             list(u.hat.truncated = u.hat.truncated)
-        } else NULL,
+        } else {
+            NULL
+        },
         if (ksi.input == "auto") {
             list(ksi = ksi, sigma = sigma)
-        } else NULL,
+        } else {
+            NULL
+        },
         if (is.reindex) {
             list(eta.hat = eta.hat)
-        } else NULL,
+        } else {
+            NULL
+        },
         if (add.p.value) {
             list(p.value = p.value)
-        } else NULL
+        } else {
+            NULL
+        }
     )
 
     class(result) <- "sadf"
-    
+
     return(result)
 }

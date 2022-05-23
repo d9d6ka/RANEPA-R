@@ -1,31 +1,43 @@
 #' @import MASS
-DOLS.N.breaks <- function(y, x,
-                    model, break.point,
-                    const = FALSE, trend = FALSE,
-                    k.lags, k.leads) {
+DOLS.N.breaks <- function(y,
+                          x,
+                          model,
+                          break.point,
+                          const = FALSE,
+                          trend = FALSE,
+                          k.lags,
+                          k.leads) {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
+    if (is.null(x)) {
+        stop("ERROR! Explanatory variables needed for DOLS")
+    }
     if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y)
 
     c(yreg, xreg) %<-%
-        DOLS.vars.N.breaks(y, x,
-                           model, break.point,
-                           const, trend,
-                           k.lags, k.leads)
+        DOLS.vars.N.breaks(
+            y, x,
+            model, break.point,
+            const, trend,
+            k.lags, k.leads
+        )
 
     c(beta, resid, ., t.beta) %<-% OLS(yreg, xreg)
 
     s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
 
-    bic <- log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
+    criterions <- list(
+        aic = log(s2) + 2 * ncol(xreg) / nrow(xreg),
+        bic = log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg),
+        lwz = log(s2) + 0.299 * ncol(xreg) * (log(nrow(xreg)))^2.1
+    )
 
     return(
         list(
-            beta   = beta,
-            resid  = resid,
-            bic    = bic,
+            beta = beta,
+            resid = resid,
+            criterions = criterions,
             t.beta = t.beta
         )
     )

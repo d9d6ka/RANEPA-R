@@ -17,7 +17,7 @@ NW.loocv <- function(y, x, kernel = "unif") {
 
     N <- length(y)
 
-    HT <- seq(N ^ (-0.5), N ^ (-0.3), by = 0.01)
+    HT <- seq(N^(-0.5), N^(-0.3), by = 0.01)
     cv0 <- Inf
 
     for (hi in HT) {

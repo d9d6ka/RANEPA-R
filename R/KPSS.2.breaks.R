@@ -49,11 +49,12 @@ KPSS.2.breaks <- function(y, model, break.point, kmax, kernel) {
 
     S.t <- apply(resid, 2, cumsum)
 
-    if (!is.null(kernel))
+    if (!is.null(kernel)) {
         test <- N^(-2) * drop(t(S.t) %*% S.t) /
             alrvr.kernel(resid, corr.max, kernel)
-    else
+    } else {
         test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr(resid)
+    }
 
     return(
         list(

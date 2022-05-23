@@ -23,21 +23,24 @@
 #'
 #' @return Matrix of deterministic terms.
 determinants.KPSS.N.breaks <- function(model, N, break.point,
-                            const = FALSE, trend = FALSE) {
+                                       const = FALSE, trend = FALSE) {
     ntb <- length(break.point)
-    if (length(model) == 1)
+    if (length(model) == 1) {
         model <- rep(model, ntb)
-    else if (length(model) != ntb)
+    } else if (length(model) != ntb) {
         stop("ERROR! Inconsistent sizes of model and break.point")
+    }
 
     xt <- NULL
-    if (const)
+    if (const) {
         xt <- matrix(data = 1, nrow = N, ncol = 1)
-    if (trend)
+    }
+    if (trend) {
         xt <- cbind(
             xt,
             matrix(data = 1:N, nrow = N, ncol = 1)
         )
+    }
 
     for (i in 1:ntb) {
         if (model[i] == 1) {
@@ -56,8 +59,7 @@ determinants.KPSS.N.breaks <- function(model, N, break.point,
                     )
                 )
             )
-        }
-        else if (model[i] == 2) {
+        } else if (model[i] == 2) {
             xt <- cbind(
                 xt,
                 rbind(
@@ -73,8 +75,7 @@ determinants.KPSS.N.breaks <- function(model, N, break.point,
                     )
                 )
             )
-        }
-        else if (model[i] == 3) {
+        } else if (model[i] == 3) {
             xt <- cbind(
                 xt,
                 rbind(

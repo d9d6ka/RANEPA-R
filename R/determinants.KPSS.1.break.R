@@ -33,30 +33,26 @@ determinants.KPSS.1.break <- function(model, N, break.point) {
             trend,
             du
         )
-    }
-    else if (model == 2) {
+    } else if (model == 2) {
         xt <- cbind(
             const,
             du,
             trend
         )
-    }
-    else if (model == 3) {
+    } else if (model == 3) {
         xt <- cbind(
             const,
             trend,
             dt
         )
-    }
-    else if (model == 4) {
+    } else if (model == 4) {
         xt <- cbind(
             const,
             du,
             trend,
             dt
         )
-    }
-    else {
+    } else {
         stop("ERROR: Try to specify the deterministic component again")
     }
 

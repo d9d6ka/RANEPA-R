@@ -1,7 +1,7 @@
 DOLS.vars.N.breaks <- function(y, x,
-                            model, break.point,
-                            const = FALSE, trend = FALSE,
-                            k.lags, k.leads) {
+                               model, break.point,
+                               const = FALSE, trend = FALSE,
+                               k.lags, k.leads) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)
@@ -31,18 +31,15 @@ DOLS.vars.N.breaks <- function(y, x,
         leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
         lags.leads <- cbind(lags, leads)
         lags.leads <- lags.leads[(k.lags + 1):(N - 1 - k.leads), , drop = FALSE]
-    }
-    else if (k.lags != 0 & k.leads == 0) {
+    } else if (k.lags != 0 & k.leads == 0) {
         lags <- d.x.lag
         lags.leads <- lags[(k.lags + 1):(N - 1), , drop = FALSE]
-    }
-    else if (k.lags == 0 & k.leads != 0) {
+    } else if (k.lags == 0 & k.leads != 0) {
         lags <- d.x.lag
         leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
         lags.leads <- cbind(lags, leads)
         lags.leads <- lags.leads[1:(N - 1 - k.leads), , drop = FALSE]
-    }
-    else if (k.lags == 0 & k.leads == 0) {
+    } else if (k.lags == 0 & k.leads == 0) {
         lags.leads <- d.x.lag
     }
     deter <- determinants.KPSS.N.breaks(model, N, break.point, const, trend)

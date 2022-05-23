@@ -42,10 +42,11 @@ KPSS.2.breaks.unknown <- function(y, model, kmax = 0, kernel = "bartlett") {
 
     S.t <- apply(resid, 2, cumsum)
 
-    if (!is.null(kernel))
+    if (!is.null(kernel)) {
         test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr.kernel(resid, kmax, kernel)
-    else
+    } else {
         test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr(resid)
+    }
 
     return(
         list(

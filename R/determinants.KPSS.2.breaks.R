@@ -33,8 +33,7 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
             matrix(data = 1, nrow = N - break.point[2], ncol = 1)
         )
         xt <- cbind(cns, du1, du2)
-    }
-    else if (model == 2) {
+    } else if (model == 2) {
         du1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
             matrix(data = 1, nrow = N - break.point[1], ncol = 1)
@@ -44,21 +43,23 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
             matrix(data = 1, nrow = N - break.point[2], ncol = 1)
         )
         xt <- cbind(cns, tend, du1, du2)
-    }
-    else if (model == 3) {
+    } else if (model == 3) {
         dt1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
-            matrix(data = 1:(N - break.point[1]),
-                   nrow = N - break.point[1], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[1]),
+                nrow = N - break.point[1], ncol = 1
+            )
         )
         dt2 <- rbind(
             matrix(data = 0, nrow = break.point[2], ncol = 1),
-            matrix(data = 1:(N - break.point[2]),
-                   nrow = N - break.point[2], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[2]),
+                nrow = N - break.point[2], ncol = 1
+            )
         )
         xt <- cbind(cns, tend, dt1, dt2)
-    }
-    else if (model == 4) {
+    } else if (model == 4) {
         du1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
             matrix(data = 1, nrow = N - break.point[1], ncol = 1)
@@ -69,29 +70,33 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
         )
         dt1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
-            matrix(data = 1:(N - break.point[1]),
-                   nrow = N - break.point[1], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[1]),
+                nrow = N - break.point[1], ncol = 1
+            )
         )
         dt2 <- rbind(
             matrix(data = 0, nrow = break.point[2], ncol = 1),
-            matrix(data = 1:(N - break.point[2]),
-                   nrow = N - break.point[2], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[2]),
+                nrow = N - break.point[2], ncol = 1
+            )
         )
         xt <- cbind(cns, tend, du1, dt1, du2, dt2)
-    }
-    else if (model == 5) {
+    } else if (model == 5) {
         du1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
             matrix(data = 1, nrow = N - break.point[1], ncol = 1)
         )
         dt2 <- rbind(
             matrix(data = 0, nrow = break.point[2], ncol = 1),
-            matrix(data = 1:(N - break.point[2]),
-                   nrow = N - break.point[2], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[2]),
+                nrow = N - break.point[2], ncol = 1
+            )
         )
         xt <- cbind(cns, tend, du1, dt2)
-    }
-    else if (model == 6) {
+    } else if (model == 6) {
         du1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
             matrix(data = 1, nrow = N - break.point[1], ncol = 1)
@@ -102,30 +107,35 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
         )
         dt1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
-            matrix(data = 1:(N - break.point[1]),
-                   nrow = N - break.point[1], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[1]),
+                nrow = N - break.point[1], ncol = 1
+            )
         )
         xt <- cbind(cns, tend, du1, dt1, du2)
-    }
-    else if (model == 7) {
+    } else if (model == 7) {
         du1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
             matrix(data = 1, nrow = N - break.point[1], ncol = 1)
         )
         dt1 <- rbind(
             matrix(data = 0, nrow = break.point[1], ncol = 1),
-            matrix(data = 1:(N - break.point[1]),
-                   nrow = N - break.point[1], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[1]),
+                nrow = N - break.point[1], ncol = 1
+            )
         )
         dt2 <- rbind(
             matrix(data = 0, nrow = break.point[2], ncol = 1),
-            matrix(data = 1:(N - break.point[2]),
-                   nrow = N - break.point[2], ncol = 1)
+            matrix(
+                data = 1:(N - break.point[2]),
+                nrow = N - break.point[2], ncol = 1
+            )
         )
         xt <- cbind(cns, tend, du1, dt1, dt2)
-    }
-    else
+    } else {
         stop("Try to speciy another model")
+    }
 
     return(xt)
 }

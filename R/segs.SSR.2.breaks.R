@@ -45,8 +45,7 @@ segs.SSR.2.breaks <- function(y, model) {
                 }
             }
         }
-    }
-    else if (5 <= model & model <= 7) {
+    } else if (5 <= model & model <= 7) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
                 z <- determinants.KPSS.2.breaks(model, N, c(i, j))

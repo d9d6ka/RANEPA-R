@@ -18,8 +18,9 @@ segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
 
     N <- nrow(y)
 
-    if (is.null(SSR.data))
+    if (is.null(SSR.data)) {
         SSR.data <- SSR.matrix(y, x, width)
+    }
 
     if (m == 1) {
         tmp.result <- segs.SSR.1.break(
@@ -29,8 +30,7 @@ segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
         )
         optimal.SSR <- tmp.result$SSR
         optimal.break <- tmp.result$break.point
-    }
-    else {
+    } else {
         variants <- N - (m + 1) * width + 1
         step.SSR <- matrix(
             data = Inf,
@@ -62,8 +62,7 @@ segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
                     step.SSR[v, 1] <- tmp_res$SSR
                     step.break[v, 1] <- tmp_res$break.point
                 }
-            }
-            else if (step == m) {
+            } else if (step == m) {
                 for (v in 1:variants) {
                     temp.SSR[v, 1] <- step.SSR[v, 1] +
                         SSR.data[step * width + v, N]
@@ -72,8 +71,7 @@ segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
                 optimal.index <- which.min(temp.SSR)
                 optimal.break <- step.break[optimal.index, ]
                 optimal.break[m] <- step * width + optimal.index - 1
-            }
-            else {
+            } else {
                 next.SSR <- matrix(
                     data = Inf,
                     nrow = variants,

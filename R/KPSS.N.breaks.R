@@ -20,19 +20,26 @@
 #' }
 #' @param break.point Array of structural breaks.
 #' @param trend Include trend if `TRUE`.
-#' @param weakly.exog Boolean where we specify whether the stochastic regressors are exogenous or not
+#' @param weakly.exog Boolean where we specify
+#' whether the stochastic regressors are exogenous or not
 #' \describe{
 #' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous (DOLS is used in this case).}
+#' \item{FALSE}{if the regressors are not weakly exogenous
+#' (DOLS is used in this case).}
 #' }
-#' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
-#' @param corr.max scalar, with the maximum order of the parametric correction. The final order of the parametric correction is selected using the BIC information criterion.
+#' @param lags.init Scalar, defines the initial number of lags for DOLS.
+#' @param leads.init Scalar, defines the initial number of leads for DOLS.
+#' @param corr.max scalar, with the maximum order of the parametric correction.
+#' The final order of the parametric correction is selected
+#' using the BIC information criterion.
 #' @param kernel Kernel for calculating long-run variance
 #' \describe{
 #' \item{bartlett}{for Bartlett kernel.}
 #' \item{quadratic}{for Quadratic Spectral kernel.}
 #' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
 #' }
+#' @param criterion Information criterion for DOLS lags and leads selection:
+#' aic, bic or lwz.
 #'
 #' @return \describe{
 #' \item{beta}{DOLS estimates of the coefficients regressors.}
@@ -50,10 +57,13 @@ KPSS.N.breaks <- function(y, x,
                           model, break.point,
                           const = FALSE, trend = FALSE,
                           weakly.exog = TRUE,
-                          ll.init, corr.max, kernel) {
+                          lags.init, leads.init,
+                          corr.max, kernel,
+                          criterion = "bic") {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (!is.null(x))
+    if (!is.null(x)) {
         if (!is.matrix(x)) x <- as.matrix(x)
+    }
 
     N <- nrow(y)
 
@@ -65,18 +75,21 @@ KPSS.N.breaks <- function(y, x,
 
         c(beta, resid, ., t.beta) %<-% OLS(y, xt)
         DOLS.lags <- 0
-    }
-    else {
-        bic.min <- 100000000
-        for (i in ll.init:1) {
-            c(beta, resid, bic, t.beta) %<-%
-                DOLS.N.breaks(y, x, model, break.point, const, trend, i, i)
-            if (bic < bic.min) {
-                bic.min <- bic
-                beta.min <- beta
-                t.beta.min <- t.beta
-                resid.min <- resid
-                DOLS.lags <- i
+        DOLS.leads <- 0
+    } else {
+        info.crit.min <- Inf
+        for (i in lags.init:1) {
+            for (j in leads.init:1) {
+                c(beta, resid, info.crit, t.beta) %<-%
+                    DOLS.N.breaks(y, x, model, break.point, const, trend, i, j)
+                if (info.crit[[criterion]] < info.crit.min) {
+                    info.crit.min <- info.crit[[criterion]]
+                    beta.min <- beta
+                    t.beta.min <- t.beta
+                    resid.min <- resid
+                    DOLS.lags <- i
+                    DOLS.leads <- j
+                }
             }
         }
         resid <- resid.min
@@ -85,18 +98,21 @@ KPSS.N.breaks <- function(y, x,
     }
 
     S.t <- apply(resid, 2, cumsum)
-    if (!is.null(kernel))
-        test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr.kernel(resid, corr.max, kernel)
-    else
+    if (!is.null(kernel)) {
+        test <- N^(-2) * drop(t(S.t) %*% S.t) /
+            alrvr.kernel(resid, corr.max, kernel)
+    } else {
         test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr(resid)
+    }
 
     return(
         list(
-            beta   = beta,
-            test   = test,
-            resid  = resid,
+            beta = beta,
+            test = test,
+            resid = resid,
             t.beta = t.beta,
             DOLS.lags = DOLS.lags,
+            DOLS.leads = DOLS.leads,
             break.point = break.point
         )
     )

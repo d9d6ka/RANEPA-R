@@ -44,6 +44,8 @@
 #' variable.}
 #' \item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
 #' }
+#' @param criterion Information criterion for DOLS lags and leads selection:
+#' aic, bic or lwz.
 #'
 #' @return List of 3 elements:
 #' \describe{
@@ -58,25 +60,30 @@
 #'
 #' @export
 KPSS.N.breaks.bootstrap <- function(y, x,
-                              model, break.point,
-                              const = FALSE, trend = FALSE,
-                              weakly.exog = TRUE,
-                              ll.init, corr.max, kernel,
-                              iter = 9999,
-                              bootstrap = "sample") {
+                                    model, break.point,
+                                    const = FALSE, trend = FALSE,
+                                    weakly.exog = TRUE,
+                                    lags.init, leads.init,
+                                    corr.max, kernel,
+                                    iter = 9999,
+                                    bootstrap = "sample",
+                                    criterion = "bic") {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (!is.null(x))
+    if (!is.null(x)) {
         if (!is.matrix(x)) x <- as.matrix(x)
+    }
 
     N <- nrow(y)
 
-    c(., test, u, ., DOLS.lags, .) %<-%
+    c(., test, u, ., DOLS.lags, DOLS.leads, .) %<-%
         KPSS.N.breaks(
             y, x,
             model, break.point,
             const, trend,
             weakly.exog,
-            ll.init, corr.max, kernel
+            lags.init, leads.init,
+            corr.max, kernel,
+            criterion
         )
 
     if (weakly.exog) {
@@ -84,14 +91,13 @@ KPSS.N.breaks.bootstrap <- function(y, x,
             x,
             determinants.KPSS.N.breaks(model, N, break.point, const, trend)
         )
-    }
-    else {
+    } else {
         c(., xreg) %<-%
             DOLS.vars.N.breaks(
                 y, x,
                 model, break.point,
                 const, trend,
-                DOLS.lags, DOLS.lags
+                DOLS.lags, DOLS.leads
             )
     }
 
@@ -110,12 +116,10 @@ KPSS.N.breaks.bootstrap <- function(y, x,
     ) %dopar% {
         if (bootstrap == "sample") {
             temp.y <- sample(u, length(u), replace = TRUE)
-        }
-        else if (bootstrap == "Cavaliere-Taylor") {
+        } else if (bootstrap == "Cavaliere-Taylor") {
             z <- rnorm(length(u))
             temp.y <- z * u
-        }
-        else if (bootstrap == "Rademacher") {
+        } else if (bootstrap == "Rademacher") {
             z <- sample(c(-1, 1), length(u), replace = TRUE)
             temp.y <- z * u
         }
@@ -123,11 +127,12 @@ KPSS.N.breaks.bootstrap <- function(y, x,
         c(beta, resid, ., t.beta) %<-% OLS(temp.y, xreg)
 
         S.t <- apply(resid, 2, cumsum)
-        if (!is.null(kernel))
+        if (!is.null(kernel)) {
             temp.test <- N^(-2) * drop(t(S.t) %*% S.t) /
                 alrvr.kernel(resid, corr.max, kernel)
-        else
+        } else {
             temp.test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr(resid)
+        }
         temp.test
     }
 

@@ -50,7 +50,9 @@ SADF.test <- function(y,
         ),
         if (add.p.value) {
             list(p.value = p.value)
-        } else NULL
+        } else {
+            NULL
+        }
     )
 
     class(result) <- "sadf"

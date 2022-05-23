@@ -39,38 +39,37 @@
 #' @importFrom zeallot %<-%
 #' @export
 KPSS.1.break <- function(y, x,
-                          model, break.point,
-                          weakly.exog = TRUE, ll.init) {
+                         model, break.point,
+                         weakly.exog = TRUE, ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (!is.null(x))
+    if (!is.null(x)) {
         if (!is.matrix(x)) x <- as.matrix(x)
+    }
 
     N <- nrow(y)
 
-    if (model < 0 & model > 6)
+    if (model < 0 & model > 6) {
         stop("ERROR: Try to specify the deterministic component again")
+    }
 
     if (weakly.exog) {
-        if (model == 0)
+        if (model == 0) {
             xt <- x
-        else if (1 <= model & model <= 4) {
+        } else if (1 <= model & model <= 4) {
             deter <- determinants.KPSS.1.break(model, N, break.point)
             xt <- cbind(deter, x)
-        }
-        else if (model == 5) {
+        } else if (model == 5) {
             deter <- determinants.KPSS.1.break(1, N, break.point)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
-        }
-        else if (model == 6) {
+        } else if (model == 6) {
             deter <- determinants.KPSS.1.break(4, N, break.point)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }
 
         c(beta, resid, ., t.beta) %<-% OLS(y, xt)
-    }
-    else {
+    } else {
         bic.min <- 100000000
         for (i in ll.init:1) {
             c(beta, resid, bic, t.beta) %<-%
@@ -92,9 +91,9 @@ KPSS.1.break <- function(y, x,
 
     return(
         list(
-            beta   = beta,
-            test   = test,
-            resid  = resid,
+            beta = beta,
+            test = test,
+            resid = resid,
             t.beta = t.beta,
             break.point = break.point
         )

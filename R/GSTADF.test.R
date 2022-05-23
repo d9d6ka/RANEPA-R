@@ -80,7 +80,7 @@ GSTADF.test <- function(y,
             }
 
             t.values[m] <- (y.tt.norm[j]^2 - y.tt.norm[i]^2 - w.sq * (j - i)) /
-            (w.sq^0.5 * 2 * sum(y.tt.norm[i:(j - 1)]^2)^0.5)
+                (w.sq^0.5 * 2 * sum(y.tt.norm[i:(j - 1)]^2)^0.5)
             m <- m + 1
         }
     }
@@ -94,7 +94,7 @@ GSTADF.test <- function(y,
     } else {
         cr.value <- 2.781
     }
-    
+
 
     if (add.p.value) {
         if (const == TRUE) {
@@ -131,16 +131,24 @@ GSTADF.test <- function(y,
         ),
         if (truncated) {
             list(u.hat.truncated = u.hat.truncated)
-        } else NULL,
+        } else {
+            NULL
+        },
         if (ksi.input == "auto") {
             list(ksi = ksi, sigma = sigma)
-        } else NULL,
+        } else {
+            NULL
+        },
         if (is.reindex) {
             list(eta.hat = eta.hat)
-        } else NULL,
+        } else {
+            NULL
+        },
         if (add.p.value) {
             list(p.value = p.value)
-        } else NULL
+        } else {
+            NULL
+        }
     )
 
     class(result) <- "sadf"

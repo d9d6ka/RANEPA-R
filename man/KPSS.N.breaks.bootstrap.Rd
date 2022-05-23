@@ -12,11 +12,13 @@ KPSS.N.breaks.bootstrap(
   const = FALSE,
   trend = FALSE,
   weakly.exog = TRUE,
-  ll.init,
+  lags.init,
+  leads.init,
   corr.max,
   kernel,
   iter = 9999,
-  bootstrap = "sample"
+  bootstrap = "sample",
+  criterion = "bic"
 )
 }
 \arguments{
@@ -44,8 +46,6 @@ KPSS.N.breaks.bootstrap(
 (DOLS is used in this case).}
 }}
 
-\item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
-
 \item{corr.max}{scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected using the BIC
 information criterion.}
@@ -66,6 +66,11 @@ information criterion.}
 variable.}
 \item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
 }}
+
+\item{criterion}{Information criterion for DOLS lags and leads selection:
+aic, bic or lwz.}
+
+\item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 }
 \value{
 List of 3 elements:

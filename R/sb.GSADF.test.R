@@ -25,11 +25,13 @@ sb.GSADF.test <- function(y,
     progress <- function(n) setTxtProgressBar(progress.bar, n)
 
     cluster <- makeCluster(max(cores - 1, 1))
-    clusterExport(cluster, c("ADF.test",
-                             "GSADF.test",
-                             "supSBADF.statistic",
-                             ".cval_GSADF_without_const",
-                             ".cval_GSADF_with_const"))
+    clusterExport(cluster, c(
+        "ADF.test",
+        "GSADF.test",
+        "supSBADF.statistic",
+        ".cval_GSADF_without_const",
+        ".cval_GSADF_with_const"
+    ))
     registerDoSNOW(cluster)
 
     GSADF.supSBADF.bootstrap.values <- foreach(
@@ -99,7 +101,7 @@ sb.GSADF.test <- function(y,
         is.explosive <- ifelse(U.value > U.cr.value, 1, 0)
     } else {
         p.value <- round(sum(supSBADF.bootstrap.values > supSBADF.value) /
-                         iter, 4)
+            iter, 4)
 
         is.explosive <- ifelse(supSBADF.value > supSBADF.cr.value, 1, 0)
     }
@@ -130,7 +132,9 @@ sb.GSADF.test <- function(y,
                 U.bootstrap.values = U.bootstrap.values,
                 U.cr.value = U.cr.value
             )
-        } else NULL
+        } else {
+            NULL
+        }
     )
 
     class(result) <- "sadf"

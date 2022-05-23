@@ -9,18 +9,19 @@ lagn <- function(x, i) {
     if (!is.matrix(x)) x <- as.matrix(x)
     N <- nrow(x)
     k <- ncol(x)
-    if (i > 0)
+    if (i > 0) {
         return(
             rbind(
                 matrix(data = NA, nrow = i, ncol = k),
                 x[1:(N - i), , drop = FALSE]
             )
         )
-    else
+    } else {
         return(
             rbind(
                 x[(1 + abs(i)):N, , drop = FALSE],
                 matrix(data = NA, nrow = abs(i), ncol = k)
             )
         )
+    }
 }

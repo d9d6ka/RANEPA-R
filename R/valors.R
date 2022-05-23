@@ -17,8 +17,9 @@ critical_values_KPSS_2p <- function(model, break.point, N) {
 
     lambda2 <- round(break.point[2] / N, 1)
     j <- trunc(lambda2 * 10)
-    if (1 <= model & model <= 4)
+    if (1 <= model & model <= 4) {
         j <- j - 1
+    }
 
     v_vc <- .cval_KPSS_2p[[model]]
 
