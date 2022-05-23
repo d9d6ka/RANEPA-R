@@ -22,9 +22,9 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
     rho <- rep(0, N)
     for (k in 1:N) {
         if (kernel == "unif") {
-            W <- ifelse(abs(((1:N) - k) / N / h) <= 1, 1, 0)
+            W <- ifelse(abs((k - (1:N)) / N / h) <= 1, 1, 0)
         } else if (kernel == "gauss") {
-            W <- pnorm(((1:N) - k) / N / h)
+            W <- pnorm((k - (1:N)) / N / h)
         }
         rho[k] <- sum(x * W * y) / sum(x * W * x)
     }
