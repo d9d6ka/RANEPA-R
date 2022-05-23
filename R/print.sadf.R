@@ -27,4 +27,9 @@ print.sadf <- function(object) {
 
     if ("p.value" %in% names(object))
         cat("P-value:", object$p.value, "\n")
+
+    if ("is.explosive" %in% names(object))
+        cat("Current process is",
+            ifelse(object$is.explosive == 1, "", "not"),
+            "explosive\n")
 }
