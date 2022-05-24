@@ -17,8 +17,8 @@ STADF.test <- function(y,
                        add.p.value = TRUE) {
     N <- length(y)
 
-    # Part 4.1. NW estimation.
-    # Estimate kernel regression either on the basis of CV or for a fixed h.
+                                        # Part 4.1. NW estimation.
+                                        # Estimate kernel regression either on the basis of CV or for a fixed h.
     y.0 <- y - y[1]
     my <- diff(y.0)
     mx <- y.0[1:(N - 1)]
@@ -28,10 +28,10 @@ STADF.test <- function(y,
     h.est <- hc * nw.model.cv$h
     u.hat <- nw.model$u.hat
 
-    # Truncating the residuals.
+                                        # Truncating the residuals.
     if (truncated == TRUE) {
         if (ksi.input == "auto") {
-            # Calculate sigma.
+                                        # Calculate sigma.
             sigma <- 0
             bd <- round(0.1 * (N - 1))
             for (s in bd:(N - 1)) {
@@ -50,14 +50,14 @@ STADF.test <- function(y,
         u.hat.star <- u.hat
     }
 
-    # w.sq - the average of squares residues.
+                                        # w.sq - the average of squares residues.
     if (omega.est == TRUE) {
         w.sq <- mean(u.hat.star^2)
     } else {
         w.sq <- 1
     }
 
-    # Part 4.2. Reindex.
+                                        # Part 4.2. Reindex.
     if (is.reindex == TRUE) {
         c(., ., eta.hat, ., new.index) %<-% reindex(u.hat.star)
     } else {
@@ -65,12 +65,12 @@ STADF.test <- function(y,
     }
     y.tt <- y[new.index + 1]
 
-    # Part 4.3. STADF test.
+                                        # Part 4.3. STADF test.
     t.values <- c()
     m <- 1
 
     for (j in (floor(r0 * N)):N) {
-        # If we consider a model with a constant, we subtract the moving average.
+                                        # If we consider a model with a constant, we subtract the moving average.
         if (const) {
             y.tt.norm <- y.tt - mean(y.tt[1:j])
         } else {
@@ -82,10 +82,10 @@ STADF.test <- function(y,
         m <- m + 1
     }
 
-    # Take the maximum of the calculated t-statistics.
-    stadf.value <- max(t.values)
+                                        # Take the maximum of the calculated t-statistics.
+    STADF.value <- max(t.values)
 
-    # Critical value.
+                                        # Critical value.
     if (const == TRUE) {
         cr.value <- 2.2 # modify
     } else {
@@ -98,11 +98,20 @@ STADF.test <- function(y,
         } else {
             cr.values <- .cval_SADF_without_const
         }
-        p.value <- round(sum(cr.values > stadf.value) / length(cr.values), 4)
-    }
 
-    # If stadf_value > cr_value, we reject the null hypothesis.
-    is.explosive <- ifelse(stadf.value > cr.value, 1, 0)
+        log.N = log(N / 100, base = 2)
+
+        i.0 <- max(floor(log.N), 0)
+        p.0 <- sum(cr.values[[i.0 + 1]] > STADF.value) /
+            length(cr.values[[i.0 + 1]])
+
+        i.1 <- min(ceiling(log.N), 4)
+        p.1 <- sum(cr.values[[i.1 + 1]] > STADF.value) /
+            length(cr.values[[i.1 + 1]])
+
+        p.value <- p.0 + (p.1 - p.0) * (N - 2^i.0 * 100) /
+            ((2^i.1 - 2^i.0) * 100)
+    }
 
     result <- c(
         list(
@@ -122,8 +131,7 @@ STADF.test <- function(y,
             pc = pc,
             w.sq = w.sq,
             t.values = t.values,
-            stadf.value = stadf.value,
-            is.explosive = is.explosive
+            STADF.value = STADF.value
         ),
         if (truncated) {
             list(u.hat.truncated = u.hat.truncated)

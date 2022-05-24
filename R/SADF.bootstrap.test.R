@@ -46,8 +46,6 @@ SADF.bootstrap.test <- function(y,
 
     p.value <- round(sum(SADF.bootstrap.values > SADF.value) / iter, 4)
 
-    is.explosive <- ifelse(SADF.value > cr.value, 1, 0)
-
     result <- list(
         y = y,
         r0 = r0,
@@ -59,8 +57,7 @@ SADF.bootstrap.test <- function(y,
         SADF.value = SADF.value,
         SADF.bootstrap.values = SADF.bootstrap.values,
         cr.value = cr.value,
-        p.value = p.value,
-        is.explosive = is.explosive
+        p.value = p.value
     )
 
     class(result) <- "sadf"

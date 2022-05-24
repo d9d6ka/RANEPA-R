@@ -86,15 +86,7 @@ GSTADF.test <- function(y,
     }
 
     # Take the maximum of the calculated t-statistics.
-    gstadf.value <- max(t.values)
-
-    # Critical value.
-    if (const == TRUE) {
-        cr.value <- 1.524
-    } else {
-        cr.value <- 2.781
-    }
-
+    GSTADF.value <- max(t.values)
 
     if (add.p.value) {
         if (const == TRUE) {
@@ -102,11 +94,20 @@ GSTADF.test <- function(y,
         } else {
             cr.values <- .cval_GSADF_without_const
         }
-        p.value <- round(sum(cr.values > gstadf.value) / length(cr.values), 4)
-    }
 
-    # If gstadf_value > cr_value, we reject the null hypothesis.
-    is.explosive <- ifelse(gstadf.value > cr.value, 1, 0)
+        log.N = log(N / 100, base = 2)
+
+        i.0 <- max(floor(log.N), 0)
+        p.0 <- sum(cr.values[[i.0 + 1]] > GSTADF.value) /
+            length(cr.values[[i.0 + 1]])
+
+        i.1 <- min(ceiling(log.N), 4)
+        p.1 <- sum(cr.values[[i.1 + 1]] > GSTADF.value) /
+            length(cr.values[[i.1 + 1]])
+
+        p.value <- p.0 + (p.1 - p.0) * (N - 2^i.0 * 100) /
+            ((2^i.1 - 2^i.0) * 100)
+    }
 
     result <- c(
         list(
@@ -126,8 +127,7 @@ GSTADF.test <- function(y,
             pc = pc,
             w.sq = w.sq,
             t.values = t.values,
-            gstadf.value = gstadf.value,
-            is.explosive = is.explosive
+            GSTADF.value = GSTADF.value
         ),
         if (truncated) {
             list(u.hat.truncated = u.hat.truncated)

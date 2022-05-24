@@ -34,10 +34,20 @@ SADF.test <- function(y,
         } else {
             cr.values <- .cval_SADF_without_const
         }
-        p.value <- round(sum(cr.values > SADF.value) / length(cr.values), 4)
-    }
 
-    is.explosive <- ifelse(SADF.value > cr.value, 1, 0)
+        log.N = log(N / 100, base = 2)
+
+        i.0 <- max(floor(log.N), 0)
+        p.0 <- sum(cr.values[[i.0 + 1]] > SADF.value) /
+            length(cr.values[[i.0 + 1]])
+
+        i.1 <- min(ceiling(log.N), 4)
+        p.1 <- sum(cr.values[[i.1 + 1]] > SADF.value) /
+            length(cr.values[[i.1 + 1]])
+
+        p.value <- p.0 + (p.1 - p.0) * (N - 2^i.0 * 100) /
+            ((2^i.1 - 2^i.0) * 100)
+    }
 
     result <- c(
         list(
@@ -45,8 +55,7 @@ SADF.test <- function(y,
             r0 = r0,
             const = const,
             t.values = t.values,
-            SADF.value = SADF.value,
-            is.explosive = is.explosive
+            SADF.value = SADF.value
         ),
         if (add.p.value) {
             list(p.value = p.value)

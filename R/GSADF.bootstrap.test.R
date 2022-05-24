@@ -29,7 +29,7 @@ GSADF.bootstrap.test <- function(y,
     clusterExport(cluster, c("GSADF.test"))
     registerDoSNOW(cluster)
 
-    SADF.bootstsrap.values <- foreach(
+    GSADF.bootstsrap.values <- foreach(
         step = 1:iter,
         .combine = c,
         .options.snow = list(progress = progress)
@@ -41,11 +41,9 @@ GSADF.bootstrap.test <- function(y,
     stopCluster(cluster)
 
     # Find critical value.
-    cr.value <- as.numeric(quantile(SADF.bootstsrap.values, 1 - alpha))
+    cr.value <- as.numeric(quantile(GSADF.bootstsrap.values, 1 - alpha))
 
-    p.value <- round(sum(SADF.bootstsrap.values > GSADF.value) / iter, 4)
-
-    is.explosive <- ifelse(GSADF.value > cr.value, 1, 0)
+    p.value <- round(sum(GSADF.bootstsrap.values > GSADF.value) / iter, 4)
 
     result <- list(
         y = y,
@@ -56,10 +54,9 @@ GSADF.bootstrap.test <- function(y,
         seed = seed,
         t.values = t.values,
         GSADF.value = GSADF.value,
-        SADF.bootstsrap.values = SADF.bootstsrap.values,
+        GSADF.bootstsrap.values = GSADF.bootstsrap.values,
         cr.value = cr.value,
-        p.value = p.value,
-        is.explosive = is.explosive
+        p.value = p.value
     )
 
     class(result) <- "sadf"
