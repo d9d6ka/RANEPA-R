@@ -45,8 +45,6 @@ GSADF.test <- function(y,
             ((2^i.1 - 2^i.0) * 100)
     }
 
-    is.explosive <- ifelse(GSADF.value > cr.value, 1, 0)
-
     result <- c(
         list(
             y = y,
