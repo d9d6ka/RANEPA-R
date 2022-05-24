@@ -15,13 +15,13 @@ weighted.SADF.test <- function(y,
                                seed = round(10^4 * sd(y))) {
     N <- length(y)
 
-    # Find supBZ.value.
+    ## Find supBZ.value.
     supBZ.model <- supBZ.statistic(y, r0)
     sigma.sq <- supBZ.model$sigma.sq
     BZ.values <- supBZ.model$BZ.values
     supBZ.value <- supBZ.model$supBZ.value
 
-    # Do parallel.
+    ## Do parallel.
     cores <- detectCores()
 
     progress.bar <- txtProgressBar(max = iter, style = 3)
@@ -55,35 +55,35 @@ weighted.SADF.test <- function(y,
 
     stopCluster(cluster)
 
-    # Get sadf_supBZ_bootstrap.values.
+    ## Get sadf_supBZ_bootstrap.values.
     supBZ.bootstrap.values <- SADF.supBZ.bootstrap.values[, 2]
 
-    # Find critical value.
+    ## Find critical value.
     supBZ.cr.value <- as.numeric(quantile(
         supBZ.bootstrap.values,
         1 - alpha
     ))
 
-    # A union of rejections strategy.
+    ## A union of rejections strategy.
     if (urs == TRUE) {
-        # Find SADF.value.
+        ## Find SADF.value.
         sadf.model <- SADF.test(y, r0, const)
         t.values <- sadf.model$t.values
         SADF.value <- sadf.model$SADF.value
 
-        # Get sadf_supBZ.bootstrap.values.
+        ## Get sadf_supBZ.bootstrap.values.
         SADF.bootstrap.values <- SADF.supBZ.bootstrap.values[, 1]
 
-        # Find critical value.
+        ## Find critical value.
         SADF.cr.value <- as.numeric(quantile(SADF.bootstrap.values, 1 - alpha))
 
-        # Calculate U value.
+        ## Calculate U value.
         U.value <- max(
             SADF.value,
             SADF.cr.value / supBZ.cr.value * supBZ.value
         )
 
-        # Find U_bootstrap.values.
+        ## Find U_bootstrap.values.
         U.bootstrap.values <- c()
         for (b in 1:iter) {
             U.bootstrap.values[b] <- max(
@@ -94,7 +94,7 @@ weighted.SADF.test <- function(y,
             )
         }
 
-        # Find critical value.
+        ## Find critical value.
         U.cr.value <- as.numeric(quantile(U.bootstrap.values, 1 - alpha))
 
         p.value <- round(sum(U.bootstrap.values > U.value) / iter, 4)

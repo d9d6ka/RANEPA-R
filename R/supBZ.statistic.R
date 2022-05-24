@@ -9,7 +9,7 @@ supBZ.statistic <- function(y,
     N <- length(y)
 
     if (is.null(sigma.sq)) {
-        # NW estimation.
+        ## NW estimation.
         my <- (diff(y))^2
         mx <- rep(1, N - 1)
         nw.loocv.model <- NW.loocv(my, mx, kernel = "gauss")
@@ -20,7 +20,7 @@ supBZ.statistic <- function(y,
         )
         u.hat <- nw.model$u.hat
 
-        # Calculate sigma.sq.
+        ## Calculate sigma.sq.
         sigma.sq <- my - nw.model$u.hat
     }
 

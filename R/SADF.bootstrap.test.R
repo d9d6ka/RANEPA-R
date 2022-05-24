@@ -14,12 +14,12 @@ SADF.bootstrap.test <- function(y,
                                 seed = round(10^4 * sd(y))) {
     N <- length(y)
 
-    # Find SADF.value.
+    ## Find SADF.value.
     model <- SADF.test(y, r0, const)
     t.values <- model$t.values
     SADF.value <- model$SADF.value
 
-    # Do parallel.
+    ## Do parallel.
     cores <- detectCores()
 
     progress.bar <- txtProgressBar(max = iter, style = 3)
@@ -41,7 +41,7 @@ SADF.bootstrap.test <- function(y,
 
     stopCluster(cluster)
 
-    # Find critical value.
+    ## Find critical value.
     cr.value <- as.numeric(quantile(SADF.bootstrap.values, 1 - alpha))
 
     p.value <- round(sum(SADF.bootstrap.values > SADF.value) / iter, 4)

@@ -22,12 +22,6 @@ SADF.test <- function(y,
 
     SADF.value <- max(t.values)
 
-    if (const == TRUE) {
-        cr.value <- 2.2 # modify
-    } else {
-        cr.value <- 3.36 # modify
-    }
-
     if (add.p.value) {
         if (const == TRUE) {
             cr.values <- .cval_SADF_with_const

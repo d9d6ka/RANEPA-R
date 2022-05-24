@@ -15,10 +15,10 @@ sb.GSADF.test <- function(y,
                           seed = round(10^4 * sd(y))) {
     N <- length(y)
 
-    # Find supSBADF_value.
+    ## Find supSBADF_value.
     supSBADF.model <- supSBADF.statistic(y, r0)
 
-    # Do parallel.
+    ## Do parallel.
     cores <- detectCores()
 
     progress.bar <- txtProgressBar(max = iter, style = 3)
@@ -53,38 +53,38 @@ sb.GSADF.test <- function(y,
 
     stopCluster(cluster)
 
-    # Get sadf_supSBADF_bootstrap_values
+    ## Get sadf_supSBADF_bootstrap_values
     supSBADF.bootstrap.values <- GSADF.supSBADF.bootstrap.values[, 2]
 
-    # Find critical value.
+    ## Find critical value.
     supSBADF.cr.value <- as.numeric(quantile(
         supSBADF.bootstrap.values,
         1 - alpha
     ))
 
-    # A union of rejections strategy.
+    ## A union of rejections strategy.
     if (urs == TRUE) {
-        # Find sadf_value.
+        ## Find sadf_value.
         gsadf.model <- GSADF.test(y, r0, const)
         t.values <- gsadf.model$t.values
         GSADF.value <- gsadf.model$GSADF.value
 
-        # Get sadf_supSBADF_bootstrap_values
+        ## Get sadf_supSBADF_bootstrap_values
         GSADF.bootstrap.values <- SGADF.supSBADF.bootstrap.values[, 1]
 
-        # Find critical value.
+        ## Find critical value.
         GSADF.cr.value <- as.numeric(quantile(
             GSADF.bootstrap.values,
             1 - alpha
         ))
 
-        # Calculate U value.
+        ## Calculate U value.
         U.value <- max(
             GSADF.value,
             GSADF.cr.value / supSBADF.cr.value * supSBADF.value
         )
 
-        # Find U_bootstrap_values.
+        ## Find U_bootstrap_values.
         U.bootstrap.values <- c()
         for (b in 1:iter) {
             U.bootstrap.values[b] <- max(
@@ -93,7 +93,7 @@ sb.GSADF.test <- function(y,
             )
         }
 
-        # Find critical value.
+        ## Find critical value.
         U.cr.value <- as.numeric(quantile(U.bootstrap.values, 1 - alpha))
 
         p.value <- round(sum(U.bootstrap.values > U.value) / iter, 4)

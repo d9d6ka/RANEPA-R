@@ -9,7 +9,7 @@ supSBADF.statistic <- function(y,
                                generalized = FALSE) {
     N <- length(y)
 
-    # Calculate C.t.
+    ## Calculate C.t.
     C.t <- cumsum(sign(diff(y)))
 
     SBADF.values <- c()

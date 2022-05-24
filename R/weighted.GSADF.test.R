@@ -15,13 +15,13 @@ weighted.GSADF.test <- function(y,
                                 seed = round(10^4 * sd(y))) {
     N <- length(y)
 
-    # Find supBZ.value.
+    ## Find supBZ.value.
     supBZ.model <- supBZ.statistic(y, r0)
     sigma.sq <- supBZ.model$sigma.sq
     BZ.values <- supBZ.model$BZ.values
     supBZ.value <- supBZ.model$supBZ.value
 
-    # Do parallel.
+    ## Do parallel.
     cores <- detectCores()
 
     progress.bar <- txtProgressBar(max = iter, style = 3)
@@ -55,38 +55,38 @@ weighted.GSADF.test <- function(y,
 
     stopCluster(cluster)
 
-    # Get sadf_supBZ.bootstsrap.values.
+    ## Get sadf_supBZ.bootstsrap.values.
     supBZ.bootstsrap.values <- SADF.supBZ.bootstrap.values[, 2]
 
-    # Find critical value.
+    ## Find critical value.
     supBZ.cr.value <- as.numeric(quantile(
         supBZ.bootstsrap.values,
         1 - alpha
     ))
 
-    # A union of rejections strategy.
+    ## A union of rejections strategy.
     if (urs == TRUE) {
-        # Find sadf.value.
+        ## Find sadf.value.
         gsadf.model <- GSADF.test(y, r0, const)
         t.values <- gsadf.model$t.values
         GSADF.value <- gsadf.model$GSADF.value
 
-        # Get sadf_supBZ.bootstsrap.values.
+        ## Get sadf_supBZ.bootstsrap.values.
         GSADF.bootstsrap.values <- SADF.supBZ.bootstrap.values[, 1]
 
-        # Find critical value.
+        ## Find critical value.
         GSADF.cr.value <- as.numeric(quantile(
             GSADF.bootstsrap.values,
             1 - alpha
         ))
 
-        # Calculate U value.
+        ## Calculate U value.
         U.value <- max(
             GSADF.value,
             GSADF.cr.value / supBZ.cr.value * supBZ.value
         )
 
-        # Find U.bootstsrap.values.
+        ## Find U.bootstsrap.values.
         U.bootstsrap.values <- c()
         for (b in 1:iter) {
             U.bootstsrap.values[b] <- max(
@@ -95,7 +95,7 @@ weighted.GSADF.test <- function(y,
             )
         }
 
-        # Find critical value.
+        ## Find critical value.
         U.cr.value <- as.numeric(quantile(U.bootstsrap.values, 1 - alpha))
 
         p.value <- round(sum(U.bootstsrap.values > U.value) / iter, 4)

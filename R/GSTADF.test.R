@@ -17,8 +17,8 @@ GSTADF.test <- function(y,
                         add.p.value = TRUE) {
     N <- length(y)
 
-    # Part 4.1. NW estimation.
-    # Estimate kernel regression either on the basis of CV or for a fixed h.
+    ## Part 4.1. NW estimation.
+    ## Estimate kernel regression either on the basis of CV or for a fixed h.
     y.0 <- y - y[1]
     my <- diff(y.0)
     mx <- y.0[1:(N - 1)]
@@ -28,10 +28,10 @@ GSTADF.test <- function(y,
     h.est <- hc * nw.model.cv$h
     u.hat <- nw.model$u.hat
 
-    # Truncating the residuals.
+    ## Truncating the residuals.
     if (truncated == TRUE) {
         if (ksi.input == "auto") {
-            # Calculate sigma.
+            ## Calculate sigma.
             sigma <- 0
             bd <- round(0.1 * (N - 1))
             for (s in bd:(N - 1)) {
@@ -51,14 +51,14 @@ GSTADF.test <- function(y,
         u.hat.star <- u.hat
     }
 
-    # w.sq - the average of squares residues.
+    ## w.sq - the average of squares residues.
     if (omega.est == TRUE) {
         w.sq <- mean(u.hat.star^2)
     } else {
         w.sq <- 1
     }
 
-    # Part 4.2. Reindex.
+    ## Part 4.2. Reindex.
     if (is.reindex == TRUE) {
         c(., ., eta.hat, ., new.index) %<-% reindex(u.hat.star)
     } else {
@@ -66,13 +66,14 @@ GSTADF.test <- function(y,
     }
     y.tt <- y[new.index + 1]
 
-    # Part 4.3. STADF test.
+    ## Part 4.3. STADF test.
     t.values <- c()
     m <- 1
 
     for (i in 1:(N - floor(r0 * N) + 1)) {
         for (j in (i + floor(r0 * N) - 1):N) {
-            # If we consider a model with a constant, we subtract the moving average.
+            ## If we consider a model with a constant,
+            ## we subtract the moving average.
             if (const) {
                 y.tt.norm <- y.tt - mean(y.tt[i:j])
             } else {
@@ -85,7 +86,7 @@ GSTADF.test <- function(y,
         }
     }
 
-    # Take the maximum of the calculated t-statistics.
+    ## Take the maximum of the calculated t-statistics.
     GSTADF.value <- max(t.values)
 
     if (add.p.value) {

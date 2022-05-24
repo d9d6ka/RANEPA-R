@@ -14,12 +14,12 @@ GSADF.bootstrap.test <- function(y,
                                  seed = round(10^4 * sd(y))) {
     N <- length(y)
 
-    # Find SADF.value.
+    ## Find SADF.value.
     model <- GSADF.test(y, r0, const)
     t.values <- model$t.values
     GSADF.value <- model$GSADF.value
 
-    # Do parallel.
+    ## Do parallel.
     cores <- detectCores()
 
     progress.bar <- txtProgressBar(max = iter, style = 3)
@@ -40,7 +40,7 @@ GSADF.bootstrap.test <- function(y,
     }
     stopCluster(cluster)
 
-    # Find critical value.
+    ## Find critical value.
     cr.value <- as.numeric(quantile(GSADF.bootstsrap.values, 1 - alpha))
 
     p.value <- round(sum(GSADF.bootstsrap.values > GSADF.value) / iter, 4)
