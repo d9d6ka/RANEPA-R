@@ -2,9 +2,24 @@ library(parallel)
 library(doSNOW)
 library(breaktest)
 
-NN_sim <- 9999
+N_sim <- 999
+N_obs <- c(
+    seq(from = 30, to = 99, by = 10),
+    seq(from = 100, to = 199, by = 20),
+    seq(from = 200, to = 399, by = 50),
+    seq(from = 400, to = 799, by = 100),
+    seq(from = 800, to = 1599, by = 200),
+    seq(from = 1600, to = 3200, by = 400)
+)
 
-progress.bar <- txtProgressBar(max = NN_sim, style = 3)
+## 30-100 шаг 10 наблюдений
+## 100-200 шаг 20 наблюдений
+## 200-400 шаг 50 наблюдений
+## 400-800 шаг 100 наблюдений
+## 800-1600 шаг 200 наблюдений
+## 1600-3200 шаг 400 (или сразу 800 бахнуть) наблюдений
+
+progress.bar <- txtProgressBar(max = N_sim, style = 3)
 progress <- function(n) setTxtProgressBar(progress.bar, n)
 
 cores <- detectCores()
@@ -12,351 +27,81 @@ cluster <- makeCluster(max(cores - 1, 1))
 clusterExport(cluster, c("STADF.test", "GSTADF.test"))
 registerDoSNOW(cluster)
 
-cat(" --------------------- 100 --------------------- ")
-# tau.break - Bubble period.
-cval_SADF_without_const_100 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(100)
-    y <- cumsum(y)
+.cval_SADF_without_const <- list()
+.cval_SADF_with_const <- list()
+.cval_GSADF_without_const <- list()
+.cval_GSADF_with_const <- list()
 
-    model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
+for (step in N_obs) {
+    cat("\nCalculating tables for", step, "observations\n")
 
-    model$stadf.value
+    tmp <- NULL
+    tmp <- foreach(
+        i = 1:N_sim,
+        .combine = c,
+        .options.snow = list(progress = progress)
+    ) %dopar% {
+        y <- rnorm(step)
+        y <- cumsum(y)
+
+        model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
+
+        model$STADF.value
+    }
+    tmp <- sort(tmp)
+    names(tmp) <- NULL
+    .cval_SADF_without_const[[as.character(step)]] <- tmp
+
+    tmp <- NULL
+    tmp <- foreach(
+        i = 1:N_sim,
+        .combine = c,
+        .options.snow = list(progress = progress)
+    ) %dopar% {
+        y <- rnorm(step)
+        y <- cumsum(y)
+
+        model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
+
+        model$STADF.value
+    }
+    tmp <- sort(tmp)
+    names(tmp) <- NULL
+    .cval_SADF_with_const[[as.character(step)]] <- tmp
+
+    tmp <- NULL
+    tmp <- foreach(
+        i = 1:N_sim,
+        .combine = c,
+        .options.snow = list(progress = progress)
+    ) %dopar% {
+        y <- rnorm(step)
+        y <- cumsum(y)
+
+        model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
+
+        model$GSTADF.value
+    }
+    tmp <- sort(tmp)
+    names(tmp) <- NULL
+    .cval_GSADF_without_const[[as.character(step)]] <- tmp
+
+    tmp <- NULL
+    tmp <- foreach(
+        i = 1:N_sim,
+        .combine = c,
+        .options.snow = list(progress = progress)
+    ) %dopar% {
+        y <- rnorm(step)
+        y <- cumsum(y)
+
+        model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
+
+        model$GSTADF.value
+    }
+    tmp <- sort(tmp)
+    names(tmp) <- NULL
+    .cval_GSADF_with_const[[as.character(step)]] <- tmp
 }
-cval_SADF_without_const_100 <- sort(cval_SADF_without_const_100)
-names(cval_SADF_without_const_100) <- NULL
-
-cval_SADF_with_const_100 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(100)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_with_const_100 <- sort(cval_SADF_with_const_100)
-names(cval_SADF_with_const_100) <- NULL
-
-# tau.break - Bubble period.
-cval_GSADF_without_const_100 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(100)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_without_const_100 <- sort(cval_GSADF_without_const_100)
-names(cval_GSADF_without_const_100) <- NULL
-
-cval_GSADF_with_const_100 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(100)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_with_const_100 <- sort(cval_GSADF_with_const_100)
-names(cval_GSADF_with_const_100) <- NULL
-
-cat(" --------------------- 200 --------------------- ")
-# tau.break - Bubble period.
-cval_SADF_without_const_200 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(200)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_without_const_200 <- sort(cval_SADF_without_const_200)
-names(cval_SADF_without_const_200) <- NULL
-
-cval_SADF_with_const_200 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(200)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_with_const_200 <- sort(cval_SADF_with_const_200)
-names(cval_SADF_with_const_200) <- NULL
-
-# tau.break - Bubble period.
-cval_GSADF_without_const_200 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(200)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_without_const_200 <- sort(cval_GSADF_without_const_200)
-names(cval_GSADF_without_const_200) <- NULL
-
-cval_GSADF_with_const_200 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(200)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_with_const_200 <- sort(cval_GSADF_with_const_200)
-names(cval_GSADF_with_const_200) <- NULL
-
-cat(" --------------------- 400 --------------------- ")
-# tau.break - Bubble period.
-cval_SADF_without_const_400 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(400)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_without_const_400 <- sort(cval_SADF_without_const_400)
-names(cval_SADF_without_const_400) <- NULL
-
-cval_SADF_with_const_400 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(400)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_with_const_400 <- sort(cval_SADF_with_const_400)
-names(cval_SADF_with_const_400) <- NULL
-
-# tau.break - Bubble period.
-cval_GSADF_without_const_400 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(400)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_without_const_400 <- sort(cval_GSADF_without_const_400)
-names(cval_GSADF_without_const_400) <- NULL
-
-cval_GSADF_with_const_400 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(400)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_with_const_400 <- sort(cval_GSADF_with_const_400)
-names(cval_GSADF_with_const_400) <- NULL
-
-cat(" --------------------- 800 --------------------- ")
-# tau.break - Bubble period.
-cval_SADF_without_const_800 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(800)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_without_const_800 <- sort(cval_SADF_without_const_800)
-names(cval_SADF_without_const_800) <- NULL
-
-cval_SADF_with_const_800 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(800)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_with_const_800 <- sort(cval_SADF_with_const_800)
-names(cval_SADF_with_const_800) <- NULL
-
-# tau.break - Bubble period.
-cval_GSADF_without_const_800 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(800)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_without_const_800 <- sort(cval_GSADF_without_const_800)
-names(cval_GSADF_without_const_800) <- NULL
-
-cval_GSADF_with_const_800 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(800)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_with_const_800 <- sort(cval_GSADF_with_const_800)
-names(cval_GSADF_with_const_800) <- NULL
-
-cat(" --------------------- 1600 --------------------- ")
-# tau.break - Bubble period.
-cval_SADF_without_const_1600 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(1600)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_without_const_1600 <- sort(cval_SADF_without_const_1600)
-names(cval_SADF_without_const_1600) <- NULL
-
-cval_SADF_with_const_1600 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(1600)
-    y <- cumsum(y)
-
-    model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$stadf.value
-}
-cval_SADF_with_const_1600 <- sort(cval_SADF_with_const_1600)
-names(cval_SADF_with_const_1600) <- NULL
-
-# tau.break - Bubble period.
-cval_GSADF_without_const_1600 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(1600)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_without_const_1600 <- sort(cval_GSADF_without_const_1600)
-names(cval_GSADF_without_const_1600) <- NULL
-
-cval_GSADF_with_const_1600 <- foreach(
-    i = 1:NN_sim,
-    .combine = c,
-    .options.snow = list(progress = progress)
-) %dopar% {
-    y <- rnorm(1600)
-    y <- cumsum(y)
-
-    model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
-
-    model$gstadf.value
-}
-cval_GSADF_with_const_1600 <- sort(cval_GSADF_with_const_1600)
-names(cval_GSADF_with_const_1600) <- NULL
-
-.cval_SADF_with_const <- list(
-    cval_SADF_with_const_100,
-    cval_SADF_with_const_200,
-    cval_SADF_with_const_400,
-    cval_SADF_with_const_800,
-    cval_SADF_with_const_1600
-)
-
-.cval_SADF_without_const <- list(
-    cval_SADF_without_const_100,
-    cval_SADF_without_const_200,
-    cval_SADF_without_const_400,
-    cval_SADF_without_const_800,
-    cval_SADF_without_const_1600
-)
-
-.cval_GSADF_with_const <- list(
-    cval_GSADF_with_const_100,
-    cval_GSADF_with_const_200,
-    cval_GSADF_with_const_400,
-    cval_GSADF_with_const_800,
-    cval_GSADF_with_const_1600
-)
-
-.cval_GSADF_without_const <- list(
-    cval_GSADF_without_const_100,
-    cval_GSADF_without_const_200,
-    cval_GSADF_without_const_400,
-    cval_GSADF_without_const_800,
-    cval_GSADF_without_const_1600
-)
 
 stopCluster(cluster)
