@@ -51,22 +51,22 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
         OLS(d.y, cbind(deter, x[, 1]))
     min.lag <- 0
 
-    if (criterion == "bic")
-        min.criterion <- log(drop(t(min.resid) %*% min.resid) /
-                             (length(min.resid) - length(min.beta))) +
-            length(min.beta) * log(length(min.resid) - length(min.beta)) /
-                (length(min.resid) - length(min.beta))
-    else if (criterion == "aic")
-        min.criterion <- log(drop(t(min.resid) %*% min.resid) /
-                             (length(min.resid) - length(min.beta))) +
-            2 * length(min.beta) / (length(min.resid) - length(min.beta))
-    else if (criterion == "lwz")
-        min.criterion <- log(drop(t(min.resid) %*% min.resid) /
-                             (length(min.resid) - length(min.beta))) +
-            0.299 * length(min.beta) *
-            (log(length(min.resid) - length(min.beta)))^2.1
-
     if (max.lag > 0) {
+        if (criterion == "bic")
+            min.criterion <- log(drop(t(min.resid) %*% min.resid) /
+                                 (length(min.resid) - length(min.beta))) +
+                length(min.beta) * log(length(min.resid) - length(min.beta)) /
+                (length(min.resid) - length(min.beta))
+        else if (criterion == "aic")
+            min.criterion <- log(drop(t(min.resid) %*% min.resid) /
+                                 (length(min.resid) - length(min.beta))) +
+                2 * length(min.beta) / (length(min.resid) - length(min.beta))
+        else if (criterion == "lwz")
+            min.criterion <- log(drop(t(min.resid) %*% min.resid) /
+                                 (length(min.resid) - length(min.beta))) +
+                0.299 * length(min.beta) *
+                (log(length(min.resid) - length(min.beta)))^2.1
+
         for (l in 1:max.lag) {
             deter <- NULL
             if (const)
@@ -106,8 +106,6 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
         }
     }
 
-    critical.value <- ifelse(const && trend, -3.14, ifelse(const, -2.86, -1.95))
-
     return(
         list(
             y = drop(y),
@@ -117,8 +115,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
             t.beta = drop(min.t.beta[pos]),
             critical.value = critical.value,
             residuals = min.resid,
-            lag = min.lag,
-            is.stationary = ifelse(min.t.beta[pos] < critical.value, 1, 0)
+            lag = min.lag
         )
     )
 }
