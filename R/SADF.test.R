@@ -20,6 +20,7 @@ SADF.test <- function(y,
         m <- m + 1
     }
 
+    ## Take the maximum of the calculated t-statistics.
     SADF.value <- max(t.values)
 
     if (add.p.value) {
@@ -29,18 +30,30 @@ SADF.test <- function(y,
             cr.values <- .cval_SADF_without_const
         }
 
-        log.N = log(N / 100, base = 2)
+        N.list <- as.numeric(names(cr.values))
 
-        i.0 <- max(floor(log.N), 0)
-        p.0 <- sum(cr.values[[i.0 + 1]] > SADF.value) /
-            length(cr.values[[i.0 + 1]])
+        if (N < min(N.list)) {
+            warning("Too little number of observations, using data for T = 30")
+            i.0 <- min(N.list)
+        } else {
+            i.0 <- max(N.list[N.list <= N])
+        }
+        p.0 <- sum(cr.values[[as.character(i.0)]] > SADF.value) /
+            length(cr.values[[as.character(i.0)]])
 
-        i.1 <- min(ceiling(log.N), 4)
-        p.1 <- sum(cr.values[[i.1 + 1]] > SADF.value) /
-            length(cr.values[[i.1 + 1]])
+        if (N > max(N.list)) {
+            i.1 <- max(N.list)
+        } else {
+            i.1 <- min(N.list[N.list >= N])
+        }
+        p.1 <- sum(cr.values[[as.character(i.1)]] > SADF.value) /
+            length(cr.values[[as.character(i.1)]])
 
-        p.value <- p.0 + (p.1 - p.0) * (N - 2^i.0 * 100) /
-            ((2^i.1 - 2^i.0) * 100)
+        if (i.0 != i.1) {
+            p.value <- p.0 + (p.1 - p.0) * (N - i.0) / (i.1 - i.0)
+        } else {
+            p.value <- p.0
+        }
     }
 
     result <- c(
