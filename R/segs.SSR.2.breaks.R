@@ -49,7 +49,7 @@ segs.SSR.2.breaks <- function(y, model) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
                 z <- determinants.KPSS.2.breaks(model, N, c(i, j))
-                c(beta, resid, p) %<-% OLS(y, z)
+                c(., resid, p, .) %<-% OLS(y, z)
                 SSR <- drop(t(resid) %*% resid)
                 if (SSR < SSR.min) {
                     r.min <- resid
@@ -62,7 +62,7 @@ segs.SSR.2.breaks <- function(y, model) {
         for (j in 2:(N - 4)) {
             for (i in (j + 2):(N - 2)) {
                 z <- determinants.KPSS.2.breaks(model, N, c(i, j))
-                c(beta, resid, p) %<-% OLS(y, z)
+                c(., resid, p, .) %<-% OLS(y, z)
                 SSR <- drop(t(resid) %*% resid)
                 if (SSR < SSR.min) {
                     r.min <- resid
