@@ -11,16 +11,17 @@
 #'
 #' @import MASS
 OLS <- function(y, x) {
-    beta <- qr.solve(t(x) %*% x) %*% t(x) %*% y
-    predict <- x %*% beta
-    resid <- y - predict
-    s2 <- drop(t(resid) %*% resid) / (nrow(x) - ncol(x))
-    t.beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(x) %*% x))), `/`)
+    tmp.model <- lm.fit(x, y)
+
+    S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) /
+        (nrow(x) - ncol(x))
+    t.beta <- tmp.model$coefficients / sqrt(diag(S.2 * qr.solve(t(x) %*% x)))
+
     return(
         list(
-            beta = beta,
-            resid = resid,
-            predict = predict,
+            beta = tmp.model$coefficients,
+            resid = tmp.model$residuals,
+            predict = tmp.model$fitted.values,
             t.beta = t.beta
         )
     )
