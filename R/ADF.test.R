@@ -23,7 +23,7 @@
 #' @export
 ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                      criterion = "bic") {
-    if (!is.matrix(y)) y <- as.matrix(y)
+    if (! is.matrix(y)) y <- as.matrix(y)
     if (! criterion %in% c("bic", "aic", "lwz")) {
         warning("WARNING! Unknown criterion, BIC is used")
         criterion <- "bic"

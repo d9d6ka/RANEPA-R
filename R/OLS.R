@@ -11,7 +11,7 @@
 #'
 #' @import MASS
 OLS <- function(y, x) {
-    tmp.model <- lm.fit(x, y)
+    tmp.model <- .lm.fit(x, y)
 
     S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) /
         (nrow(x) - ncol(x))
