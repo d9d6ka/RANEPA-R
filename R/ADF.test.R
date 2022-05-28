@@ -113,7 +113,6 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
             trend = trend,
             beta = min.beta,
             t.beta = drop(min.t.beta[pos]),
-            critical.value = critical.value,
             residuals = min.resid,
             lag = min.lag
         )

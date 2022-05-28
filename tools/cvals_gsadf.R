@@ -23,8 +23,7 @@ progress.bar <- txtProgressBar(max = N_sim, style = 3)
 progress <- function(n) setTxtProgressBar(progress.bar, n)
 
 cores <- detectCores()
-cluster <- makeCluster(max(cores - 1, 1))
-clusterExport(cluster, c("STADF.test", "GSTADF.test"))
+cluster <- makeCluster(max(cores - 1, 1), type = "SOCK")
 registerDoSNOW(cluster)
 
 .cval_SADF_without_const <- list()
@@ -35,73 +34,122 @@ registerDoSNOW(cluster)
 for (step in N_obs) {
     cat("\nCalculating tables for", step, "observations\n")
 
+    cat("without CONST\n")
     tmp <- NULL
     tmp <- foreach(
         i = 1:N_sim,
         .combine = c,
+        .inorder = FALSE,
+        .errorhandling = "remove",
+        .packages = c("breaktest"),
         .options.snow = list(progress = progress)
     ) %dopar% {
-        y <- rnorm(step)
-        y <- cumsum(y)
+        repeat {
+            y <- rnorm(step)
+            y <- cumsum(y)
 
-        model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
+            model <- STADF.test(y, const = FALSE, add.p.value = FALSE)
 
+            if (!is.na(model$STADF.value)) {
+                break
+            }
+        }
         model$STADF.value
     }
     tmp <- sort(tmp)
     names(tmp) <- NULL
     .cval_SADF_without_const[[as.character(step)]] <- tmp
+    cat("\nLen:", length(tmp), "\n")
 
+    cat("with CONST\n")
     tmp <- NULL
     tmp <- foreach(
         i = 1:N_sim,
         .combine = c,
+        .inorder = FALSE,
+        .errorhandling = "remove",
+        .packages = c("breaktest"),
         .options.snow = list(progress = progress)
     ) %dopar% {
-        y <- rnorm(step)
-        y <- cumsum(y)
+        repeat {
+            y <- rnorm(step)
+            y <- cumsum(y)
 
-        model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
+            model <- STADF.test(y, const = TRUE, add.p.value = FALSE)
 
+            if (!is.na(model$STADF.value)) {
+                break
+            }
+        }
         model$STADF.value
     }
     tmp <- sort(tmp)
     names(tmp) <- NULL
     .cval_SADF_with_const[[as.character(step)]] <- tmp
+    cat("\nLen:", length(tmp), "\n")
 
+    cat("without CONST\n")
     tmp <- NULL
     tmp <- foreach(
         i = 1:N_sim,
         .combine = c,
+        .inorder = FALSE,
+        .errorhandling = "remove",
+        .packages = c("breaktest"),
         .options.snow = list(progress = progress)
     ) %dopar% {
-        y <- rnorm(step)
-        y <- cumsum(y)
+        repeat {
+            y <- rnorm(step)
+            y <- cumsum(y)
 
-        model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
+            model <- GSTADF.test(y, const = FALSE, add.p.value = FALSE)
 
+            if (!is.na(model$GSTADF.value)) {
+                break
+            }
+        }
         model$GSTADF.value
     }
     tmp <- sort(tmp)
     names(tmp) <- NULL
     .cval_GSADF_without_const[[as.character(step)]] <- tmp
+    cat("\nLen:", length(tmp), "\n")
 
+    cat("with CONST\n")
     tmp <- NULL
     tmp <- foreach(
         i = 1:N_sim,
         .combine = c,
+        .inorder = FALSE,
+        .errorhandling = "remove",
+        .packages = c("breaktest"),
         .options.snow = list(progress = progress)
     ) %dopar% {
-        y <- rnorm(step)
-        y <- cumsum(y)
+        repeat {
+            y <- rnorm(step)
+            y <- cumsum(y)
 
-        model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
+            model <- GSTADF.test(y, const = TRUE, add.p.value = FALSE)
 
+            if (!is.na(model$GSTADF.value)) {
+                break
+            }
+        }
         model$GSTADF.value
     }
     tmp <- sort(tmp)
     names(tmp) <- NULL
     .cval_GSADF_with_const[[as.character(step)]] <- tmp
+    cat("\nLen:", length(tmp), "\n")
+
+    save(.cval_kpss_1p,
+        .cval_kpss_2p,
+        .cval_SADF_without_const,
+        .cval_SADF_with_const,
+        .cval_GSADF_without_const,
+        .cval_GSADF_with_const,
+        file = "res_tmp.rda"
+    )
 }
 
 stopCluster(cluster)
