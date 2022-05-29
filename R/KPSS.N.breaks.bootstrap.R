@@ -126,7 +126,7 @@ KPSS.N.breaks.bootstrap <- function(y, x,
 
         c(beta, resid, ., t.beta) %<-% OLS(temp.y, xreg)
 
-        S.t <- apply(resid, 2, cumsum)
+        S.t <- cumsum(resid)
         if (!is.null(kernel)) {
             temp.test <- N^(-2) * drop(t(S.t) %*% S.t) /
                 alrvr.kernel(resid, corr.max, kernel)
