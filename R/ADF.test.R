@@ -6,6 +6,7 @@
 #' @param trend Include trend to the model if TRUE.
 #' @param max.lag Maximum lag number
 #' @param criterion A criterion used to select number of lags.
+#' If lag selection is not needed keep this NULL.
 #'
 #' @return List containing:
 #' \itemize{
@@ -22,11 +23,22 @@
 #' @importFrom zeallot %<-%
 #' @export
 ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
-                     criterion = "bic") {
+                     criterion = NULL) {
     if (! is.matrix(y)) y <- as.matrix(y)
-    if (! criterion %in% c("bic", "aic", "lwz")) {
-        warning("WARNING! Unknown criterion, BIC is used")
-        criterion <- "bic"
+    if (! (is.null(criterion) || criterion %in% c("bic", "aic", "lwz"))) {
+        warning("WARNING! Unknown criterion, none is used")
+        criterion <- NULL
+    }
+
+    aux.deter <- function(const, trend, lag, obs) {
+        deter <- NULL
+        if (const) {
+            deter <- cbind(deter, rep(1, (N - 1 - lag)))
+        }
+        if (trend) {
+            deter <- cbind(deter, 1:(N - 1 - lag))
+        }
+        return(deter)
     }
 
     N <- nrow(y)
@@ -35,12 +47,6 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
     d.y <- diff(y)
     x <- y[1:(N - 1), , drop = FALSE]
 
-    deter <- NULL
-    if (const)
-        deter <- cbind(deter, rep(1, (N - 1)))
-    if (trend)
-        deter <- cbind(deter, 1:(N - 1))
-
     if (max.lag > 0) {
         for (l in 1:max.lag) {
             x <- cbind(x, lagn(d.y, l))
@@ -48,10 +54,16 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
     }
 
     c(min.beta, min.resid, ., min.t.beta) %<-%
-        OLS(d.y, cbind(deter, x[, 1]))
-    min.lag <- 0
+        OLS(
+            d.y[(max.lag + 1):(N - 1), , drop = FALSE],
+            cbind(
+                aux.deter(const, trend, max.lag, N),
+                x[(max.lag + 1):(N - 1), 1:(max.lag + 1), drop = FALSE]
+            )
+        )
+    min.lag <- max.lag
 
-    if (max.lag > 0) {
+    if (max.lag > 0 && ! is.null(criterion)) {
         if (criterion == "bic")
             min.criterion <- log(drop(t(min.resid) %*% min.resid) /
                                  (length(min.resid) - length(min.beta))) +
@@ -67,7 +79,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                 0.299 * length(min.beta) *
                 (log(length(min.resid) - length(min.beta)))^2.1
 
-        for (l in 1:max.lag) {
+        for (l in seq(max.lag - 1, 0, -1)) {
             deter <- NULL
             if (const)
                 deter <- cbind(deter, rep(1, (N - 1 - l)))
