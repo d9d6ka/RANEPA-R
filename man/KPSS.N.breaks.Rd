@@ -14,7 +14,7 @@ KPSS.N.breaks(
   weakly.exog = TRUE,
   lags.init,
   leads.init,
-  corr.max,
+  max.lag,
   kernel,
   criterion = "bic"
 )
@@ -47,7 +47,7 @@ whether the stochastic regressors are exogenous or not
 
 \item{leads.init}{Scalar, defines the initial number of leads for DOLS.}
 
-\item{corr.max}{scalar, with the maximum order of the parametric correction.
+\item{max.lag}{scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected
 using the BIC information criterion.}
 

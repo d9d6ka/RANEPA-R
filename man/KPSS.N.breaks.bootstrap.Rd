@@ -14,7 +14,7 @@ KPSS.N.breaks.bootstrap(
   weakly.exog = TRUE,
   lags.init,
   leads.init,
-  corr.max,
+  max.lag,
   kernel,
   iter = 9999,
   bootstrap = "sample",
@@ -46,7 +46,7 @@ KPSS.N.breaks.bootstrap(
 (DOLS is used in this case).}
 }}
 
-\item{corr.max}{scalar, with the maximum order of the parametric correction.
+\item{max.lag}{scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected using the BIC
 information criterion.}
 

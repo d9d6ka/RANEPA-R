@@ -4,7 +4,7 @@
 \alias{KPSS.2.breaks}
 \title{KPSS-test with 2 known structural breaks}
 \usage{
-KPSS.2.breaks(y, model, break.point, kmax, kernel)
+KPSS.2.breaks(y, model, break.point, max.lag, kernel)
 }
 \arguments{
 \item{y}{(Tx1)-vector of time series}
@@ -17,7 +17,7 @@ KPSS.2.breaks(y, model, break.point, kmax, kernel)
 \item{5}{for the AC-CA model.}
 }}
 
-\item{kmax}{scalar, with the maximum order of the parametric correction.
+\item{max.lag}{scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected using the
 BIC information criterion.}
 

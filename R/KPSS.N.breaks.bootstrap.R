@@ -27,7 +27,7 @@
 #' (DOLS is used in this case).}
 #' }
 #' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
-#' @param corr.max scalar, with the maximum order of the parametric correction.
+#' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using the BIC
 #' information criterion.
 #' @param kernel Kernel for calculating long-run variance
@@ -64,7 +64,7 @@ KPSS.N.breaks.bootstrap <- function(y, x,
                                     const = FALSE, trend = FALSE,
                                     weakly.exog = TRUE,
                                     lags.init, leads.init,
-                                    corr.max, kernel,
+                                    max.lag, kernel,
                                     iter = 9999,
                                     bootstrap = "sample",
                                     criterion = "bic") {
@@ -82,7 +82,7 @@ KPSS.N.breaks.bootstrap <- function(y, x,
             const, trend,
             weakly.exog,
             lags.init, leads.init,
-            corr.max, kernel,
+            max.lag, kernel,
             criterion
         )
 
@@ -124,15 +124,14 @@ KPSS.N.breaks.bootstrap <- function(y, x,
             temp.y <- z * u
         }
 
-        c(beta, resid, ., t.beta) %<-% OLS(temp.y, xreg)
+        c(beta, resid, ., .) %<-% OLS(temp.y, xreg)
 
-        S.t <- cumsum(resid)
         if (!is.null(kernel)) {
-            temp.test <- N^(-2) * drop(t(S.t) %*% S.t) /
-                alrvr.kernel(resid, corr.max, kernel)
+            temp.test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
         } else {
-            temp.test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr(resid)
+            temp.test <- KPSS(resid, lr.var.AK(resid))
         }
+
         temp.test
     }
 
