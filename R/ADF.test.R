@@ -24,8 +24,8 @@
 #' @export
 ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                      criterion = NULL) {
-    if (! is.matrix(y)) y <- as.matrix(y)
-    if (! (is.null(criterion) || criterion %in% c("bic", "aic", "lwz"))) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (!(is.null(criterion) || criterion %in% c("bic", "aic", "lwz", "maic"))) {
         warning("WARNING! Unknown criterion, none is used")
         criterion <- NULL
     }
@@ -63,28 +63,23 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
         )
     min.lag <- max.lag
 
-    if (max.lag > 0 && ! is.null(criterion)) {
-        if (criterion == "bic")
-            min.criterion <- log(drop(t(min.resid) %*% min.resid) /
-                                 (length(min.resid) - length(min.beta))) +
-                length(min.beta) * log(length(min.resid) - length(min.beta)) /
-                (length(min.resid) - length(min.beta))
-        else if (criterion == "aic")
-            min.criterion <- log(drop(t(min.resid) %*% min.resid) /
-                                 (length(min.resid) - length(min.beta))) +
-                2 * length(min.beta) / (length(min.resid) - length(min.beta))
-        else if (criterion == "lwz")
-            min.criterion <- log(drop(t(min.resid) %*% min.resid) /
-                                 (length(min.resid) - length(min.beta))) +
-                0.299 * length(min.beta) *
-                (log(length(min.resid) - length(min.beta)))^2.1
+    if (max.lag > 0 && !is.null(criterion)) {
+        min.criterion <- info.criterion(
+            min.resid,
+            length(min.beta),
+            criterion,
+            min.beta[pos],
+            x[(max.lag + 1):(N - 1), 1, drop = FALSE]
+        )
 
         for (l in seq(max.lag - 1, 0, -1)) {
             deter <- NULL
-            if (const)
+            if (const) {
                 deter <- cbind(deter, rep(1, (N - 1 - l)))
-            if (trend)
+            }
+            if (trend) {
                 deter <- cbind(deter, 1:(N - 1 - l))
+            }
             c(tmp.beta, tmp.resid, ., tmp.t.beta) %<-%
                 OLS(
                     d.y[(l + 1):(N - 1), , drop = FALSE],
@@ -93,20 +88,13 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                         x[(l + 1):(N - 1), 1:(l + 1), drop = FALSE]
                     )
                 )
-            if (criterion == "bic")
-                tmp.criterion <- log(drop(t(tmp.resid) %*% tmp.resid) /
-                                     (length(tmp.resid) - length(tmp.beta))) +
-                    length(tmp.beta) * log(length(tmp.resid) - length(tmp.beta)) /
-                    (length(tmp.resid) - length(tmp.beta))
-            else if (criterion == "aic")
-                tmp.criterion <- log(drop(t(tmp.resid) %*% tmp.resid) /
-                                     (length(tmp.resid) - length(tmp.beta))) +
-                    2 * length(tmp.beta) / (length(tmp.resid) - length(tmp.beta))
-            else if (criterion == "lwz")
-                tmp.criterion <- log(drop(t(tmp.resid) %*% tmp.resid) /
-                                     (length(tmp.resid) - length(tmp.beta))) +
-                    0.299 * length(tmp.beta) *
-                    (log(length(tmp.resid) - length(tmp.beta)))^2.1
+            tmp.criterion <- info.criterion(
+                tmp.resid,
+                length(tmp.beta),
+                criterion,
+                tmp.beta[pos],
+                x[(l + 1):(N - 1), 1, drop = FALSE]
+            )
 
             if (tmp.criterion < min.criterion) {
                 min.criterion <- tmp.criterion
