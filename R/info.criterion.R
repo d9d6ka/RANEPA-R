@@ -25,32 +25,26 @@
 #'
 #' @export
 info.criterion <- function(resid, extra,
-                           criterion = "aic",
                            modification = FALSE, ...) {
     if (!is.matrix(resid)) resid <- as.matrix(resid)
 
     N <- nrow(resid)
 
     if (modification) {
-        s2 <- drop(t(resid) %*% resid) / (N - extra)
+        s2 <- drop(t(resid) %*% resid) / (N - 1)
         tau <- (...elt(1) ^ 2) * drop(t(...elt(2)) %*% ...elt(2)) / s2
     } else {
         tau <- 0
     }
 
-    if (criterion == "aic") {
-        result <- log(drop(t(resid) %*% resid) / (N - extra)) +
-            2 * (tau + extra) / (N - extra)
-    } else if (criterion == "bic") {
-        result <- log(drop(t(resid) %*% resid) / (N - extra)) +
-            (tau + extra) * log(N - extra) / (N - extra)
-    } else if (criterion == "lwz") {
-        result <- log(drop(t(resid) %*% resid) / (N - extra)) +
-            0.299 * (tau + extra) * (log(N - extra))^2.1
-    } else if (criterion == "hq") {
-        result <- log(drop(t(resid) %*% resid) / (N - extra)) +
-            2 * (tau + extra) * log(log(N - extra)) / (N - extra)
-    }
+    log.RSS <- log(drop(t(resid) %*% resid) / N)
 
-    return(result)
+    return(
+        list(
+            aic = log.RSS + 2 * (tau + extra) / N,
+            bic = log.RSS + (tau + extra) * log(N) / N,
+            hq = log.RSS + 2 * (tau + extra) * log(log(N)) / N,
+            lwz = log.RSS + 0.299 * (tau + extra) * (log(N))^2.1
+        )
+    )
 }

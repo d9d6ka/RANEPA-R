@@ -4,14 +4,12 @@
 \alias{info.criterion}
 \title{Information criterions}
 \usage{
-info.criterion(resid, extra, criterion = "aic", modification = FALSE, ...)
+info.criterion(resid, extra, modification = FALSE, ...)
 }
 \arguments{
 \item{resid}{Input residuals.}
 
 \item{extra}{Number of coefficients etc.}
-
-\item{criterion}{Needed information criterion: aic, bic, hq or lwz.}
 
 \item{modification}{Whether the unit-root test modificaton is needed.}
 
@@ -21,6 +19,8 @@ info.criterion(resid, extra, criterion = "aic", modification = FALSE, ...)
 \item The vector of \eqn{y_{t-1}},
 }
 exactly in this order.}
+
+\item{criterion}{Needed information criterion: aic, bic, hq or lwz.}
 }
 \value{
 The value of the selected informational criterion.

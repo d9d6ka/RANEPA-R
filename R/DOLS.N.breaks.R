@@ -25,13 +25,9 @@ DOLS.N.breaks <- function(y,
 
     c(beta, resid, ., t.beta) %<-% OLS(yreg, xreg)
 
-    s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
+    s2 <- drop(t(resid) %*% resid) / nrow(xreg)
 
-    criterions <- list(
-        aic = log(s2) + 2 * ncol(xreg) / nrow(xreg),
-        bic = log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg),
-        lwz = log(s2) + 0.299 * ncol(xreg) * (log(nrow(xreg)))^2.1
-    )
+    criterions <- info.criterion(resid, ncol(xreg))
 
     return(
         list(
