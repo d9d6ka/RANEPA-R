@@ -4,7 +4,14 @@
 \alias{ADF.test}
 \title{ADF.test - simple implementation of ADF test}
 \usage{
-ADF.test(y, const = TRUE, trend = FALSE, max.lag = 0, criterion = NULL)
+ADF.test(
+  y,
+  const = TRUE,
+  trend = FALSE,
+  max.lag = 0,
+  criterion = NULL,
+  modified.criterion = FALSE
+)
 }
 \arguments{
 \item{y}{A variable of interest.}
@@ -17,6 +24,8 @@ ADF.test(y, const = TRUE, trend = FALSE, max.lag = 0, criterion = NULL)
 
 \item{criterion}{A criterion used to select number of lags.
 If lag selection is not needed keep this NULL.}
+
+\item{modified.criterion}{Whether the unit-root test modificaton is needed.}
 }
 \value{
 List containing:

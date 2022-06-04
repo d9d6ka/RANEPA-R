@@ -7,6 +7,7 @@
 #' @param max.lag Maximum lag number
 #' @param criterion A criterion used to select number of lags.
 #' If lag selection is not needed keep this NULL.
+#' @param modified.criterion Whether the unit-root test modificaton is needed.
 #'
 #' @return List containing:
 #' \itemize{
@@ -23,9 +24,9 @@
 #' @importFrom zeallot %<-%
 #' @export
 ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
-                     criterion = NULL) {
+                     criterion = NULL, modified.criterion = FALSE) {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (!(is.null(criterion) || criterion %in% c("bic", "aic", "lwz", "maic"))) {
+    if (!(is.null(criterion) || criterion %in% c("bic", "aic", "lwz"))) {
         warning("WARNING! Unknown criterion, none is used")
         criterion <- NULL
     }
@@ -68,6 +69,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
             min.resid,
             length(min.beta),
             criterion,
+            modified.criterion,
             min.beta[pos],
             x[(max.lag + 1):(N - 1), 1, drop = FALSE]
         )
@@ -92,6 +94,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                 tmp.resid,
                 length(tmp.beta),
                 criterion,
+                modified.criterion,
                 tmp.beta[pos],
                 x[(l + 1):(N - 1), 1, drop = FALSE]
             )
