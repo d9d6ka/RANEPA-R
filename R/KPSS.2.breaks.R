@@ -64,6 +64,7 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
     )
 }
 
+
 #' @title
 #' KPSS-test with 2 unknown structural breaks
 #'

@@ -2,7 +2,7 @@
 #' Andrews-Kim (2006) test
 #'
 #' @description
-#' Test for structural break at the sample end
+#' Test for structural break at the end of the sample.
 #'
 #' @details
 #' See Andrews and Kim (2006) for the detailed description.
