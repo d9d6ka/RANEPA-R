@@ -6,12 +6,13 @@
 #' @return Long-run variance.
 #'
 #' @import MASS
-lr.var <- function(e) {
+lr.var <- function(e, l = NULL) {
     if (!is.matrix(e)) e <- as.matrix(e)
 
     N <- nrow(e)
 
-    l <- trunc(4 * ((N / 100)^(1 / 4)))
+    if (is.null(l))
+        l <- trunc(4 * ((N / 100)^(1 / 4)))
 
     lrv <- drop(t(e) %*% e) / N
     for (i in 1:l) {

@@ -4,7 +4,7 @@
 \alias{lr.var}
 \title{Calculating long-run variance}
 \usage{
-lr.var(e)
+lr.var(e, l = NULL)
 }
 \arguments{
 \item{e}{(Tx1) vector or residuals.}

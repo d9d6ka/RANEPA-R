@@ -48,3 +48,39 @@ info.criterion <- function(resid, extra,
         )
     )
 }
+
+#' @importFrom zeallot %<-%
+lag.selection <- function(y, x, criterion = "aic", max.lag) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.matrix(x)) x <- as.matrix(x)
+
+    N <- nrow(y)
+    k <- ncol(x)
+
+    tmp.y <- y[(1 + max.lag):N, , drop = FALSE]
+    tmp.x <- x[(1 + max.lag):N, , drop = FALSE]
+
+    for (l in 1:max.lag) {
+        tmp.x <- cbind(
+            tmp.x,
+            lagn(y, l)[(1 + max.lag):N, , drop = FALSE]
+        )
+    }
+
+    c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:k, drop = FALSE])
+
+    res.IC <- log(drop(t(resid) %*% resid) / (N - max.lag))
+    res.lag <- 0
+
+    for (l in 1:max.lag) {
+        c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
+        temp.IC <- info.criterion(resid, l)
+
+        if (temp.IC < res.IC) {
+            res.IC <- temp.IC
+            res.lag <- l
+        }
+    }
+
+    return(res.lag)
+}

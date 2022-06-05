@@ -6,7 +6,7 @@
 \usage{
 segs.GLS.1.break(
   y,
-  trend = FALSE,
+  const = FALSE,
   first.break = NULL,
   last.break = NULL,
   trim = 0.15
@@ -15,7 +15,7 @@ segs.GLS.1.break(
 \arguments{
 \item{y}{Variable of interest.}
 
-\item{trend}{Whether there is a break in the trend.}
+\item{const}{Whether there is a break in the constant.}
 
 \item{first.break}{First possible break point.}
 

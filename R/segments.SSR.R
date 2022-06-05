@@ -5,7 +5,7 @@
 #' See Skrobotov (2018) for further details.
 #'
 #' @param y Variable of interest.
-#' @param trend Whether there is a break in the trend.
+#' @param const Whether there is a break in the constant.
 #' @param first.break First possible break point.
 #' @param last.break Last possible break point.
 #' @param trim Trim value to calculate `first.break` and `last.break`
@@ -14,7 +14,7 @@
 #' @return The point of possible break.
 #'
 #' @importFrom zeallot %<-%
-segs.GLS.1.break <- function(y, trend = FALSE,
+segs.GLS.1.break <- function(y, const = FALSE,
                              first.break = NULL, last.break = NULL,
                              trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -37,8 +37,15 @@ segs.GLS.1.break <- function(y, trend = FALSE,
             DU <- c(rep(0, tb), rep(1, N - tb))
             DT <- DU * (1:N - tb)
 
-            x <- cbind(deter, DU)
-            if (trend) x <- cbind(x, DT)
+            x <- cbind(
+                deter,
+                if (const) {
+                    DU
+                } else {
+                    NULL
+                },
+                DT
+            )
 
             c.bar <- N * (alpha - 1)
             c(., resid, ., .) %<-% GLS(y, x, c.bar)
