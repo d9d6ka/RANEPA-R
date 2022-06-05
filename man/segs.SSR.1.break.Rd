@@ -23,7 +23,7 @@ segs.SSR.1.break(beg, end, first.break, last.break, len, SSR.data)
 List containing
 \describe{
 \item{SSR}{Optimal SSR value.}
-\item{break_point}{The breaking point.}
+\item{break_point}{The point of possible break.}
 }
 }
 \description{

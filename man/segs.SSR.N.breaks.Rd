@@ -16,7 +16,7 @@ segs.SSR.N.breaks(y, x, m = 1, width = 2, SSR.data = NULL)
 \item{width}{Minimum spacing between the breaks.}
 }
 \value{
-List of 2 elements: optimal SSR and the vector of breaks.
+List of 2 elements: optimal SSR and the vector of break points.
 }
 \description{
 Find \eqn{m + 1} optimal partitions

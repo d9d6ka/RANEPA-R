@@ -21,8 +21,8 @@ segs.SSR.2.breaks(y, model)
 List containing
 \describe{
 \item{resid}{(Tx1) vector of estimated OLS residuals.}
-\item{tb1}{The first breaking point.}
-\item{tb2}{The second breaking point.}
+\item{tb1}{The first break point.}
+\item{tb2}{The second break point.}
 }
 }
 \description{
