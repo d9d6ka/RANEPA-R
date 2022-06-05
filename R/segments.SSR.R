@@ -1,4 +1,62 @@
 #' @title
+#' Procedure to minimize the GLS-SSR for 1 break point
+#'
+#' @details
+#' See Skrobotov (2018) for further details.
+#'
+#' @param y Variable of interest.
+#' @param trend Whether there is a break in the trend.
+#' @param first.break First possible break point.
+#' @param last.break Last possible break point.
+#' @param trim Trim value to calculate `first.break` and `last.break`
+#' if not provided.
+#'
+#' @return The point of possible break.
+#'
+#' @importFrom zeallot %<-%
+segs.GLS.1.break <- function(y, trend = FALSE,
+                             first.break = NULL, last.break = NULL,
+                             trim = 0.15) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+
+    N <- nrow(y)
+    deter <- cbind(rep(1, N), 1:N)
+
+    if (is.null(first.break) || is.null(last.break)) {
+        first.break <- floor(trim * N)
+        last.break <- floor((1 - trim) * N)
+    }
+
+    steps <- c(0, 0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 0.975, 1)
+
+    res.SSR <- Inf
+    res.tb <- 0
+
+    for (alpha in steps) {
+        for (tb in first.break:last.break) {
+            DU <- c(rep(0, tb), rep(1, N - tb))
+            DT <- DU * (1:N - tb)
+
+            x <- cbind(deter, DU)
+            if (trend) x <- cbind(x, DT)
+
+            c.bar <- N * (alpha - 1)
+            c(., resid, ., .) %<-% GLS(y, x, c.bar)
+
+            tmp.SSR <- drop(t(resid) %*% resid)
+
+            if (tmp.SSR < res.SSR) {
+                res.SSR <- tmp.SSR
+                res.tb <- tb
+            }
+        }
+    }
+
+    return(res.tb)
+}
+
+
+#' @title
 #' Procedure to minimize the SSR for 1 break point
 #'
 #' @details
@@ -14,7 +72,7 @@
 #' @return List containing
 #' \describe{
 #' \item{SSR}{Optimal SSR value.}
-#' \item{break_point}{The breaking point.}
+#' \item{break_point}{The point of possible break.}
 #' }
 segs.SSR.1.break <- function(beg, end, first.break, last.break, len, SSR.data) {
     tmp_result <- matrix(data = Inf, nrow = len, ncol = 1)
@@ -55,8 +113,8 @@ segs.SSR.1.break <- function(beg, end, first.break, last.break, len, SSR.data) {
 #' @return List containing
 #' \describe{
 #' \item{resid}{(Tx1) vector of estimated OLS residuals.}
-#' \item{tb1}{The first breaking point.}
-#' \item{tb2}{The second breaking point.}
+#' \item{tb1}{The first break point.}
+#' \item{tb2}{The second break point.}
 #' }
 #'
 #' @importFrom zeallot %<-%
@@ -134,7 +192,7 @@ segs.SSR.2.breaks <- function(y, model) {
 #' @param m Number of breaks.
 #' @param width Minimum spacing between the breaks.
 #'
-#' @return List of 2 elements: optimal SSR and the vector of breaks.
+#' @return List of 2 elements: optimal SSR and the vector of break points.
 #'
 #' @export
 segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
