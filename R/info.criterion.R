@@ -74,7 +74,7 @@ lag.selection <- function(y, x, criterion = "aic", max.lag) {
 
     for (l in 1:max.lag) {
         c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
-        temp.IC <- info.criterion(resid, l)
+        temp.IC <- info.criterion(resid, l)[[criterion]]
 
         if (temp.IC < res.IC) {
             res.IC <- temp.IC
