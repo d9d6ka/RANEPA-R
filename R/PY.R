@@ -1,3 +1,14 @@
+#' @title
+#' Perron-Yabu (2009) statistic for break at unknown date.
+#'
+#' @param y The input series of interest.
+#' @param const Allowing the break in constant.
+#' @param trend Allowing the break in trend.
+#' @param criterion Needed information criterion: aic, bic, hq or lwz.
+#' @param trim A trimming value for a possible break date bounds.
+#' @param max.lag The maximum possible lag in the model.
+#'
+#' @import MASS
 #' @importFrom zeallot %<-%
 #' @export
 PY <- function(y,
@@ -6,9 +17,12 @@ PY <- function(y,
                trim = 0.15,
                max.lag) {
     if (!is.matrix(y)) y <- as.matrix(y)
+    if (!trim %in% c(0.01, 0.05, 0.10, 0.15, 0.25)) {
+        stop("ERROR! Illegal trim value")
+    }
 
     if (const && !trend) {
-        VR <- matrix(c(0, 0, 1), nrow = 1, ncol = 3, byrow = TRUE)
+        VR <- matrix(c(0, 1, 0), nrow = 1, ncol = 3, byrow = TRUE)
         v.t <- as.matrix(c(
             -4.30, -4.39, -4.39, -4.34, -4.32,
             -4.45, -4.42, -4.33, -4.27, -4.27
@@ -55,9 +69,12 @@ PY <- function(y,
 
     N <- nrow(y)
 
+    first.break <- max(trunc(trim * N), max.lag + 2)
+    last.break <- trunc((1 - trim) * N)
+
     vect1 <- matrix(0, nrow = trunc((1 - 2 * trim) * N) + 2, ncol = 1)
 
-    for (tb in (max(trunc(trim * N), max.lag + 2)):(trunc((1 - trim) * N))) {
+    for (tb in first.break:last.break) {
         lambda <- tb / N
 
         DU <- c(rep(0, tb), rep(1, N - tb))
@@ -74,92 +91,105 @@ PY <- function(y,
 
         c(., resid, ., .) %<-% OLS(y, x)
 
-        d.resid <- c(NA, diff(resid))
+        d.resid <- c(0, diff(resid))
 
-        x.resid <- lagn(resid, 1)
+        x.u <- lagn(resid, 1, na = 0)
         if (k.hat > 1) {
             for (l in 1:(k.hat - 1)) {
-                x.resid <- cbind(x.resid, lagn(d.resid, l))
+                x.u <- cbind(x.u, lagn(d.resid, l, na = 0))
             }
         }
+        y.u <- resid[k.hat:N, , drop = FALSE]
+        x.u <- x.u[k.hat:N, , drop = FALSE]
 
-        c(beta, e.hat, ., .) %<-% OLS(resid[(1 + k.hat):N, , drop = FALSE],
-                                      x.resid[(1 + k.hat):N, , drop = FALSE])
+        c(beta.u, u.resid, ., .) %<-% OLS(y.u, x.u)
 
-        VCV <- qr.solve(t(x.resid[(1 + k.hat):N, , drop = FALSE]) %*% x.resid[(1 + k.hat):N, , drop = FALSE]) *
-            drop(t(e.hat) %*% e.hat) / nrow(e.hat)
+        VCV <- qr.solve(t(x.u) %*% x.u) *
+            drop(t(u.resid) %*% u.resid) / nrow(u.resid)
 
-        a.hat <- beta[1]
-        v.a.hat <- VCV[1, 1]
-        tau <- (a.hat - 1) / sqrt(v.a.hat)
+        a.hat <- beta.u[1]
+        var.a.hat <- VCV[1, 1]
+        tau <- (a.hat - 1) / sqrt(var.a.hat)
 
-        tau.05 <- v.t[ceiling(lambda * 10)]
+        tau05 <- v.t[ceiling(lambda * 10)]
 
         IP <- trunc((k.hat + 1) / 2)
+
         k <- 10
         k.x <- ncol(x)
 
         c1 <- sqrt((1 + k.x) * N)
-        c2 <- ((1 + k.x) * N - tau.05^2 * (IP + N)) /
-            (tau.05 * (tau.05 + k.x) * (IP + N))
+        c2 <- ((1 + k.x) * N - tau05^2 * (IP + N)) /
+            (tau05 * (tau05 + k.x) * (IP + N))
 
-        if (tau > tau.05)
+        if (tau > tau05)
             c.tau <- -tau
-        else if (tau <= tau.05 && tau > -k)
+        else if (tau <= tau05 && tau > -k)
             c.tau <- IP * tau / N - (k.x + 1) / (tau + c2 * (tau + k))
         else if (tau <= -k && tau > -c1)
             c.tau <- IP * tau / N - (k.x + 1) / tau
         else if (tau <= -c1)
             c.tau <- 0
 
-        rhomd1 <- a.hat + c.tau * sqrt(v.a.hat)
-        if (rhomd1 >= 1)
-            amu <- 1
-        else if (abs(rhomd1) < 1)
-            amu <- rhomd1
+        a.hat.M <- a.hat + c.tau * sqrt(var.a.hat)
+        if (a.hat.M >= 1)
+            a.hat.M <- 1
+        else if (abs(a.hat.M) < 1)
+            a.hat.M <- a.hat.M
         else
-            amu <- -0.99
+            a.hat.M <- -0.99
 
-        CR <- sqrt(N) * abs(amu - 1)
-        if (CR <= 0) amu <- 1
+        CR <- sqrt(N) * abs(a.hat.M - 1)
+        if (CR <= 1) a.hat.M <- 1
 
-        g.y <- rbind(y[1, , drop = FALSE], y[2:N, , drop = FALSE] - amu * y[1:(N - 1), , drop = FALSE])
-        g.x <- rbind(x[1, , drop = FALSE], x[2:N, , drop = FALSE] - amu * x[1:(N - 1), , drop = FALSE])
+        y.g <- rbind(
+            y[1, , drop = FALSE],
+            y[2:N, , drop = FALSE] - a.hat.M * y[1:(N - 1), , drop = FALSE]
+        )
+        x.g <- rbind(
+            x[1, , drop = FALSE],
+            x[2:N, , drop = FALSE] - a.hat.M * x[1:(N - 1), , drop = FALSE]
+        )
 
-        c(g.beta, v.resid, ., .) %<-% OLS(g.y, g.x)
+        c(beta.g, g.resid, ., .) %<-% OLS(y.g, x.g)
 
         if (k.hat == 1)
-            h0 <- drop(t(v.resid) %*% v.resid) / nrow(v.resid)
+            h0 <- drop(t(g.resid) %*% g.resid) / nrow(g.resid)
         else {
-            if (amu == 1) {
-                v.x <- NULL
-                for (k.i in 1:(k.hat - 1)) v.x <- cbind(v.x, lagn(v.resid, k.i))
-                v.y <- v.resid[k.hat:(N - 1), , drop = FALSE]
-                c(beta, e.resid, ., .) %<-%
-                    OLS(v.y,
-                        v.x[k.hat:(N - 1), , drop = FALSE])
+            if (a.hat.M == 1) {
+                x.v <- NULL
+                for (k.i in 1:(k.hat - 1))
+                    x.v <- cbind(x.v, lagn(g.resid, k.i, na = 0))
+
+                y.v <- g.resid[(k.hat - 1):N, , drop = FALSE]
+                x.v <- x.v[(k.hat - 1):N, , drop = FALSE]
+
+                c(beta.v, v.resid, ., .) %<-% OLS(y.v, x.v)
 
                 if (const && !trend) {
-                    v.beta <- matrix(0, nrow = k.hat - 1, ncol = 3)
+                    BETAS <- matrix(0, nrow = k.hat - 1, ncol = 3)
                     for (k.i in 1:(k.hat - 1)) {
                         DU.ki <- c(rep(0, tb - k.i), rep(1, N - (tb - k.i)))
                         x.ki <- cbind(
                             rep(1, N),
-                            1:N,
-                            DU.ki
+                            DU.ki,
+                            1:N
                         )
-                        g.x.ki <- rbind(x.ki[1, ],
-                                        x.ki[2:N, ] - amu * x.ki[1:(N - 1), ])
-                        c(beta.ki, ., ., .) %<-% OLS(g.y, g.x.ki)
-                        v.beta[k.i, ] <- drop(beta.ki)
+                        x.g.ki <- rbind(
+                            x.ki[1, ],
+                            x.ki[2:N, ] - a.hat.M * x.ki[1:(N - 1), ]
+                        )
+                        c(beta.ki, ., ., .) %<-% OLS(y.g, x.g.ki)
+                        BETAS[k.i, ] <- drop(beta.ki)
                     }
-                    g.beta[2] <- g.beta[2] - drop(t(v.beta[, 2, drop = FALSE]) %*% beta)
-                    h0 <- drop(t(e.resid) %*% e.resid) / (N - k.hat)
+                    beta.g[2] <- beta.g[2] -
+                        drop(t(BETAS[, 2]) %*% beta.v)
+                    h0 <- drop(t(v.resid) %*% v.resid) / (N - k.hat)
                 } else if (!const && trend) {
-                    h0 <- (drop(t(e.resid) %*% e.resid) / (N - k.hat)) /
-                        ((1 - sum(beta))^2)
+                    h0 <- (drop(t(v.resid) %*% v.resid) / (N - k.hat)) /
+                        ((1 - sum(beta.v))^2)
                 } else {
-                    v.beta <- matrix(0, nrow = k.hat - 1, ncol = 4)
+                    BETAS <- matrix(0, nrow = k.hat - 1, ncol = 4)
                     for (k.i in 1:(k.hat - 1)) {
                         DU.ki <- c(rep(0, tb - k.i), rep(1, N - (tb - k.i)))
                         DT.ki <- DU.ki * (1:N - tb)
@@ -169,25 +199,28 @@ PY <- function(y,
                             1:N,
                             DT.ki
                         )
-                        g.x.ki <- rbind(x.ki[1, ],
-                                        x.ki[2:N, ] - amu * x.ki[1:(N - 1), ])
-                        c(beta.ki, ., ., .) %<-% OLS(g.y, g.x.ki)
-                        v.beta[k.i, ] <- drop(beta.ki)
-                        sig.e <- drop(t(e.resid) %*% e.resid) / (N - k.hat)
-                        h0 <- sige / ((1 - sum(beta))^2)
-                        g.beta[2] <- (g.beta[2] - drop(t(v.beta[, 2, drop = FALSE]) %*% beta)) *
-                            sqrt(h0) / sqrt(sig.e)
+                        x.g.ki <- rbind(
+                            x.ki[1, ],
+                            x.ki[2:N, ] - a.hat.M * x.ki[1:(N - 1), ]
+                        )
+                        c(beta.ki, ., ., .) %<-% OLS(y.g, x.g.ki)
+                        BETAS[k.i, ] <- drop(beta.ki)
+                        sig.e <- drop(t(v.resid) %*% v.resid) / (N - k.hat)
+                        h0 <- sig.e / ((1 - sum(beta.v))^2)
+                        beta.g[2] <- (sqrt(h0) / sqrt(sig.e)) *
+                            (beta.g[2] - drop(t(BETAS[, 2]) %*% beta.v))
+
                     }
                 }
             }
 
-            if (abs(amu) < 1)
-                c(h0, m) <- h0W(v.resid)
+            if (abs(a.hat.M) < 1)
+                c(h0, m) <- h0W(g.resid)
         }
 
-        VCV = h0 * qr.solve(t(g.x) %*% g.x)
-        vect1[tb - trunc(trim * N)] = t(VR %*% g.beta) %*%
-            qr.solve(VR %*% VCV %*% t(VR)) %*% (VR %*% g.beta)
+        VCV = h0 * qr.solve(t(x.g) %*% x.g)
+        vect1[tb - first.break + 1] = t(VR %*% beta.g) %*%
+            qr.solve(VR %*% VCV %*% t(VR)) %*% (VR %*% beta.g)
     }
 
     wald <- log(sum(exp(vect1 / 2)) / N)
