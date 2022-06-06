@@ -1,6 +1,62 @@
 #' @title
 #' Calculating long-run variance
 #'
+#' @param e (Tx1) vector or residuals.
+#'
+#' @return Long-run variance.
+#'
+#' @import MASS
+lr.var <- function(e, l = NULL) {
+    if (!is.matrix(e)) e <- as.matrix(e)
+
+    N <- nrow(e)
+
+    if (is.null(l))
+        l <- trunc(4 * ((N / 100)^(1 / 4)))
+
+    lrv <- drop(t(e) %*% e) / N
+    for (i in 1:l) {
+        w <- (1 - i / (l + 1))
+        lrv <- lrv + 2 * drop(t(e[1:(N - i)]) %*% e[(1 + i):N]) * w / N
+    }
+    return(lrv)
+}
+
+#' @title
+#' Calculating long-run variance
+#'
+#' @description
+#' Procedure ALRVR to estimate the long-run variance
+#' as in Andrews (1991) and Kurozumi (2002).
+#'
+#' @param e (Tx1) vector or residuals.
+#'
+#' @return Long-run variance.
+#'
+#' @import MASS
+lr.var.AK <- function(e) {
+    if (!is.matrix(e)) e <- as.matrix(e)
+
+    N <- nrow(e)
+    k <- 0.8
+    a <- qr.solve(t(e[1:(N - 1)]) %*% e[1:(N - 1)]) %*%
+        t(e[1:(N - 1)]) %*% e[2:N]
+    l <- min(
+        1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3),
+        1.1447 * (4 * k^2 * N / ((1 + k)^2 * (1 - k)^2))^(1 / 3)
+    )
+    l <- trunc(l)
+    lrv <- drop(t(e) %*% e) / N
+    for (i in 1:l) {
+        w <- (1 - i / (l + 1))
+        lrv <- lrv + 2 * drop(t(e[1:(N - i)]) %*% e[(1 + i):N]) * w / N
+    }
+    return(lrv)
+}
+
+#' @title
+#' Calculating long-run variance
+#'
 #' @description
 #' Procedure ALRVR to estimate the long-run variance as
 #' in Sul, Phillips and Choi (2003).
@@ -21,10 +77,10 @@
 #' @return Long-run variance.
 #'
 #' @import MASS
-alrvr.kernel <- function(e,
-                         max.lag = 0,
-                         kernel = "bartlett",
-                         criterion = "bic") {
+lr.var.SPC <- function(e,
+                       max.lag = 0,
+                       kernel = "bartlett",
+                       criterion = "bic") {
     if (!is.matrix(e)) e <- as.matrix(e)
     if (max.lag < 0) max.lag <- 0
     if (!kernel %in% c("bartlett", "quadratic")) {
@@ -57,16 +113,7 @@ alrvr.kernel <- function(e,
 
         res.temp <- temp[, 1, drop = FALSE] - x.temp %*% rho.temp
 
-        if (criterion == "bic") {
-            info.crit <- log(drop(t(res.temp) %*% res.temp) / (N - i)) +
-                (i * log(N - i) / (N - i))
-        } else if (criterion == "aic") {
-            info.crit <- log(drop(t(res.temp) %*% res.temp) / (N - i)) +
-                2 * i / (N - i)
-        } else if (criterion == "lwz") {
-            info.crit <- log(drop(t(res.temp) %*% res.temp) / (N - i)) +
-                0.299 * i * (log(N - i))^2.1
-        }
+        info.crit <- info.criterion(res.temp, i, criterion)
 
         if (info.crit < info.crit.min) {
             info.crit.min <- info.crit
@@ -75,7 +122,6 @@ alrvr.kernel <- function(e,
             res <- res.temp
         }
     }
-
 
     if (k == 0) {
         lrv <- drop(t(res) %*% res) / N

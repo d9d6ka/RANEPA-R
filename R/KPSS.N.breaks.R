@@ -29,7 +29,7 @@
 #' }
 #' @param lags.init Scalar, defines the initial number of lags for DOLS.
 #' @param leads.init Scalar, defines the initial number of leads for DOLS.
-#' @param corr.max scalar, with the maximum order of the parametric correction.
+#' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected
 #' using the BIC information criterion.
 #' @param kernel Kernel for calculating long-run variance
@@ -58,7 +58,7 @@ KPSS.N.breaks <- function(y, x,
                           const = FALSE, trend = FALSE,
                           weakly.exog = TRUE,
                           lags.init, leads.init,
-                          corr.max, kernel,
+                          max.lag, kernel,
                           criterion = "bic") {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.null(x)) {
@@ -97,12 +97,10 @@ KPSS.N.breaks <- function(y, x,
         t.beta <- t.beta.min
     }
 
-    S.t <- apply(resid, 2, cumsum)
     if (!is.null(kernel)) {
-        test <- N^(-2) * drop(t(S.t) %*% S.t) /
-            alrvr.kernel(resid, corr.max, kernel)
+        test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
     } else {
-        test <- N^(-2) * drop(t(S.t) %*% S.t) / alrvr(resid)
+        test <- KPSS(resid, lr.var.AK(resid))
     }
 
     return(
