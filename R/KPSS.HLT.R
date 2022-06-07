@@ -51,11 +51,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
         x <- cbind(
             rep(1, N - 1),
-            if (const) {
-                diff(DU)
-            } else {
-                NULL
-            },
+            if (const) diff(DU) else NULL,
             DU[2:N]
         )
 
@@ -83,11 +79,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
     x <- cbind(
         rep(1, N),
         1:N,
-        if (const) {
-            DU0
-        } else {
-            NULL
-        },
+        if (const) DU0 else NULL,
         DT0
     )
 
@@ -100,11 +92,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
     x <- cbind(
         rep(1, N - 1),
-        if (const) {
-            diff(DU1)
-        } else {
-            NULL
-        },
+        if (const) diff(DU1) else NULL,
         DU1[2:N]
     )
 

@@ -70,7 +70,7 @@ KPSS.1.break <- function(y, x,
 
         c(beta, resid, ., t.beta) %<-% OLS(y, xt)
     } else {
-        bic.min <- 100000000
+        bic.min <- Inf
         for (i in ll.init:1) {
             c(beta, resid, bic, t.beta) %<-%
                 DOLS(y, x, model, break.point, i, i)

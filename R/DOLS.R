@@ -75,16 +75,14 @@ DOLS <- function(y, x, model, break.point, k.lags, k.leads) {
         )
     }
 
-    beta <- qr.solve(t(xreg) %*% xreg) %*% t(xreg) %*%
-        y[(k.lags + 2):(N - k.leads), 1, drop = FALSE]
+    c(beta, resid, ., t.beta) %<-%
+        OLS(
+            y[(k.lags + 2):(N - k.leads), 1, drop = FALSE],
+            xreg
+        )
 
-    resid <- y[(k.lags + 2):(N - k.leads), 1, drop = FALSE] - xreg %*% beta
-
-    s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
-
-    t.beta <- sweep(beta, 1, sqrt(diag(s2 * qr.solve(t(xreg) %*% xreg))), `/`)
-
-    bic <- log(s2) + ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
+    bic <- log(drop(t(resid) %*% resid) / nrow(xreg)) +
+        ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
 
     return(
         list(
