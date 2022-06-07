@@ -4,7 +4,7 @@
 \alias{lagn}
 \title{Produce lagged vector backward of forward}
 \usage{
-lagn(x, i)
+lagn(x, i, na = NA)
 }
 \arguments{
 \item{x}{Initial vector.}

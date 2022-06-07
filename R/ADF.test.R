@@ -26,9 +26,11 @@
 ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                      criterion = NULL, modified.criterion = FALSE) {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (!(is.null(criterion) || criterion %in% c("bic", "aic", "lwz"))) {
-        warning("WARNING! Unknown criterion, none is used")
-        criterion <- NULL
+    if (!is.null(criterion)) {
+        if (criterion %in% c("bic", "aic", "lwz", "hq")) {
+            warning("WARNING! Unknown criterion, none is used")
+            criterion <- NULL
+        }
     }
 
     N <- nrow(y)
@@ -54,24 +56,28 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
         }
     }
 
-    c(., e, ., .) %<-% OLS(
-        d.y[(1 + max.lag):(N - 1), , drop = FALSE],
-        x[(1 + max.lag):(N - 1), 1:pos, drop = FALSE]
-    )
-
-    res.IC <- log(drop(t(e) %*% e) / N)
-    res.lag <- 0
-
-    for (l in 1:max.lag) {
-        if (max.lag == 0) break
+    if (is.null(criterion)) {
+        res.lag <- max.lag
+    } else {
         c(., e, ., .) %<-% OLS(
             d.y[(1 + max.lag):(N - 1), , drop = FALSE],
-            x[(1 + max.lag):(N - 1), 1:(pos + l), drop = FALSE]
+            x[(1 + max.lag):(N - 1), 1:pos, drop = FALSE]
         )
-        tmp.IC <- info.criterion(e, l)[[criterion]]
-        if (tmp.IC < res.IC) {
-            res.IC <- tmp.IC
-            res.lag <- l
+
+        res.IC <- log(drop(t(e) %*% e) / N)
+        res.lag <- 0
+
+        for (l in 1:max.lag) {
+            if (max.lag == 0) break
+            c(., e, ., .) %<-% OLS(
+                d.y[(1 + max.lag):(N - 1), , drop = FALSE],
+                x[(1 + max.lag):(N - 1), 1:(pos + l), drop = FALSE]
+            )
+            tmp.IC <- info.criterion(e, l)[[criterion]]
+            if (tmp.IC < res.IC) {
+                res.IC <- tmp.IC
+                res.lag <- l
+            }
         }
     }
 
@@ -87,7 +93,9 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
             const = const,
             trend = trend,
             beta = res.beta,
-            t.beta = drop(res.t.beta[pos]),
+            t.beta = drop(res.t.beta),
+            alpha = res.beta[pos],
+            t.alpha = drop(res.t.beta[pos]),
             residuals = res.resid,
             lag = res.lag
         )

@@ -16,7 +16,7 @@ SADF.test <- function(y,
     m <- 1
     for (j in (floor(r0 * N)):N) {
         model <- ADF.test(y[1:j], const = const)
-        t.values[m] <- model$t.beta
+        t.values[m] <- model$t.alpha
         m <- m + 1
     }
 

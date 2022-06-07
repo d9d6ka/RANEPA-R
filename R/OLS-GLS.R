@@ -12,10 +12,9 @@
 #' @import MASS
 OLS <- function(y, x) {
     tmp.model <- .lm.fit(x, y)
-
     S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) /
         (nrow(x) - ncol(x))
-    t.beta <- tmp.model$coefficients / sqrt(diag(S.2 * qr.solve(t(x) %*% x)))
+    t.beta <- tmp.model$coefficients / sqrt(diag(S.2 * solve(t(x) %*% x)))
 
     return(
         list(
@@ -57,7 +56,7 @@ GLS <- function(y, z, c) {
     z.hat[1, ] <- z[1, ]
 
     c(beta, ., ., t.beta) %<-% OLS(y.hat, z.hat)
-    predict <- y - z %*% beta
+    predict <- z %*% beta
     resid <- y - predict
 
     return(

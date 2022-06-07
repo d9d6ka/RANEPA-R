@@ -96,7 +96,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
     lr.var.y <- lr.var(resid, bartlett.lag)
     kpss.y <- KPSS(resid, lr.var.y)
 
-    DU1 <- c(rep(0, tb1), rep(1, N - t1))
+    DU1 <- c(rep(0, tb1), rep(1, N - tb1))
 
     x <- cbind(
         rep(1, N - 1),

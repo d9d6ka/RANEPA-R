@@ -17,7 +17,7 @@ GSADF.test <- function(y,
     for (i in 1:(N - floor(r0 * N) + 1)) {
         for (j in (i + floor(r0 * N) - 1):N) {
             model <- ADF.test(y[i:j], const = const)
-            t.values[m] <- model$t.beta
+            t.values[m] <- model$t.alpha
             m <- m + 1
         }
     }

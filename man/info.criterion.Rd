@@ -4,7 +4,7 @@
 \alias{info.criterion}
 \title{Information criterions}
 \usage{
-info.criterion(resid, extra, modification = FALSE, ...)
+info.criterion(resid, extra, modification = FALSE, alpha = 0, y = NULL)
 }
 \arguments{
 \item{resid}{Input residuals.}
@@ -13,12 +13,9 @@ info.criterion(resid, extra, modification = FALSE, ...)
 
 \item{modification}{Whether the unit-root test modificaton is needed.}
 
-\item{...}{Extra parameters needed for modification. Needed are
-\itemize{
-\item The coefficient \eqn{\alpha} of \eqn{y_{t-1}},
-\item The vector of \eqn{y_{t-1}},
-}
-exactly in this order.}
+\item{alpha}{The coefficient \eqn{\alpha} of \eqn{y_{t-1}} in ADF model.}
+
+\item{y}{The vector of \eqn{y_{t-1}} in ADF model.}
 
 \item{criterion}{Needed information criterion: aic, bic, hq or lwz.}
 }
