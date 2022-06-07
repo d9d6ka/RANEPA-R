@@ -12,8 +12,7 @@
 #' @import MASS
 OLS <- function(y, x) {
     tmp.model <- .lm.fit(x, y)
-    S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) /
-        (nrow(x) - ncol(x))
+    S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) / nrow(x)
     t.beta <- tmp.model$coefficients / sqrt(diag(S.2 * solve(t(x) %*% x)))
 
     return(

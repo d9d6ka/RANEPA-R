@@ -26,8 +26,9 @@
 ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                      criterion = NULL, modified.criterion = FALSE) {
     if (!is.matrix(y)) y <- as.matrix(y)
+
     if (!is.null(criterion)) {
-        if (criterion %in% c("bic", "aic", "lwz", "hq")) {
+        if (!criterion %in% c("bic", "aic", "lwz", "hq")) {
             warning("WARNING! Unknown criterion, none is used")
             criterion <- NULL
         }
@@ -44,15 +45,15 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
         deter <- cbind(deter, 1:(N - 1))
     }
 
-    d.y <- diff(y)
+    d.y <- as.matrix(c(0, diff(y)))
     x <- cbind(
         deter,
-        y[1:(N - 1), , drop = FALSE]
+        lagn(y, 1, na = 0)
     )
 
     if (max.lag > 0) {
         for (l in 1:max.lag) {
-            x <- cbind(x, lagn(d.y, l))
+            x <- cbind(x, lagn(d.y, l, na = 0))
         }
     }
 
@@ -60,20 +61,24 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
         res.lag <- max.lag
     } else {
         c(., e, ., .) %<-% OLS(
-            d.y[(1 + max.lag):(N - 1), , drop = FALSE],
-            x[(1 + max.lag):(N - 1), 1:pos, drop = FALSE]
+            d.y[(2 + max.lag):N, , drop = FALSE],
+            x[(2 + max.lag):N, 1:pos, drop = FALSE]
         )
 
-        res.IC <- log(drop(t(e) %*% e) / N)
+        res.IC <- log(drop(t(e) %*% e) / nrow(e))
         res.lag <- 0
 
         for (l in 1:max.lag) {
             if (max.lag == 0) break
-            c(., e, ., .) %<-% OLS(
-                d.y[(1 + max.lag):(N - 1), , drop = FALSE],
-                x[(1 + max.lag):(N - 1), 1:(pos + l), drop = FALSE]
+            c(b, e, ., .) %<-% OLS(
+                d.y[(2 + max.lag):N, , drop = FALSE],
+                x[(2 + max.lag):N, 1:(pos + l), drop = FALSE]
             )
-            tmp.IC <- info.criterion(e, l)[[criterion]]
+            tmp.IC <- info.criterion(
+                e, l,
+                modification = modified.criterion,
+                alpha = b[pos], y = x[(2 + max.lag):N, pos, drop = FALSE]
+            )[[criterion]]
             if (tmp.IC < res.IC) {
                 res.IC <- tmp.IC
                 res.lag <- l
@@ -83,8 +88,8 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
 
     c(res.beta, res.resid, ., res.t.beta) %<-%
         OLS(
-            d.y[(max.lag + 1):(N - 1), , drop = FALSE],
-            x[(max.lag + 1):(N - 1), 1:(pos + res.lag), drop = FALSE]
+            d.y[(2 + max.lag):N, , drop = FALSE],
+            x[(2 + max.lag):N, 1:(pos + res.lag), drop = FALSE]
         )
 
     return(

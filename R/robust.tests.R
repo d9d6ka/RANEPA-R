@@ -1,16 +1,19 @@
+#'
 #' @importFrom zeallot %<-%
 #'
 #' @export
 robust.tests <- function(y,
-                         const = FALSE, trend = FALSE,
+                         const = FALSE, trend = FALSE, season = FALSE,
                          trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     result <- list(
         const = const,
-        trend = trend
+        trend = trend,
+        season = season
     )
 
+    ## Critical values
     cv.DF.GLS.m <- -1.93078
     cv.DF.OLS.m <- -2.85706
 
@@ -25,8 +28,10 @@ robust.tests <- function(y,
         cv.MDF.t <- -4.34468
     }
 
-    if (const && !trend) cv.HLT <- 2.563
-    if (const && trend) cv.HLT <- 3.162
+    if (!const && trend)
+        cv.HLT <- 2.563
+    else
+        cv.HLT <- 3.162
 
 	sap.ur <- 1.1009;
 	sap.ur1 <- 1.0514;
@@ -39,7 +44,16 @@ robust.tests <- function(y,
 	sap.cv.ur.PY.k0 <- 1.0159
 	sap.cv.A.PY.k0 <- 1.00
 
+    ## Start ##
     N <- nrow(y)
+
+    if (season) {
+        SEAS <- cbind(
+            rep(1, N),
+            seasonal.dummies(N)
+        )
+        c(., y, ., .) %<-% OLS(y, SEAS)
+    }
 
     max.lag <- trunc(12 * (N / 100)^(1 / 4))
 
@@ -69,14 +83,20 @@ robust.tests <- function(y,
 
     ## OLS/GLS ##
     ## Mean case
-    c(., resid.GLS.m, ., .) %<-% GLS(y, x[, 1, drop = FALSE], -7)
     c(beta.OLS.m, resid.OLS.m, ., .) %<-% OLS(y, x[, 1, drop = FALSE])
     DF.OLS.m <- ADF.test(resid.OLS.m,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
                          criterion = "aic",
                          modified.criterion = TRUE)
-    k.m <- DF.OLS.m$lag
+    k.m <- max(1, DF.OLS.m$lag)
+
+    DF.OLS.m <- ADF.test(resid.OLS.m,
+                         const = FALSE, trend = FALSE,
+                         max.lag = k.m,
+                         criterion = NULL)
+
+    c(., resid.GLS.m, ., .) %<-% GLS(y, x[, 1, drop = FALSE], -7)
     DF.GLS.m <- ADF.test(resid.GLS.m,
                          const = FALSE, trend = FALSE,
                          max.lag = k.m,
@@ -84,14 +104,20 @@ robust.tests <- function(y,
     denom.m <- 1 - sum(DF.GLS.m$beta) + DF.GLS.m$alpha
 
     ## Trend case
-    c(., resid.GLS.t, ., .) %<-% GLS(y, x[, 1:2], -13.5)
     c(beta.OLS.t, resid.OLS.t, ., .) %<-% OLS(y, x[, 1:2])
     DF.OLS.t <- ADF.test(resid.OLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
                          criterion = "aic",
                          modified.criterion = TRUE)
-    k.t <- DF.OLS.t$lag
+    k.t <- max(1, DF.OLS.t$lag)
+
+    DF.OLS.t <- ADF.test(resid.OLS.t,
+                         const = FALSE, trend = FALSE,
+                         max.lag = k.t,
+                         criterion = NULL)
+
+    c(., resid.GLS.t, ., .) %<-% GLS(y, x[, 1:2], -13.5)
     DF.GLS.t <- ADF.test(resid.GLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = k.t,
@@ -105,6 +131,11 @@ robust.tests <- function(y,
                     max.lag = max.lag,
                     criterion = "aic",
                     modified.criterion = TRUE)
+    k.tb <- max(1, DF1$lag)
+    DF1 <- ADF.test(resid.OLS,
+                    const = FALSE, trend = FALSE,
+                    max.lag = k.tb,
+                    criterion = NULL)
     MDF.OLS <- DF1$t.alpha
 
     ## MDF ##
@@ -127,7 +158,13 @@ robust.tests <- function(y,
                            max.lag = max.lag,
                            criterion = "aic",
                            modified.criterion = TRUE)
+        k.tb <- max(1, DF1.tb$lag)
+
         c(., resid.GLS, ., .) %<-% GLS(y, z, -17.6)
+        DF1.tb <- ADF.test(resid.GLS,
+                           const = FALSE, trend = FALSE,
+                           max.lag = k.tb,
+                           criterion = NULL)
 
         if (DF1.tb$t.alpha < MDF.GLS) MDF.GLS <- DF1.tb$t.alpha
     }
@@ -149,6 +186,11 @@ robust.tests <- function(y,
                         max.lag = max.lag,
                         criterion = "aic",
                         modified.criterion = TRUE)
+        k.tb <- max(1, DF2$lag)
+        DF2 <- ADF.test(resid.OLS,
+                        const = FALSE, trend = FALSE,
+                        max.lag = k.tb,
+                        criterion = NULL)
         DF2.tb <- N * DF2$alpha / (1 - sum(DF2$beta) + DF2$alpha)
 
 #########TODO: Проверить!!!

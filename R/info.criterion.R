@@ -28,7 +28,7 @@ info.criterion <- function(resid, extra,
     N <- nrow(resid)
 
     if (modification) {
-        s2 <- drop(t(resid) %*% resid) / (N - 1)
+        s2 <- drop(t(resid) %*% resid) / N
         tau <- (alpha ^ 2) * drop(t(y) %*% y) / s2
     } else {
         tau <- 0

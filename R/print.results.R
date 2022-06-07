@@ -55,15 +55,15 @@ print.robustUR <- function(object) {
     }
     cat("\n")
 
-    cat("The break date is estimated in", object$break.date, "\n")
+    cat("The break date is estimated in", object$break.time, "\n")
     cat("\n")
 
     cat("Robust tests for the break with uncertaint over errors",
-        "(integrated or stationary):\n",
-        "\tstat\t\tc.v.\n")
+        "(integrated or stationary):\n\n",
+        "\tstat\tc.v.\n")
     for (v in c("HLT", "PY")) {
-        cat(v, ":\t", object[[v]]$stat, "\t", object[[v]]$cv, "\n")
-        if (object[[v]]$stat > object[[v]]$cv)
+        cat(sprintf("%-7s\t%.4f\t%.4f\n", v, object[[v]]$stat, object[[v]]$cv))
+        if (object[[v]]$stat < object[[v]]$cv)
             cat("reject\n")
         else
             cat("fails to reject\n")
@@ -71,11 +71,11 @@ print.robustUR <- function(object) {
     }
     cat("\n")
 
-    cat("Unit root tests:\n",
-        "\t\tstat\t\tc.v.\n")
+    cat("Unit root tests:\n\n",
+        "\tstat\tc.v.\n")
     for (v in c("DF.GLS", "DF.OLS", "MDF.GLS", "MDF.OLS", "MDF.t")) {
-        cat(v, ":\t", object[[v]]$stat, "\t", object[[v]]$cv, "\n")
-        if (object[[v]]$stat > object[[v]]$cv)
+        cat(sprintf("%-7s\t%.4f\t%.4f\n", v, object[[v]]$stat, object[[v]]$cv))
+        if (object[[v]]$stat < object[[v]]$cv)
             cat("reject\n")
         else
             cat("fails to reject\n")
@@ -83,10 +83,10 @@ print.robustUR <- function(object) {
     }
     cat("\n")
 
-    cat("Testing strategies:\n")
+    cat("Testing strategies:\n\n")
     for (v in c("A.HLT", "A.PY", "UR.HLT", "UR.PY")) {
         tmp.str <- str_split(v, "\\.")
-        cat(tmp.str[[1]][1], "*(t_", tmp.str[[1]][2], ", s_alpha):\n", sep = "")
+        cat(tmp.str[[1]][1], "*(t_", tmp.str[[1]][2], ", s_alpha): ", sep = "")
         if (object[[v]] == 1)
             cat("reject\n")
         else
