@@ -105,7 +105,7 @@ KPSS.2.breaks.unknown <- function(y, model, max.lag = 0, kernel = "bartlett") {
 
     N <- nrow(y)
 
-    c(resid, tb1, tb2) %<-% segs.SSR.2.breaks(y, model)
+    c(resid, tb1, tb2) %<-% segments.OLS.double(y, model)
 
     if (!is.null(kernel)) {
         test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))

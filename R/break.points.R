@@ -14,7 +14,7 @@
 #' @return The point of possible break.
 #'
 #' @importFrom zeallot %<-%
-segs.GLS.1.break <- function(y, const = FALSE,
+segments.GLS <- function(y, const = FALSE,
                              first.break = NULL, last.break = NULL,
                              trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -81,7 +81,7 @@ segs.GLS.1.break <- function(y, const = FALSE,
 #' \item{SSR}{Optimal SSR value.}
 #' \item{break_point}{The point of possible break.}
 #' }
-segs.SSR.1.break <- function(beg, end, first.break, last.break, len, SSR.data) {
+segments.OLS.single <- function(beg, end, first.break, last.break, len, SSR.data) {
     tmp_result <- matrix(data = Inf, nrow = len, ncol = 1)
 
     for (p_break in first.break:last.break) {
@@ -125,7 +125,7 @@ segs.SSR.1.break <- function(beg, end, first.break, last.break, len, SSR.data) {
 #' }
 #'
 #' @importFrom zeallot %<-%
-segs.SSR.2.breaks <- function(y, model) {
+segments.OLS.double <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
@@ -198,11 +198,12 @@ segs.SSR.2.breaks <- function(y, model) {
 #' @param x (Txk)-vector of the explanatory stochastic regressors.
 #' @param m Number of breaks.
 #' @param width Minimum spacing between the breaks.
+#' @param SSR.data Optional matrix of recursive SSR's.
 #'
 #' @return List of 2 elements: optimal SSR and the vector of break points.
 #'
 #' @export
-segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
+segments.OLS <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -213,7 +214,7 @@ segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
     }
 
     if (m == 1) {
-        tmp.result <- segs.SSR.1.break(
+        tmp.result <- segments.OLS.single(
             1, N,
             width, N - width + 1,
             N, SSR.data
@@ -241,7 +242,7 @@ segs.SSR.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
             if (step == 1) {
                 for (v in 1:variants) {
                     step.end <- 2 * width + v - 1
-                    tmp_res <- segs.SSR.1.break(
+                    tmp_res <- segments.OLS.single(
                         1,
                         step.end,
                         width,

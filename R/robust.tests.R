@@ -2,9 +2,9 @@
 #' @importFrom zeallot %<-%
 #'
 #' @export
-robust.tests <- function(y,
-                         const = FALSE, trend = FALSE, season = FALSE,
-                         trim = 0.15) {
+robust.tests.1.break <- function(y,
+                                 const = FALSE, trend = FALSE, season = FALSE,
+                                 trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     result <- list(
@@ -60,7 +60,7 @@ robust.tests <- function(y,
     first.break <- trunc(trim * N)
     last.break <- trunc((1 - trim) * N)
 
-    tb <- segs.GLS.1.break(
+    tb <- segments.GLS(
         y, const,
         first.break, last.break,
         trim
