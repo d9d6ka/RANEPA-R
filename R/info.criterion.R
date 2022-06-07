@@ -13,26 +13,23 @@
 #' @param extra Number of coefficients etc.
 #' @param criterion Needed information criterion: aic, bic, hq or lwz.
 #' @param modification Whether the unit-root test modificaton is needed.
-#' @param ... Extra parameters needed for modification. Needed are
-#' \itemize{
-#' \item The coefficient \eqn{\alpha} of \eqn{y_{t-1}},
-#' \item The vector of \eqn{y_{t-1}},
-#' }
-#' exactly in this order.
+#' @param alpha The coefficient \eqn{\alpha} of \eqn{y_{t-1}} in ADF model.
+#' @param y The vector of \eqn{y_{t-1}} in ADF model.
 #'
 #' @return
 #' The value of the selected informational criterion.
 #'
 #' @export
 info.criterion <- function(resid, extra,
-                           modification = FALSE, ...) {
+                           modification = FALSE,
+                           alpha = 0, y = NULL) {
     if (!is.matrix(resid)) resid <- as.matrix(resid)
 
     N <- nrow(resid)
 
     if (modification) {
         s2 <- drop(t(resid) %*% resid) / (N - 1)
-        tau <- (...elt(1) ^ 2) * drop(t(...elt(2)) %*% ...elt(2)) / s2
+        tau <- (alpha ^ 2) * drop(t(y) %*% y) / s2
     } else {
         tau <- 0
     }
@@ -50,7 +47,7 @@ info.criterion <- function(resid, extra,
 }
 
 #' @importFrom zeallot %<-%
-lag.selection <- function(y, x, criterion = "aic", max.lag) {
+lag.selection <- function(y, x, max.lag, criterion = "aic") {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -75,6 +72,49 @@ lag.selection <- function(y, x, criterion = "aic", max.lag) {
     for (l in 1:max.lag) {
         c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
         temp.IC <- info.criterion(resid, l)[[criterion]]
+
+        if (temp.IC < res.IC) {
+            res.IC <- temp.IC
+            res.lag <- l
+        }
+    }
+
+    return(res.lag)
+}
+
+#' @importFrom zeallot %<-%
+ADF.lag.selection <- function(y, const = FALSE, trend = FALSE, max.lag,
+                              criterion = "aic", modification = FALSE) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+
+    N <- nrow(y)
+    pos <- ifelse(const && trend, 3, ifelse(const, 2, 1))
+
+    d.y <- c(NA, diff(y))
+    x <- cbind(
+        if (const) rep(1, N) else NULL,
+        if (trend) 1:N else NULL,
+        lagn(y, 1)
+    )
+
+    for (l in 1:max.lag) {
+        x <- cbind(x, lagn(d.y, l))
+    }
+
+    tmp.y <- d.y[(2 + max.lag):N, , drop = FALSE]
+    tmp.x <- x[(2 + max.lag):N, , drop = FALSE]
+
+    c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:pos, drop = FALSE])
+
+    res.IC <- log(drop(t(resid) %*% resid) / (N - max.lag))
+    res.lag <- 0
+
+    for (l in 1:max.lag) {
+        c(beta, resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:(pos + l), drop = FALSE])
+        temp.IC <- info.criterion(
+            resid, l,
+            modification, beta[pos], tmp.x[, pos, drop = FALSE]
+        )[[criterion]]
 
         if (temp.IC < res.IC) {
             res.IC <- temp.IC

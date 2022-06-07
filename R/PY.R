@@ -87,7 +87,7 @@ PY <- function(y,
             if (trend) DT else NULL
         )
 
-        k.hat <- max(1, lag.selection(y, x, criterion, max.lag))
+        k.hat <- max(1, lag.selection(y, x, max.lag, criterion))
 
         c(., resid, ., .) %<-% OLS(y, x)
 
