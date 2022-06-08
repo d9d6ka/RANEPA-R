@@ -6,6 +6,8 @@
 #'
 #' @param y Variable of interest.
 #' @param const Whether there is a break in the constant.
+#' @param trend Whether there is a break in the trend.
+#' @param breaks Number of breaks.
 #' @param first.break First possible break point.
 #' @param last.break Last possible break point.
 #' @param trim Trim value to calculate `first.break` and `last.break`
@@ -14,12 +16,24 @@
 #' @return The point of possible break.
 #'
 #' @importFrom zeallot %<-%
-segments.GLS <- function(y, const = FALSE,
-                             first.break = NULL, last.break = NULL,
-                             trim = 0.15) {
+segments.GLS <- function(y,
+                         const = FALSE, trend = FALSE,
+                         breaks = 1,
+                         first.break = NULL, last.break = NULL,
+                         trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
+    if (break < 1) {
+        warning("At least one break is needed!")
+        breaks <- 1
+    }
+    if (break > 3) {
+        warning("More than three breaks are not supported at the moment!")
+        breaks <- 3
+    }
+
     N <- nrow(y)
+
     deter <- cbind(rep(1, N), 1:N)
 
     if (is.null(first.break) || is.null(last.break)) {
@@ -30,35 +44,92 @@ segments.GLS <- function(y, const = FALSE,
     steps <- c(0, 0.2, 0.4, 0.6, 0.8, 0.9, 0.95, 0.975, 1)
 
     res.SSR <- Inf
-    res.tb <- 0
+    res.tb <- rep(0, breaks)
 
     for (alpha in steps) {
-        for (tb in first.break:last.break) {
-            DU <- c(rep(0, tb), rep(1, N - tb))
-            DT <- DU * (1:N - tb)
+        if (const && !trend) {
+            for (tb1 in first.break:last.break) {
+                DU1 <- c(rep(0, tb1), rep(1, N - tb1))
+                DT1 <- DU1 * (1:N - tb1)
 
-            x <- cbind(
-                deter,
-                if (const) {
-                    DU
-                } else {
-                    NULL
-                },
-                DT
-            )
+                x <- cbind(
+                    deter,
+                    if (const) DU1 else NULL,
+                    if (trend) DT1 else NULL
+                )
 
-            c.bar <- N * (alpha - 1)
-            c(., resid, ., .) %<-% GLS(y, x, c.bar)
+                c.bar <- N * (alpha - 1)
+                c(., resid, ., .) %<-% GLS(y, x, c.bar)
 
-            tmp.SSR <- drop(t(resid) %*% resid)
+                tmp.SSR <- drop(t(resid) %*% resid)
 
-            if (tmp.SSR < res.SSR) {
-                res.SSR <- tmp.SSR
-                res.tb <- tb
+                if (tmp.SSR < res.SSR) {
+                    res.SSR <- tmp.SSR
+                    res.tb <- c(tb1)
+                }
+            }
+        } else if (!const && trend) {
+            for (tb1 in first.break:(last.break - first.break)) {
+                for (tb2 in (tb1 + first.break):last.break) {
+                    DU1 <- c(rep(0, tb1), rep(1, N - tb1))
+                    DT1 <- DU1 * (1:N - tb1)
+                    DU2 <- c(rep(0, tb2), rep(1, N - tb2))
+                    DT2 <- DU2 * (1:N - tb2)
+
+                    x <- cbind(
+                        deter,
+                        if (const) DU1 else NULL,
+                        if (trend) DT1 else NULL,
+                        if (const) DU2 else NULL,
+                        if (trend) DT2 else NULL
+                    )
+
+                    c.bar <- N * (alpha - 1)
+                    c(., resid, ., .) %<-% GLS(y, x, c.bar)
+
+                    tmp.SSR <- drop(t(resid) %*% resid)
+
+                    if (tmp.SSR < res.SSR) {
+                        res.SSR <- tmp.SSR
+                        res.tb <- c(tb1, tb2)
+                    }
+                }
+            }
+        } else if (const && trend) {
+            for (tb1 in first.break:(last.break - 2 * first.break)) {
+                for (tb2 in (tb1 + first.break):(last.break - first.break)) {
+                    for (tb3 in (tb2 + first.break):last.break) {
+                        DU1 <- c(rep(0, tb1), rep(1, N - tb1))
+                        DT1 <- DU1 * (1:N - tb1)
+                        DU2 <- c(rep(0, tb2), rep(1, N - tb2))
+                        DT2 <- DU2 * (1:N - tb2)
+                        DU3 <- c(rep(0, tb3), rep(1, N - tb3))
+                        DT3 <- DU3 * (1:N - tb3)
+
+                        x <- cbind(
+                            deter,
+                            if (const) DU1 else NULL,
+                            if (trend) DT1 else NULL,
+                            if (const) DU2 else NULL,
+                            if (trend) DT2 else NULL,
+                            if (const) DU3 else NULL,
+                            if (trend) DT3 else NULL
+                        )
+
+                        c.bar <- N * (alpha - 1)
+                        c(., resid, ., .) %<-% GLS(y, x, c.bar)
+
+                        tmp.SSR <- drop(t(resid) %*% resid)
+
+                        if (tmp.SSR < res.SSR) {
+                            res.SSR <- tmp.SSR
+                            res.tb <- c(tb1, tb2, tb3)
+                        }
+                    }
+                }
             }
         }
     }
-
     return(res.tb)
 }
 
@@ -81,7 +152,9 @@ segments.GLS <- function(y, const = FALSE,
 #' \item{SSR}{Optimal SSR value.}
 #' \item{break_point}{The point of possible break.}
 #' }
-segments.OLS.single <- function(beg, end, first.break, last.break, len, SSR.data) {
+segments.OLS.single <- function(beg, end,
+                                first.break, last.break,
+                                len, SSR.data) {
     tmp_result <- matrix(data = Inf, nrow = len, ncol = 1)
 
     for (p_break in first.break:last.break) {
@@ -131,7 +204,7 @@ segments.OLS.double <- function(y, model) {
     N <- nrow(y)
 
     r.min <- 0
-    SSR.min <- 1000000
+    SSR.min <- Inf
     tb1.min <- 0
     tb2.min <- 0
 

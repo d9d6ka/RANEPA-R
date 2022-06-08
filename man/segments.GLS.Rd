@@ -7,6 +7,8 @@
 segments.GLS(
   y,
   const = FALSE,
+  trend = FALSE,
+  breaks = 1,
   first.break = NULL,
   last.break = NULL,
   trim = 0.15
@@ -16,6 +18,10 @@ segments.GLS(
 \item{y}{Variable of interest.}
 
 \item{const}{Whether there is a break in the constant.}
+
+\item{trend}{Whether there is a break in the trend.}
+
+\item{breaks}{Number of breaks.}
 
 \item{first.break}{First possible break point.}
 
