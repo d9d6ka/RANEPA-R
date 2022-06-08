@@ -63,7 +63,7 @@ print.robustUR <- function(object) {
         "\tstat\tc.v.\n")
     for (v in c("HLT", "PY")) {
         cat(sprintf("%-7s\t%.4f\t%.4f\n", v, object[[v]]$stat, object[[v]]$cv))
-        if (object[[v]]$stat < object[[v]]$cv)
+        if (object[[v]]$stat > object[[v]]$cv)
             cat("reject\n")
         else
             cat("fails to reject\n")
