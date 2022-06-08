@@ -10,6 +10,7 @@
 #'
 #' @import MASS
 #' @importFrom zeallot %<-%
+#'
 #' @export
 PY <- function(y,
                const = FALSE, trend = FALSE,
@@ -68,6 +69,8 @@ PY <- function(y,
     }
 
     N <- nrow(y)
+    x.const <- rep(1, N)
+    x.trend <- 1:N
 
     first.break <- max(trunc(trim * N), max.lag + 2)
     last.break <- trunc((1 - trim) * N)
@@ -77,13 +80,13 @@ PY <- function(y,
     for (tb in first.break:last.break) {
         lambda <- tb / N
 
-        DU <- c(rep(0, tb), rep(1, N - tb))
-        DT <- DU * (1:N - tb)
+        DU <- as.numeric(x.trend > tb)
+        DT <- DU * (x.trend - tb)
 
         x <- cbind(
-            rep(1, N),
+            x.const,
+            x.trend,
             if (const) DU else NULL,
-            1:N,
             if (trend) DT else NULL
         )
 
@@ -93,13 +96,13 @@ PY <- function(y,
 
         d.resid <- c(0, diff(resid))
 
+        y.u <- resid[k.hat:N, , drop = FALSE]
         x.u <- lagn(resid, 1, na = 0)
         if (k.hat > 1) {
             for (l in 1:(k.hat - 1)) {
                 x.u <- cbind(x.u, lagn(d.resid, l, na = 0))
             }
         }
-        y.u <- resid[k.hat:N, , drop = FALSE]
         x.u <- x.u[k.hat:N, , drop = FALSE]
 
         c(beta.u, u.resid, ., .) %<-% OLS(y.u, x.u)
@@ -120,7 +123,7 @@ PY <- function(y,
 
         c1 <- sqrt((1 + k.x) * N)
         c2 <- ((1 + k.x) * N - tau05^2 * (IP + N)) /
-            (tau05 * (tau05 + k.x) * (IP + N))
+            (tau05 * (tau05 + k) * (IP + N))
 
         if (tau > tau05)
             c.tau <- -tau
@@ -161,19 +164,19 @@ PY <- function(y,
                 for (k.i in 1:(k.hat - 1))
                     x.v <- cbind(x.v, lagn(g.resid, k.i, na = 0))
 
-                y.v <- g.resid[(k.hat - 1):N, , drop = FALSE]
-                x.v <- x.v[(k.hat - 1):N, , drop = FALSE]
+                y.v <- g.resid[(k.hat - 1):nrow(g.resid), , drop = FALSE]
+                x.v <- x.v[(k.hat - 1):nrow(g.resid), , drop = FALSE]
 
                 c(beta.v, v.resid, ., .) %<-% OLS(y.v, x.v)
 
                 if (const && !trend) {
                     BETAS <- matrix(0, nrow = k.hat - 1, ncol = 3)
                     for (k.i in 1:(k.hat - 1)) {
-                        DU.ki <- c(rep(0, tb - k.i), rep(1, N - (tb - k.i)))
+                        DU.ki <- as.numeric(x.trend > tb - k.i)
                         x.ki <- cbind(
-                            rep(1, N),
+                            x.const,
                             DU.ki,
-                            1:N
+                            x.trend
                         )
                         x.g.ki <- rbind(
                             x.ki[1, ],
@@ -191,8 +194,8 @@ PY <- function(y,
                 } else {
                     BETAS <- matrix(0, nrow = k.hat - 1, ncol = 4)
                     for (k.i in 1:(k.hat - 1)) {
-                        DU.ki <- c(rep(0, tb - k.i), rep(1, N - (tb - k.i)))
-                        DT.ki <- DU.ki * (1:N - tb)
+                        DU.ki <- as.numeric(x.trend > tb - k.i)
+                        DT.ki <- DU.ki * (x.trend - tb)
                         x.ki <- cbind(
                             rep(1, N),
                             DU.ki,
@@ -209,7 +212,6 @@ PY <- function(y,
                         h0 <- sig.e / ((1 - sum(beta.v))^2)
                         beta.g[2] <- (sqrt(h0) / sqrt(sig.e)) *
                             (beta.g[2] - drop(t(BETAS[, 2]) %*% beta.v))
-
                     }
                 }
             }
@@ -218,8 +220,8 @@ PY <- function(y,
                 c(h0, m) <- h0W(g.resid)
         }
 
-        VCV = h0 * qr.solve(t(x.g) %*% x.g)
-        vect1[tb - first.break + 1] = t(VR %*% beta.g) %*%
+        VCV <- h0 * qr.solve(t(x.g) %*% x.g)
+        vect1[tb - first.break + 1] <- t(VR %*% beta.g) %*%
             qr.solve(VR %*% VCV %*% t(VR)) %*% (VR %*% beta.g)
     }
 

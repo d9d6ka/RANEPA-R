@@ -61,7 +61,7 @@ robust.tests.1.break <- function(y,
     last.break <- trunc((1 - trim) * N)
 
     tb <- segments.GLS(
-        y, const,
+        y, const, trend, 1,
         first.break, last.break,
         trim
     )

@@ -33,8 +33,8 @@ segments.GLS <- function(y,
     }
 
     N <- nrow(y)
-
-    deter <- cbind(rep(1, N), 1:N)
+    x.const <- rep(1, N)
+    x.trend <- 1:N
 
     if (is.null(first.break) || is.null(last.break)) {
         first.break <- floor(trim * N)
@@ -49,11 +49,12 @@ segments.GLS <- function(y,
     for (alpha in steps) {
         if (const && !trend) {
             for (tb1 in first.break:last.break) {
-                DU1 <- c(rep(0, tb1), rep(1, N - tb1))
-                DT1 <- DU1 * (1:N - tb1)
+                DU1 <- as.numeric(x.trend > tb1)
+                DT1 <- DU1 * (x.trend - tb1)
 
                 x <- cbind(
-                    deter,
+                    x.const,
+                    x.trend,
                     if (const) DU1 else NULL,
                     if (trend) DT1 else NULL
                 )
@@ -71,13 +72,14 @@ segments.GLS <- function(y,
         } else if (!const && trend) {
             for (tb1 in first.break:(last.break - first.break)) {
                 for (tb2 in (tb1 + first.break):last.break) {
-                    DU1 <- c(rep(0, tb1), rep(1, N - tb1))
-                    DT1 <- DU1 * (1:N - tb1)
-                    DU2 <- c(rep(0, tb2), rep(1, N - tb2))
-                    DT2 <- DU2 * (1:N - tb2)
+                    DU1 <- as.numeric(x.trend > tb1)
+                    DT1 <- DU1 * (x.trend - tb1)
+                    DU2 <- as.numeric(x.trend > tb2)
+                    DT2 <- DU2 * (x.trend - tb2)
 
                     x <- cbind(
-                        deter,
+                        x.const,
+                        x.trend,
                         if (const) DU1 else NULL,
                         if (trend) DT1 else NULL,
                         if (const) DU2 else NULL,
@@ -99,15 +101,16 @@ segments.GLS <- function(y,
             for (tb1 in first.break:(last.break - 2 * first.break)) {
                 for (tb2 in (tb1 + first.break):(last.break - first.break)) {
                     for (tb3 in (tb2 + first.break):last.break) {
-                        DU1 <- c(rep(0, tb1), rep(1, N - tb1))
-                        DT1 <- DU1 * (1:N - tb1)
-                        DU2 <- c(rep(0, tb2), rep(1, N - tb2))
-                        DT2 <- DU2 * (1:N - tb2)
-                        DU3 <- c(rep(0, tb3), rep(1, N - tb3))
-                        DT3 <- DU3 * (1:N - tb3)
+                        DU1 <- as.numeric(x.trend > tb1)
+                        DT1 <- DU1 * (x.trend - tb1)
+                        DU2 <- as.numeric(x.trend > tb2)
+                        DT2 <- DU2 * (x.trend - tb2)
+                        DU3 <- as.numeric(x.trend > tb3)
+                        DT3 <- DU3 * (x.trend - tb3)
 
                         x <- cbind(
-                            deter,
+                            x.const,
+                            x.trend,
                             if (const) DU1 else NULL,
                             if (trend) DT1 else NULL,
                             if (const) DU2 else NULL,
@@ -130,6 +133,7 @@ segments.GLS <- function(y,
             }
         }
     }
+
     return(res.tb)
 }
 
