@@ -1,4 +1,4 @@
-segments.KP <- function(y,
+PY.sequential <- function(y,
                         const = FALSE, trend = FALSE,
                         breaks = 1,
                         criterion = "aic",
