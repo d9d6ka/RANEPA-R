@@ -23,11 +23,11 @@ segments.GLS <- function(y,
                          trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    if (break < 1) {
+    if (breaks < 1) {
         warning("At least one break is needed!")
         breaks <- 1
     }
-    if (break > 3) {
+    if (breaks > 3) {
         warning("More than three breaks are not supported at the moment!")
         breaks <- 3
     }
@@ -293,7 +293,7 @@ segments.OLS <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
     if (m == 1) {
         tmp.result <- segments.OLS.single(
             1, N,
-            width, N - width + 1,
+            width, N - width,
             N, SSR.data
         )
         optimal.SSR <- tmp.result$SSR
@@ -324,8 +324,7 @@ segments.OLS <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
                         step.end,
                         width,
                         step.end - width,
-                        N,
-                        SSR.data
+                        step.end, SSR.data
                     )
                     step.SSR[v, 1] <- tmp_res$SSR
                     step.break[v, 1] <- tmp_res$break.point

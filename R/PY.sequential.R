@@ -50,34 +50,33 @@ PY.sequential <- function(y,
         dates <- segments.OLS(y, cbind(x.const, x.trend), breaks, h, SSR.data)
         date.vec <- c(1, drop(dates$break.point) + 1, N + 1)
     }
-    print(date.vec)
 
     wald <- rep(0, breaks + 1)
 
     for (i in 1:(breaks + 1)) {
+        N.i <- date.vec[i + 1] - date.vec[i]
+        
         vect1 <- rep(0, N)
-        t.low <- max(
-            trunc(date.vec[i] + (date.vec[i + 1] - date.vec[i]) * trim),
-            max.lag + 2
-        )
-        t.high <-
-            trunc(date.vec[i + 1] - (date.vec[i + 1] - date.vec[i]) * trim)
+        
+        t.low <- max(trunc(date.vec[i] + N.i * trim - 1), max.lag + 2)
+        t.high <- trunc(date.vec[i + 1] - N.i * trim - 1)
+
         if (t.low < t.high - 1) {
             for (tb in t.low:t.high) {
-                lambda <- tb / date.vec[i + 1]
+                lambda <- (tb - 1) / (date.vec[i + 1] - 1)
 
                 DU <- as.numeric(x.trend > tb)
                 DT <- DU * (x.trend - tb)
 
                 x <- cbind(
                     x.const,
-                    x.trend - date.vec[i] + 1,
                     if (const) DU else NULL,
+                    x.trend - date.vec[i] + 1,
                     DT
                 )
 
-                y.i <- y[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE]
-                x.i <- x[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE]
+                y.i <- y[date.vec[i]:(date.vec[i + 1] - 1), , drop = FALSE]
+                x.i <- x[date.vec[i]:(date.vec[i + 1] - 1), , drop = FALSE]
 
                 k.hat <- max(1, lag.selection(y.i, x.i, max.lag, criterion))
 
@@ -110,10 +109,9 @@ PY.sequential <- function(y,
                 k <- 10
                 k.x <- ncol(x)
 
-                T.i <- date.vec[i + 1] - date.vec[i]
-                c1 <- sqrt((1 + k.x) * T.i)
-                c2 <- ((1 + k.x) * T.i - tau05^2 * (IP + T.i)) /
-                    (tau05 * (tau05 + k) * (IP + T.i))
+                c1 <- sqrt((1 + k.x) * N.i)
+                c2 <- ((1 + k.x) * N.i - tau05^2 * (IP + N.i)) /
+                    (tau05 * (tau05 + k) * (IP + N.i))
 
                 if (tau > tau05)
                     c.tau <- -tau
@@ -136,14 +134,14 @@ PY.sequential <- function(y,
                 if (CR <= 1) a.hat.M <- 1
 
                 y.g <- rbind(
-                    y[date.vec[i] + 1, , drop = FALSE],
-                    y[(date.vec[i] + 2):(date.vec[i + 1] - 1), , drop = FALSE] -
-                    a.hat.M * y[(date.vec[i] + 1):(date.vec[i + 1] - 2), , drop = FALSE]
+                    y[date.vec[i], , drop = FALSE],
+                    y[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE] -
+                    a.hat.M * y[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE]
                 )
                 x.g <- rbind(
-                    x[date.vec[i] + 1, , drop = FALSE],
-                    x[(date.vec[i] + 2):(date.vec[i + 1] - 1), , drop = FALSE] -
-                    a.hat.M * x[(date.vec[i] + 1):(date.vec[i + 1] - 2), , drop = FALSE]
+                    x[date.vec[i], , drop = FALSE],
+                    x[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE] -
+                    a.hat.M * x[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE]
                 )
 
                 c(beta.g, g.resid, ., .) %<-% OLS(y.g, x.g)
@@ -162,7 +160,7 @@ PY.sequential <- function(y,
                         c(beta.v, v.resid, ., .) %<-% OLS(y.v, x.v)
 
                         if (!const) {
-                            h0 <- (drop(t(v.resid) %*% v.resid) / (T.i - k.hat)) /
+                            h0 <- (drop(t(v.resid) %*% v.resid) / (N.i - k.hat)) /
                                 ((1 - sum(beta.v))^2)
                         }
                         if (const) {
@@ -183,7 +181,7 @@ PY.sequential <- function(y,
                                 )
                                 c(beta.ki, ., ., .) %<-% OLS(y.g, x.g.ki)
                                 BETAS[k.i, ] <- drop(beta.ki)
-                                sig.e <- drop(t(v.resid) %*% v.resid) / (T.i - k.hat)
+                                sig.e <- drop(t(v.resid) %*% v.resid) / (N.i - k.hat)
                                 h0 <- sig.e / ((1 - sum(beta.v))^2)
                                 beta.g[2] <- (sqrt(h0) / sqrt(sig.e)) *
                                     (beta.g[2] - drop(t(BETAS[, 2]) %*% beta.v))
@@ -204,7 +202,9 @@ PY.sequential <- function(y,
             wald[i] <- log(sum(exp(vect1 / 2)) / (date.vec[i + 1] - date.vec[i]))
         }
     }
+
     print(wald)
+
     return(
         list(
             wald = max(wald)
