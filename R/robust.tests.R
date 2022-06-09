@@ -47,9 +47,12 @@ robust.tests.1.break <- function(y,
     ## Start ##
     N <- nrow(y)
 
+    x.const <- rep(1, N)
+    x.trend <- 1:N
+
     if (season) {
         SEAS <- cbind(
-            rep(1, N),
+            x.const,
             seasonal.dummies(N)
         )
         c(., y, ., .) %<-% OLS(y, SEAS)
@@ -57,26 +60,27 @@ robust.tests.1.break <- function(y,
 
     max.lag <- trunc(12 * (N / 100)^(1 / 4))
 
-    first.break <- trunc(trim * N)
-    last.break <- trunc((1 - trim) * N)
+    first.break <- trunc(trim * N) + 1
+    last.break <- trunc((1 - trim) * N) + 1
 
     tb <- segments.GLS(
         y, const, trend, 1,
         first.break, last.break,
         trim
     )
+    tb <- drop(tb)
     result$break.time <- tb
 
     tau <- tb / N
     cv.MDF.GLS.lib = cv.MDF.GLS ## CV(tau, cv_MDF_GLS_lib_1,trm);
     cv.MDF.OLS.lib = cv.MDF.OLS ## CV(tau, cv_MDF_OLS_lib_1,trm);
 
-    DU <- c(rep(0, tb), rep(1, N - tb))
-    DT <- DU * (1:N - tb)
+    DU <- as.numeric(x.trend > tb)
+    DT <- DU * (x.trend - tb)
 
     x <- cbind(
-        rep(1, N),
-        1:N,
+        x.const,
+        x.trend,
         if (const) DU else NULL,
         if (trend) DT else NULL
     )
@@ -142,13 +146,13 @@ robust.tests.1.break <- function(y,
     ## One break ##
     MDF.GLS <- Inf
     for (tb1 in first.break:last.break) {
-        DU1 <- c(rep(0, tb1), rep(1, N - tb1))
-        DT1 <- DU1 * (1:N - tb1)
+        DU1 <- as.numeric(x.trend > tb1)
+        DT1 <- DU1 * (x.trend - tb1)
 
         z <- cbind(
-            rep(1, N),
+            x.const,
             if (const) DU1 else NULL,
-            1:N,
+            x.trend,
             if (trend) DT1 else NULL
         )
 
@@ -171,12 +175,12 @@ robust.tests.1.break <- function(y,
 
     MDF.t <- Inf
     for (tb1 in first.break:last.break) {
-        DU1 <- c(rep(0, tb1), rep(1, N - tb1))
-        DT1 <- DU1 * (1:N - tb1)
+        DU1 <- as.numeric(x.trend > tb1)
+        DT1 <- DU1 * (x.trend - tb1)
 
         z <- cbind(
-            rep(1, N),
-            1:N,
+            x.const,
+            x.trend,
             DT1
         )
 

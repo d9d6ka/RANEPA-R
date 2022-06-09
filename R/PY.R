@@ -72,8 +72,8 @@ PY <- function(y,
     x.const <- rep(1, N)
     x.trend <- 1:N
 
-    first.break <- max(trunc(trim * N), max.lag + 2)
-    last.break <- trunc((1 - trim) * N)
+    first.break <- max(trunc(trim * N), max.lag + 2) + 1
+    last.break <- trunc((1 - trim) * N) + 1
 
     vect1 <- matrix(0, nrow = trunc((1 - 2 * trim) * N) + 2, ncol = 1)
 
