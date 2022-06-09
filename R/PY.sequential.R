@@ -203,8 +203,6 @@ PY.sequential <- function(y,
         }
     }
 
-    print(wald)
-
     return(
         list(
             wald = max(wald)
