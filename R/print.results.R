@@ -94,3 +94,40 @@ print.robustUR <- function(object) {
         cat("\n")
     }
 }
+
+
+#' @importFrom stringr str_split
+#' @export
+print.robustURN <- function(object) {
+    cat("\n\nstat\tc.v.\n\n")
+
+    for (v in c(
+        "MDF.GLS.1",
+        "MDF.GLS.2",
+        if (object$breaks == 3) "MDF.GLS.3" else NULL,
+        "MDF.OLS.1",
+        "MDF.OLS.2",
+        if (object$breaks == 3) "MDF.OLS.3" else NULL
+    )) {
+        cat(sprintf("%-9s:\t%.4f\t%.4f\n", object[[v]]$stat, object[[v]]$cv))
+        if (object[[v]]$stat < object[[v]]$cv)
+            cat("reject\n")
+        else
+            cat("fails to reject\n")
+        cat("\n")
+    }
+    cat("\n")
+
+    cat(sprintf("UR^%d(s.alpha): ", object$breaks))
+    if (object$UR1 == 1)
+        cat("reject\n")
+    else
+        cat("fails to reject\n")
+
+    cat(sprintf("UR^%d(s.alpha, %d): ", object$breaks, object$breaks.star))
+    if (object$UR == 1)
+        cat("reject\n")
+    else
+        cat("fails to reject\n")
+    cat("\n")
+}

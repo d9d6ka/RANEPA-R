@@ -436,31 +436,96 @@ MDF <- function(y,
         (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.1olsgls * cv.MDF.OLS3))
         )
 
-        ur3.2ols.sa <- (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.2ols * cv.MDF.OLS2)) || (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.2ols * cv.MDF.OLS3))
+        ur3.2ols.sa <- as.numeric(
+        (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.2ols * cv.MDF.OLS2)) ||
+        (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.2ols * cv.MDF.OLS3))
+        )
 
-        ur3.2olsgls.sa <- (MDF.GLS2 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.GLS2)) || (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.OLS2))
-					|| (MDF.GLS3 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.GLS3)) || (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.OLS3))
+        ur3.2olsgls.sa <- as.numeric(
+        (MDF.GLS2 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.GLS2)) ||
+        (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.OLS2)) ||
+        (MDF.GLS3 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.GLS3)) ||
+        (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.2olsgls * cv.MDF.OLS3))
+        )
 
-        ur3.3ols.sa <- (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.3ols * cv.MDF.OLS3))
+        ur3.3ols.sa <- as.numeric(
+            MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.3ols * cv.MDF.OLS3)
+        )
 
-			ur3.3olsgls.sa <- (MDF.GLS3 < (sap.cv.ur.3 * sap.ur3.3olsgls * cv.MDF.GLS3)) || (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.3olsgls * cv.MDF.OLS3))
+        ur3.3olsgls.sa <- as.numeric(
+        (MDF.GLS3 < (sap.cv.ur.3 * sap.ur3.3olsgls * cv.MDF.GLS3)) ||
+        (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.3olsgls * cv.MDF.OLS3))
+        )
 
-			UR <- (m.star == 3) * ((1-t.alpha.3.id) * ur3.olsgls.sa + t.alpha.3.id * ur3.ols.sa)+
-				  (m.star == 2) * ((1-t.alpha.3.id) * ur3.1olsgls.sa + t.alpha.3.id * ur3.1ols.sa)+
-				  (m.star == 1) * ((1-t.alpha.3.id) * ur3.2olsgls.sa + t.alpha.3.id * ur3.2ols.sa)+
-				  (m.star == 0) * ((1-t.alpha.3.id) * ur3.3olsgls.sa + t.alpha.3.id * ur3.3ols.sa)
+        UR <- as.numeric(m.star == 3) *
+            ((1 - t.alpha.3.id) * ur3.olsgls.sa + t.alpha.3.id * ur3.ols.sa) +
+            as.numeric(m.star == 2) *
+            ((1-t.alpha.3.id) * ur3.1olsgls.sa + t.alpha.3.id * ur3.1ols.sa) +
+            as.numeric(m.star == 1) *
+            ((1-t.alpha.3.id) * ur3.2olsgls.sa + t.alpha.3.id * ur3.2ols.sa) +
+            as.numeric(m.star == 0) *
+            ((1-t.alpha.3.id) * ur3.3olsgls.sa + t.alpha.3.id * ur3.3ols.sa)
 
-// without pre-test	for breaks
+        ## without pre-test for breaks
 
-			ur3.ols.sa <- (DF.OLS.t < (sap.cv.ur.3 * sap.ur3.ols * cv.DF.OLS.t)) || (MDF.OLS1 < (sap.cv.ur.3 * sap.ur3.ols * cv.MDF.OLS1))
-					|| (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.ols * cv.MDF.OLS2)) || (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.ols * cv.MDF.OLS3))
+        ur3.ols.sa <- as.numeric(
+        (DF.OLS.t < (sap.cv.ur.3 * sap.ur3.ols * cv.DF.OLS.t)) ||
+        (MDF.OLS1 < (sap.cv.ur.3 * sap.ur3.ols * cv.MDF.OLS1)) ||
+        (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.ols * cv.MDF.OLS2)) ||
+        (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.ols * cv.MDF.OLS3))
+        )
 
-			ur3.olsgls.sa <- (DF.GLS.t < (sap.cv.ur.3 * sap.ur3.olsgls * cv.DF.GLS.t)) || (MDF.GLS1 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.GLS1))
-					|| (DF.OLS.t < (sap.cv.ur.3 * sap.ur3.olsgls * cv.DF.OLS.t)) || (MDF.OLS1 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.OLS1))
-					|| (MDF.GLS2 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.GLS2)) || (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.OLS2))
-					|| (MDF.GLS3 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.GLS3)) || (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.OLS3))
+        ur3.olsgls.sa <- as.numeric(
+        (DF.GLS.t < (sap.cv.ur.3 * sap.ur3.olsgls * cv.DF.GLS.t)) ||
+        (MDF.GLS1 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.GLS1)) ||
+        (DF.OLS.t < (sap.cv.ur.3 * sap.ur3.olsgls * cv.DF.OLS.t)) ||
+        (MDF.OLS1 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.OLS1)) ||
+        (MDF.GLS2 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.GLS2)) ||
+        (MDF.OLS2 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.OLS2)) ||
+        (MDF.GLS3 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.GLS3)) ||
+        (MDF.OLS3 < (sap.cv.ur.3 * sap.ur3.olsgls * cv.MDF.OLS3))
+        )
 
-			UR1 <- (1-t.alpha.3.id) * ur3.olsgls.sa + t.alpha.3.id * ur3.ols.sa
-
+        UR1 <- (1 - t.alpha.3.id) * ur3.olsgls.sa + t.alpha.3.id * ur3.ols.sa
     }
+
+    result <- list()
+    result$breaks.star <- breaks.star
+    result$breaks.tbb <- tbb
+    result$breaks <- breaks
+
+    result$MDF.GLS.1 <- list(
+        stat = MDF.GLS1,
+        cv = cv.MDF.GLS1
+    )
+    result$MDF.GLS.2 <- list(
+        stat = MDF.GLS2,
+        cv = cv.MDF.GLS2
+    )
+    if (breaks == 3) {
+        result$MDF.GLS.3 <- list(
+            stat = MDF.GLS3,
+            cv = cv.MDF.GLS3
+        )
+    }
+
+    result$MDF.OLS.1 <- list(
+        stat = MDF.OLS1,
+        cv = cv.MDF.OLS1
+    )
+    result$MDF.OLS.2 <- list(
+        stat = MDF.OLS2,
+        cv = cv.MDF.OLS2
+    )
+    if (breaks == 3) {
+        result$MDF.OLS.3 <- list(
+            stat = MDF.OLS3,
+            cv = cv.MDF.OLS3
+        )
+    }
+
+    result$UR1 <- UR1
+    result$UR <- UR
+
+    class(result) <- "robustURN"
 }
