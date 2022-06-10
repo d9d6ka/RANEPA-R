@@ -8,8 +8,6 @@
 #' @param x Explanatory variables.
 #'
 #' @return The list of betas, residuals, forecasted values and t-values.
-#'
-#' @import MASS
 OLS <- function(y, x) {
     tmp.model <- .lm.fit(x, y)
     S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) /
@@ -39,7 +37,6 @@ OLS <- function(y, x) {
 #'
 #' @return The list of betas, residuals, forecasted values and t-values.
 #'
-#' @import MASS
 #' @importFrom zeallot %<-%
 GLS <- function(y, z, c) {
     if (!is.matrix(y)) y <- as.matrix(y)

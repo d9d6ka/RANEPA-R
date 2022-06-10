@@ -8,15 +8,14 @@
 #' @param trim A trimming value for a possible break date bounds.
 #' @param max.lag The maximum possible lag in the model.
 #'
-#' @import MASS
 #' @importFrom zeallot %<-%
 #'
 #' @export
-PY <- function(y,
-               const = FALSE, trend = FALSE,
-               criterion = "aic",
-               trim = 0.15,
-               max.lag) {
+PY.single <- function(y,
+                      const = FALSE, trend = FALSE,
+                      criterion = "aic",
+                      trim = 0.15,
+                      max.lag) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!trim %in% c(0.01, 0.05, 0.10, 0.15, 0.25)) {
         stop("ERROR! Illegal trim value")

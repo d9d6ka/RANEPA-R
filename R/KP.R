@@ -7,7 +7,6 @@
 #' @param criterion Needed information criterion: aic, bic, hq or lwz.
 #' @param trim A trimming value for a possible break date bounds.
 #'
-#' @import MASS
 #' @importFrom zeallot %<-%
 #'
 #' @export

@@ -8,7 +8,6 @@
 #' @param trim A trimming value for a possible break date bounds.
 #' @param max.lag The maximum possible lag in the model.
 #'
-#' @import MASS
 #' @importFrom zeallot %<-%
 #'
 #' @export
@@ -55,9 +54,9 @@ PY.sequential <- function(y,
 
     for (i in 1:(breaks + 1)) {
         N.i <- date.vec[i + 1] - date.vec[i]
-        
+
         vect1 <- rep(0, N)
-        
+
         t.low <- max(trunc(date.vec[i] + N.i * trim - 1), max.lag + 2)
         t.high <- trunc(date.vec[i + 1] - N.i * trim - 1)
 

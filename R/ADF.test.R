@@ -65,7 +65,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
             x[(2 + max.lag):N, 1:pos, drop = FALSE]
         )
 
-        res.IC <- log(drop(t(e) %*% e) / nrow(e))
+        res.ic <- log(drop(t(e) %*% e) / nrow(e))
         res.lag <- 0
 
         for (l in 1:max.lag) {
@@ -74,13 +74,13 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
                 d.y[(2 + max.lag):N, , drop = FALSE],
                 x[(2 + max.lag):N, 1:(pos + l), drop = FALSE]
             )
-            tmp.IC <- info.criterion(
+            tmp.ic <- info.criterion(
                 e, l,
                 modification = modified.criterion,
                 alpha = b[pos], y = x[(2 + max.lag):N, pos, drop = FALSE]
             )[[criterion]]
-            if (tmp.IC < res.IC) {
-                res.IC <- tmp.IC
+            if (tmp.ic < res.ic) {
+                res.ic <- tmp.ic
                 res.lag <- l
             }
         }
@@ -99,7 +99,7 @@ ADF.test <- function(y, const = TRUE, trend = FALSE, max.lag = 0,
             trend = trend,
             beta = res.beta,
             t.beta = drop(res.t.beta),
-            alpha = res.beta[pos],
+            alpha = drop(res.beta[pos]),
             t.alpha = drop(res.t.beta[pos]),
             residuals = res.resid,
             lag = res.lag

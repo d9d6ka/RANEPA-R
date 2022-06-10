@@ -1,4 +1,3 @@
-#' @import MASS
 DOLS.N.breaks <- function(y,
                           x,
                           model,

@@ -4,8 +4,6 @@
 #' @param e (Tx1) vector or residuals.
 #'
 #' @return Long-run variance.
-#'
-#' @import MASS
 lr.var <- function(e, l = NULL) {
     if (!is.matrix(e)) e <- as.matrix(e)
 
@@ -32,8 +30,6 @@ lr.var <- function(e, l = NULL) {
 #' @param e (Tx1) vector or residuals.
 #'
 #' @return Long-run variance.
-#'
-#' @import MASS
 lr.var.AK <- function(e) {
     if (!is.matrix(e)) e <- as.matrix(e)
 
@@ -75,8 +71,6 @@ lr.var.AK <- function(e) {
 #' @param criterion The information crietreion: bic, aic or lwz.
 #'
 #' @return Long-run variance.
-#'
-#' @import MASS
 lr.var.SPC <- function(e,
                        max.lag = 0,
                        kernel = "bartlett",

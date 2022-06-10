@@ -1,23 +1,23 @@
 #' @export
 print.sadf <- function(object) {
-    test.name <- NULL
+    test_name <- NULL
 
     if ("SADF.value" %in% names(object)) {
-        test.statistic <- object$SADF.value
-        test.name <- "SADF"
+        test_statistic <- object$SADF.value
+        test_name <- "SADF"
     } else if ("stadf.value" %in% names(object)) {
-        test.statistic <- object$stadf.value
-        test.name <- "STADF"
+        test_statistic <- object$stadf.value
+        test_name <- "STADF"
     } else if ("GSADF.value" %in% names(object)) {
-        test.statistic <- object$GSADF.value
-        test.name <- "GSADF"
+        test_statistic <- object$GSADF.value
+        test_name <- "GSADF"
     } else if ("gstadf.value" %in% names(object)) {
-        test.statistic <- object$gstadf.value
-        test.name <- "GSTADF"
+        test_statistic <- object$gstadf.value
+        test_name <- "GSTADF"
     }
 
-    if (!is.null(test.name)) {
-        cat(test.name, "test statistic:", test.statistic, "\n")
+    if (!is.null(test_name)) {
+        cat(test_name, "test statistic:", test_statistic, "\n")
     }
 
     if ("supBZ.value" %in% names(object)) {
@@ -85,8 +85,8 @@ print.robustUR <- function(object) {
 
     cat("Testing strategies:\n\n")
     for (v in c("A.HLT", "A.PY", "UR.HLT", "UR.PY")) {
-        tmp.str <- str_split(v, "\\.")
-        cat(tmp.str[[1]][1], "*(t_", tmp.str[[1]][2], ", s_alpha): ", sep = "")
+        tmp_str <- stringr::str_split(v, "\\.")
+        cat(tmp_str[[1]][1], "*(t_", tmp_str[[1]][2], ", s_alpha): ", sep = "")
         if (object[[v]] == 1)
             cat("reject\n")
         else
@@ -99,7 +99,7 @@ print.robustUR <- function(object) {
 #' @importFrom stringr str_split
 #' @export
 print.robustURN <- function(object) {
-    cat("\n\nstat\tc.v.\n\n")
+    cat("\t\tstat\tc.v.\n\n")
 
     for (v in c(
         "MDF.GLS.1",
@@ -109,7 +109,7 @@ print.robustURN <- function(object) {
         "MDF.OLS.2",
         if (object$breaks == 3) "MDF.OLS.3" else NULL
     )) {
-        cat(sprintf("%-9s:\t%.4f\t%.4f\n", object[[v]]$stat, object[[v]]$cv))
+        cat(sprintf("%-9s:\t%.4f\t%.4f\n", v, object[[v]]$stat, object[[v]]$cv))
         if (object[[v]]$stat < object[[v]]$cv)
             cat("reject\n")
         else

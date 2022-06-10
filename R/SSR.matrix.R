@@ -40,7 +40,6 @@ SSR.matrix <- function(y, x, width = 2) {
 #'
 #' @return The vector of calculated recursive SSR.
 #'
-#' @import MASS
 #' @importFrom zeallot %<-%
 SSR.recursive <- function(y, x, beg, end, width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)

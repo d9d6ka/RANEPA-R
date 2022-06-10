@@ -35,7 +35,6 @@
 #' \item{break_point}{Break points.}
 #' }
 #'
-#' @import MASS
 #' @importFrom zeallot %<-%
 #' @export
 KPSS.1.break <- function(y, x,

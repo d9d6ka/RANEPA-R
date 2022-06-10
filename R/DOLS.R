@@ -1,4 +1,3 @@
-#' @import MASS
 DOLS <- function(y, x, model, break.point, k.lags, k.leads) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) {
