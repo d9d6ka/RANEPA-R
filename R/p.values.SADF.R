@@ -1,3 +1,8 @@
+#' Interpolating p-value for intermediate observation numbers.
+#'
+#' @param statistic The statistic value.
+#' @param N.obs The number of observations.
+#' @param cr.values The set of precalculated tables.
 p.values.SADF <- function(statistic, N.obs, cr.values) {
     N.table.obs <- as.numeric(names(cr.values))
 

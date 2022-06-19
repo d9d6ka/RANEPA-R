@@ -1,9 +1,20 @@
 #' @title
-#' supBZ.statistic - Calculate supBZ statistic (HLZ, 2018).
+#' Calculate supBZ statistic
+#'
+#' @param y The series of interest.
+#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param sigma.sq Local non-parametric estimates of variance. If `NULL` they
+#' will be estimated via Nadaraya-Watson procedure.
+#'
+#' @references
+#' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+#' “Testing Explosive Bubbles with Time-Varying Volatility.”
+#' Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
+#' https://doi.org/10.1080/07474938.2018.1536099.
 #'
 #' @export
 supBZ.statistic <- function(y,
-                            r0 = 0.01 + 1.8 / sqrt(length(y)),
+                            trim = 0.01 + 1.8 / sqrt(length(y)),
                             sigma.sq = NULL,
                             generalized = FALSE) {
     N <- length(y)
@@ -14,14 +25,12 @@ supBZ.statistic <- function(y,
         mx <- rep(1, N - 1)
         nw.loocv.model <- NW.loocv(my, mx, kernel = "gauss")
         h.est <- nw.loocv.model$h
-        nw.model <- NW.estimation(my, mx,
+        nw.model <- NW.volatility(
+            my,
             kernel = "gauss",
             h = nw.loocv.model$h
         )
-        u.hat <- nw.model$u.hat
-
-        ## Calculate sigma.sq.
-        sigma.sq <- my - nw.model$u.hat
+        sigma.sq <- nw.model$omega.sq
     }
 
     y <- y - y[1]
@@ -32,15 +41,15 @@ supBZ.statistic <- function(y,
     m <- 1
 
     if (!generalized) {
-        for (j in (floor(r0 * N)):N) {
+        for (j in (floor(trim * N)):N) {
             BZ.values[m] <-
                 sum(d.y[1:(j - 1)] * l.y[1:(j - 1)] / sigma.sq[1:(j - 1)]) /
                     (sum(l.y[1:(j - 1)]^2 / sigma.sq[1:(j - 1)]))^0.5
             m <- m + 1
         }
     } else {
-        for (i in 1:(N - floor(r0 * N) + 1)) {
-            for (j in (i + floor(r0 * N) - 1):N) {
+        for (i in 1:(N - floor(trim * N) + 1)) {
+            for (j in (i + floor(trim * N) - 1):N) {
                 BZ.values[m] <-
                     sum(d.y[i:(j - 1)] * l.y[i:(j - 1)] / sigma.sq[i:(j - 1)]) /
                         (sum(l.y[i:(j - 1)]^2 / sigma.sq[i:(j - 1)]))^0.5
@@ -55,7 +64,7 @@ supBZ.statistic <- function(y,
         c(
             list(
                 y = y,
-                r0 = r0,
+                trim = trim,
                 sigma.sq = sigma.sq,
                 BZ.values = BZ.values,
                 supBZ.value = supBZ.value

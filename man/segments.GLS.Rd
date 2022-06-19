@@ -36,6 +36,9 @@ The point of possible break.
 \description{
 Procedure to minimize the GLS-SSR for 1 break point
 }
-\details{
-See Skrobotov (2018) for further details.
+\references{
+Skrobotov, Anton.
+“On Trend Breaks and Initial Condition in Unit Root Testing.”
+Journal of Time Series Econometrics 10, no. 1 (2018): 1–15.
+https://doi.org/10.1515/jtse-2016-0014.
 }

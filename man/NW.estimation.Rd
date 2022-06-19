@@ -22,6 +22,9 @@ residuals.
 \description{
 NW.estimation - Nadaraya–Watson kernel regression.
 }
-\details{
-See Harvey, Leybourne and Zu (2021) for more information.
+\references{
+Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
+“Nonparametric Estimation of the Variance Function
+in an Explosive Autoregression Model.”
+School of Economics. University of Nottingham, 2022.
 }

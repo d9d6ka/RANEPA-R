@@ -1,9 +1,6 @@
 #' @title
 #' Procedure to minimize the GLS-SSR for 1 break point
 #'
-#' @details
-#' See Skrobotov (2018) for further details.
-#'
 #' @param y Variable of interest.
 #' @param const Whether there is a break in the constant.
 #' @param trend Whether there is a break in the trend.
@@ -14,6 +11,12 @@
 #' if not provided.
 #'
 #' @return The point of possible break.
+#'
+#' @references
+#' Skrobotov, Anton.
+#' “On Trend Breaks and Initial Condition in Unit Root Testing.”
+#' Journal of Time Series Econometrics 10, no. 1 (2018): 1–15.
+#' https://doi.org/10.1515/jtse-2016-0014.
 #'
 #' @importFrom zeallot %<-%
 segments.GLS <- function(y,

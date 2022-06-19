@@ -23,6 +23,9 @@ List of 2 elements: optimal SSR and the vector of break points.
 \description{
 Find \eqn{m + 1} optimal partitions
 }
-\details{
-Based on Bai and Perron (2003).
+\references{
+Bai, Jushan, and Pierre Perron.
+“Computation and Analysis of Multiple Structural Change Models.”
+Journal of Applied Econometrics 18, no. 1 (2003): 1–22.
+https://doi.org/10.1002/jae.659.
 }

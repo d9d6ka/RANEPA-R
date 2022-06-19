@@ -1,5 +1,18 @@
 #' @title
-#' SADF test with wild bootstrap.
+#' Supremum ADF test with wild bootstrap.
+#'
+#' @param y The input time series of interest.
+#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param const Whether the constant needs to be included.
+#' @param alpha The significance level of interest.
+#' @param iter The number of iterations/
+#' @param seed The seed parameter for the random number generator.
+#'
+#' @references
+#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+#' “Time-Transformed Test for the Explosive Bubbles under
+#' Non-Stationary Volatility.”
+#' arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
 #'
 #' @import doSNOW
 #' @import foreach
@@ -7,7 +20,7 @@
 #'
 #' @export
 SADF.bootstrap.test <- function(y,
-                                r0 = 0.01 + 1.8 / sqrt(length(y)),
+                                trim = 0.01 + 1.8 / sqrt(length(y)),
                                 const = TRUE,
                                 alpha = 0.05,
                                 iter = 4 * 200,
@@ -15,7 +28,7 @@ SADF.bootstrap.test <- function(y,
     N <- length(y)
 
     ## Find SADF.value.
-    model <- SADF.test(y, r0, const)
+    model <- SADF.test(y, trim, const)
     t.values <- model$t.values
     SADF.value <- model$SADF.value
 
@@ -35,7 +48,7 @@ SADF.bootstrap.test <- function(y,
         .options.snow = list(progress = progress)
     ) %dopar% {
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
-        model <- SADF.test(y.star, r0, const)
+        model <- SADF.test(y.star, trim, const)
         model$SADF.value
     }
 
@@ -48,7 +61,7 @@ SADF.bootstrap.test <- function(y,
 
     result <- list(
         y = y,
-        r0 = r0,
+        trim = trim,
         const = const,
         alpha = alpha,
         iter = iter,

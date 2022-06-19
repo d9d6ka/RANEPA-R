@@ -1,5 +1,5 @@
 #' @title
-#' Produce lagged vector backward of forward
+#' Produce a vector lagged backward of forward
 #'
 #' @param x Initial vector.
 #' @param i Size of lag (lead if negative).

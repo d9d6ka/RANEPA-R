@@ -6,10 +6,20 @@
 \usage{
 reindex(u)
 }
+\arguments{
+\item{u}{The residuals series for reindexing.}
+}
 \description{
 reindex - function that makes reindexing.
 }
-\details{
-See Cavaliere and Taylor (2007, 2008) and
-Kurozumi, Skrobotov and Tsaryov (2021) for more information.
+\references{
+Cavaliere, Giuseppe, and A. M. Robert Taylor.
+“Time-Transformed Unit Root Tests for Models with Non-Stationary Volatility.”
+Journal of Time Series Analysis 29, no. 2 (March 2008): 300–330.
+https://doi.org/10.1111/j.1467-9892.2007.00557.x.
+
+Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+“Time-Transformed Test for the Explosive Bubbles under
+Non-Stationary Volatility.”
+arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
 }

@@ -2,11 +2,11 @@
 % Please edit documentation in R/STADF.test.R
 \name{STADF.test}
 \alias{STADF.test}
-\title{SADF test based on NW estimation and reindexing.}
+\title{Supremum ADF test with time transformation.}
 \usage{
 STADF.test(
   y,
-  r0 = 0.01 + 1.8/sqrt(length(y)),
+  trim = 0.01 + 1.8/sqrt(length(y)),
   const = FALSE,
   omega.est = TRUE,
   h = "auto_CV",
@@ -18,6 +18,45 @@ STADF.test(
   add.p.value = TRUE
 )
 }
+\arguments{
+\item{y}{The input time series of interest.}
+
+\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+
+\item{const}{Whether the constant needs to be included.}
+
+\item{omega.est}{Whether the variance of Nadaraya-Watson residuals should be
+used.}
+
+\item{truncated}{Whether the truncation of Nadaraya-Watson residuals is
+needed.}
+
+\item{is.reindex}{Whether the Cavaliere and Taylor (2008) time transformation
+is needed.}
+
+\item{ksi.input}{The value of the truncation parameter. Can be either `auto`
+or the explicit numerical value. In the former case the numeric value is
+estimated.}
+
+\item{hc}{The scaling parameter for Nadaraya-Watson bandwidth.}
+
+\item{pc}{The scaling parameter for the estimated truncation parameter value.}
+
+\item{add.p.value}{Whether the p-value is to be returned. This argument is
+needed to suppress the calculation of p-values during the precalculation of
+tables needed for the p-values estimating.}
+}
 \description{
-SADF test based on NW estimation and reindexing.
+Supremum ADF test with time transformation.
+}
+\references{
+Cavaliere, Giuseppe, and A. M. Robert Taylor.
+“Time-Transformed Unit Root Tests for Models with Non-Stationary Volatility.”
+Journal of Time Series Analysis 29, no. 2 (March 2008): 300–330.
+https://doi.org/10.1111/j.1467-9892.2007.00557.x.
+
+Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+“Time-Transformed Test for the Explosive Bubbles under
+Non-Stationary Volatility.”
+arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
 }

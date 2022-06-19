@@ -29,3 +29,11 @@ PY.sequential(
 \description{
 Sequential Perron-Yabu (2009) statistic for breaks at unknown date.
 }
+\references{
+Kejriwal, Mohitosh, and Pierre Perron.
+“A Sequential Procedure to Determine the Number of Breaks in Trend
+with an Integrated or Stationary Noise Component:
+Determination of Number of Breaks in Trend.”
+Journal of Time Series Analysis 31, no. 5 (September 2010): 305–28.
+https://doi.org/10.1111/j.1467-9892.2010.00666.x.
+}

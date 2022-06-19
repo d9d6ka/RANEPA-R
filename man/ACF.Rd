@@ -2,16 +2,16 @@
 % Please edit documentation in R/ACF.R
 \name{ACF}
 \alias{ACF}
-\title{Calculating ACF.}
+\title{Calculating ACF values.}
 \usage{
 ACF(y)
 }
 \arguments{
-\item{y}{The input time series.}
+\item{y}{The input time series of interest.}
 }
 \value{
 The vector of ACF values for s from 0 to \eqn{N - 1}.
 }
 \description{
-Calculating ACF.
+Calculating ACF values.
 }

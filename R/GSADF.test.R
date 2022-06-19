@@ -1,9 +1,22 @@
 #' @title
-#' GSADF test.
+#' Generalized supremum ADF test.
+#'
+#' @param y The input time series of interest.
+#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param const Whether the constant needs to be included.
+#' @param add.p.value Whether the p-value is to be returned. This argument is
+#' needed to suppress the calculation of p-values during the precalculation of
+#' tables needed for the p-values estimating.
+#'
+#' @references
+#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+#' “Time-Transformed Test for the Explosive Bubbles under
+#' Non-Stationary Volatility.”
+#' arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
 #'
 #' @export
 GSADF.test <- function(y,
-                       r0 = 0.01 + 1.8 / sqrt(length(y)),
+                       trim = 0.01 + 1.8 / sqrt(length(y)),
                        const = TRUE,
                        add.p.value = TRUE) {
     N <- length(y)
@@ -14,8 +27,8 @@ GSADF.test <- function(y,
 
     t.values <- c()
     m <- 1
-    for (i in 1:(N - floor(r0 * N) + 1)) {
-        for (j in (i + floor(r0 * N) - 1):N) {
+    for (i in 1:(N - floor(trim * N) + 1)) {
+        for (j in (i + floor(trim * N) - 1):N) {
             model <- ADF.test(y[i:j], const = const)
             t.values[m] <- model$t.alpha
             m <- m + 1
@@ -38,7 +51,7 @@ GSADF.test <- function(y,
     result <- c(
         list(
             y = y,
-            r0 = r0,
+            trim = trim,
             const = const,
             t.values = t.values,
             GSADF.value = GSADF.value

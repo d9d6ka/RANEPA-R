@@ -2,7 +2,7 @@
 % Please edit documentation in R/seasonal.dummies.R
 \name{seasonal.dummies}
 \alias{seasonal.dummies}
-\title{Generating seasomal monthly dummy variables.}
+\title{Generating monthly seasonal dummy variables.}
 \usage{
 seasonal.dummies(N)
 }
@@ -13,5 +13,5 @@ seasonal.dummies(N)
 The matrix of values od seasonal dummies.
 }
 \description{
-Generating seasomal monthly dummy variables.
+Generating monthly seasonal dummy variables.
 }

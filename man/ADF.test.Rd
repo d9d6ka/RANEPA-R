@@ -10,11 +10,12 @@ ADF.test(
   trend = FALSE,
   max.lag = 0,
   criterion = NULL,
-  modified.criterion = FALSE
+  modified.criterion = FALSE,
+  rescale.criterion = FALSE
 )
 }
 \arguments{
-\item{y}{A variable of interest.}
+\item{y}{The input time series of interest.}
 
 \item{const}{Include const to the model if TRUE.}
 
@@ -26,6 +27,9 @@ ADF.test(
 If lag selection is not needed keep this NULL.}
 
 \item{modified.criterion}{Whether the unit-root test modificaton is needed.}
+
+\item{rescale.criterion}{Whether the rescaling informational criterion
+is needed. Designed to cope with heteroscedasticity in residuals.}
 }
 \value{
 List containing:
@@ -42,4 +46,24 @@ List containing:
 }
 \description{
 ADF.test - simple implementation of ADF test
+}
+\details{
+A function for ADF test with the ability to select the number of lags.
+Lags are selected by informational criterions which can be modified as in
+Ng and Perron (2001) and Cavaliere et al. (2015).
+
+Due to the Frisch-Waugh-Lovell theorem we first detrend `y` and then apply
+the test to the detrended series.
+}
+\references{
+Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
+and A. M. Robert Taylor. “Lag Length Selection for Unit Root Tests
+in the Presence of Nonstationary Volatility.”
+Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
+https://doi.org/10.1080/07474938.2013.808065.
+
+Ng, Serena, and Pierre Perron. “Lag Length Selection and the Construction of
+Unit Root Tests with Good Size and Power.”
+Econometrica 69, no. 6 (2001): 1519–54.
+https://doi.org/10.1111/1468-0262.00256.
 }

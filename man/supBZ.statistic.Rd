@@ -2,15 +2,29 @@
 % Please edit documentation in R/supBZ.statistic.R
 \name{supBZ.statistic}
 \alias{supBZ.statistic}
-\title{supBZ.statistic - Calculate supBZ statistic (HLZ, 2018).}
+\title{Calculate supBZ statistic}
 \usage{
 supBZ.statistic(
   y,
-  r0 = 0.01 + 1.8/sqrt(length(y)),
+  trim = 0.01 + 1.8/sqrt(length(y)),
   sigma.sq = NULL,
   generalized = FALSE
 )
 }
+\arguments{
+\item{y}{The series of interest.}
+
+\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+
+\item{sigma.sq}{Local non-parametric estimates of variance. If `NULL` they
+will be estimated via Nadaraya-Watson procedure.}
+}
 \description{
-supBZ.statistic - Calculate supBZ statistic (HLZ, 2018).
+Calculate supBZ statistic
+}
+\references{
+Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+“Testing Explosive Bubbles with Time-Varying Volatility.”
+Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
+https://doi.org/10.1080/07474938.2018.1536099.
 }

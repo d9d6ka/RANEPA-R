@@ -2,10 +2,32 @@
 % Please edit documentation in R/SADF.test.R
 \name{SADF.test}
 \alias{SADF.test}
-\title{SADF test.}
+\title{Supremum ADF test.}
 \usage{
-SADF.test(y, r0 = 0.01 + 1.8/sqrt(length(y)), const = TRUE, add.p.value = TRUE)
+SADF.test(
+  y,
+  trim = 0.01 + 1.8/sqrt(length(y)),
+  const = TRUE,
+  add.p.value = TRUE
+)
+}
+\arguments{
+\item{y}{The input time series of interest.}
+
+\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+
+\item{const}{Whether the constant needs to be included.}
+
+\item{add.p.value}{Whether the p-value is to be returned. This argument is
+needed to suppress the calculation of p-values during the precalculation of
+tables needed for the p-values estimating.}
 }
 \description{
-SADF test.
+Supremum ADF test.
+}
+\references{
+Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+“Time-Transformed Test for the Explosive Bubbles under
+Non-Stationary Volatility.”
+arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
 }

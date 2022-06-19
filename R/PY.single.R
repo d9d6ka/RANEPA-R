@@ -8,6 +8,13 @@
 #' @param trim A trimming value for a possible break date bounds.
 #' @param max.lag The maximum possible lag in the model.
 #'
+#' @references
+#' Perron, Pierre, and Tomoyoshi Yabu.
+#' “Testing for Shifts in Trend With an Integrated or
+#' Stationary Noise Component.”
+#' Journal of Business & Economic Statistics 27, no. 3 (July 2009): 369–96.
+#' https://doi.org/10.1198/jbes.2009.07268.
+#'
 #' @importFrom zeallot %<-%
 #'
 #' @export
@@ -89,7 +96,7 @@ PY.single <- function(y,
             if (trend) DT else NULL
         )
 
-        k.hat <- max(1, lag.selection(y, x, max.lag, criterion))
+        k.hat <- max(1, AR(y, x, max.lag, criterion)$lag)
 
         c(., resid, ., .) %<-% OLS(y, x)
 
@@ -216,7 +223,7 @@ PY.single <- function(y,
             }
 
             if (abs(a.hat.M) < 1)
-                c(h0, m) <- h0W(g.resid)
+                c(h0, m) %<-% lr.var.quad(g.resid)
         }
 
         VCV <- h0 * qr.solve(t(x.g) %*% x.g)

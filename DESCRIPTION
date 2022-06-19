@@ -1,5 +1,5 @@
 Package: breaktest
-Version: 0.0.1
+Version: 0.0.2
 Date: 2022-04-28
 Title: My First Collection of Functions
 Authors@R: c(person("Anton", "Skrobotov", role = c("aut", "ctb"),
@@ -13,10 +13,9 @@ Author: Anton Skrobotov [aut, ctb],
 Maintainer: Vadim Zyamalov <zyamalov@ranepa.rut>
 Depends: R (>= 3.1.0)
 Imports:
-    MASS,
     zeallot
-Description: A (one paragraph) description of what
-  the package does and why it may be useful.
+Description: This package contains a set of different unit root and
+    cointegration tests in the presence of structural breaks in the data.
 License: GPL (>= 2)
 URL: https://github.com/d9d6ka/breaktest
 BugReports: https://github.com/d9d6ka/breaktest/issues

@@ -9,15 +9,25 @@
 #' \item Hannan-Quinn,
 #' \item Liu et al.}
 #'
-#' @param resid Input residuals.
-#' @param extra Number of coefficients etc.
-#' @param criterion Needed information criterion: aic, bic, hq or lwz.
+#' @param resid Input residuals needed for estimating the values of
+#' information criterions.
+#' @param extra Number of extra parameters needed for estimating the punishment
+#' term.
 #' @param modification Whether the unit-root test modificaton is needed.
+#' See Ng and Perron (2001) for further information.
 #' @param alpha The coefficient \eqn{\alpha} of \eqn{y_{t-1}} in ADF model.
+#' Needed only for criterion modification purposes.
 #' @param y The vector of \eqn{y_{t-1}} in ADF model.
+#' Needed only for criterion modification purposes.
 #'
 #' @return
 #' The value of the selected informational criterion.
+#'
+#' @references
+#' Ng, Serena, and Pierre Perron. “Lag Length Selection and the Construction of
+#' Unit Root Tests with Good Size and Power.”
+#' Econometrica 69, no. 6 (2001): 1519–54.
+#' https://doi.org/10.1111/1468-0262.00256.
 #'
 #' @export
 info.criterion <- function(resid, extra,
@@ -44,83 +54,4 @@ info.criterion <- function(resid, extra,
             lwz = log.RSS + 0.299 * (tau + extra) * (log(N))^2.1
         )
     )
-}
-
-#' @importFrom zeallot %<-%
-lag.selection <- function(y, x, max.lag, criterion = "aic") {
-    if (!is.matrix(y)) y <- as.matrix(y)
-    if (!is.matrix(x)) x <- as.matrix(x)
-
-    N <- nrow(y)
-    k <- ncol(x)
-
-    tmp.y <- y[(1 + max.lag):N, , drop = FALSE]
-    tmp.x <- x[(1 + max.lag):N, , drop = FALSE]
-
-    for (l in 1:max.lag) {
-        tmp.x <- cbind(
-            tmp.x,
-            lagn(y, l)[(1 + max.lag):N, , drop = FALSE]
-        )
-    }
-
-    c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:k, drop = FALSE])
-
-    res.IC <- log(drop(t(resid) %*% resid) / (N - max.lag))
-    res.lag <- 0
-
-    for (l in 1:max.lag) {
-        c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
-        temp.IC <- info.criterion(resid, l)[[criterion]]
-
-        if (temp.IC < res.IC) {
-            res.IC <- temp.IC
-            res.lag <- l
-        }
-    }
-
-    return(res.lag)
-}
-
-#' @importFrom zeallot %<-%
-ADF.lag.selection <- function(y, const = FALSE, trend = FALSE, max.lag,
-                              criterion = "aic", modification = FALSE) {
-    if (!is.matrix(y)) y <- as.matrix(y)
-
-    N <- nrow(y)
-    pos <- ifelse(const && trend, 3, ifelse(const, 2, 1))
-
-    d.y <- c(NA, diff(y))
-    x <- cbind(
-        if (const) rep(1, N) else NULL,
-        if (trend) 1:N else NULL,
-        lagn(y, 1)
-    )
-
-    for (l in 1:max.lag) {
-        x <- cbind(x, lagn(d.y, l))
-    }
-
-    tmp.y <- d.y[(2 + max.lag):N, , drop = FALSE]
-    tmp.x <- x[(2 + max.lag):N, , drop = FALSE]
-
-    c(., resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:pos, drop = FALSE])
-
-    res.IC <- log(drop(t(resid) %*% resid) / (N - max.lag))
-    res.lag <- 0
-
-    for (l in 1:max.lag) {
-        c(beta, resid, ., .) %<-% OLS(tmp.y, tmp.x[, 1:(pos + l), drop = FALSE])
-        temp.IC <- info.criterion(
-            resid, l,
-            modification, beta[pos], tmp.x[, pos, drop = FALSE]
-        )[[criterion]]
-
-        if (temp.IC < res.IC) {
-            res.IC <- temp.IC
-            res.lag <- l
-        }
-    }
-
-    return(res.lag)
 }

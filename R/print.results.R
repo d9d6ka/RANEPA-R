@@ -39,7 +39,7 @@ print.sadf <- function(object) {
 
 #' @importFrom stringr str_split
 #' @export
-print.robustUR <- function(object) {
+print.mdfHLT <- function(object) {
     if (object$const && !object$trend) {
         cat("Model 0: Structural change in intercept\n")
         cat("Y{t}=a0+a1*DU+b0*t+e{t}\n",
@@ -98,7 +98,7 @@ print.robustUR <- function(object) {
 
 #' @importFrom stringr str_split
 #' @export
-print.robustURN <- function(object) {
+print.mdfHLTN <- function(object) {
     cat("\t\tstat\tc.v.\n\n")
 
     for (v in c(
@@ -130,4 +130,20 @@ print.robustURN <- function(object) {
     else
         cat("fails to reject\n")
     cat("\n")
+}
+
+
+#' @importFrom stringr str_split
+#' @export
+print.mdfHHLT <- function(object) {
+    cat("\t\tstat\tc.v.\t wild c.v.\n\n")
+    for (v in c("MZa", "MSB", "MZt", "ADF")) {
+        cat(
+            "%s stat:\t%.4f\t%.4f\t%.4f\n",
+            v,
+            object[[v]]$stat,
+            object[[v]]$cv,
+            object[[v]]$cv.bootstrap
+        )
+    }
 }

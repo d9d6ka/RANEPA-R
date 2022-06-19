@@ -20,6 +20,12 @@
 #' \item{tb2}{The second break point.}
 #' }
 #'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “The KPSS Test with Two Structural Breaks.”
+#' Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
+#' https://doi.org/10.1007/s10108-006-9017-8.
+#'
 #' @importFrom zeallot %<-%
 segments.OLS.double <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -35,7 +41,7 @@ segments.OLS.double <- function(y, model) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
                 z <- determinants.KPSS.2.breaks(model, N, c(i, j))
-                c(., resid, p, .) %<-% OLS(y, z)
+                c(., resid, ., .) %<-% OLS(y, z)
                 ssr <- drop(t(resid) %*% resid)
                 if (ssr < cur.ssr) {
                     res.r <- resid
@@ -49,7 +55,7 @@ segments.OLS.double <- function(y, model) {
         for (i in 2:(N - 4)) {
             for (j in (i + 2):(N - 2)) {
                 z <- determinants.KPSS.2.breaks(model, N, c(i, j))
-                c(., resid, p, .) %<-% OLS(y, z)
+                c(., resid, ., .) %<-% OLS(y, z)
                 ssr <- drop(t(resid) %*% resid)
                 if (ssr < cur.ssr) {
                     res.r <- resid
@@ -62,7 +68,7 @@ segments.OLS.double <- function(y, model) {
         for (j in 2:(N - 4)) {
             for (i in (j + 2):(N - 2)) {
                 z <- determinants.KPSS.2.breaks(model, N, c(i, j))
-                c(., resid, p, .) %<-% OLS(y, z)
+                c(., resid, ., .) %<-% OLS(y, z)
                 ssr <- drop(t(resid) %*% resid)
                 if (ssr < cur.ssr) {
                     res.r <- resid

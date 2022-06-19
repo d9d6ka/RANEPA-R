@@ -1,11 +1,18 @@
 #' @title
-#' Calculate sup sign-based SADF statistic (HLZ, 2019)).
+#' Calculate superior sign-based SADF statistic.
+#'
+#' @references
+#' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+#' “Sign-Based Unit Root Tests for Explosive Financial Bubbles in the Presence
+#' of Deterministically Time-Varying Volatility.”
+#' Econometric Theory 36, no. 1 (February 2020): 122–69.
+#' https://doi.org/10.1017/S0266466619000057.
 #'
 #' @importFrom zeallot %<-%
 #'
 #' @export
 supSBADF.statistic <- function(y,
-                               r0 = 0.01 + 1.8 / sqrt(length(y)),
+                               trim = 0.01 + 1.8 / sqrt(length(y)),
                                generalized = FALSE) {
     N <- length(y)
 
@@ -16,14 +23,14 @@ supSBADF.statistic <- function(y,
     m <- 1
 
     if (!generalized) {
-        for (j in (floor(r0 * N)):N) {
+        for (j in (floor(trim * N)):N) {
             c(., ., ., t.beta) %<-% OLS(diff(C.t)[1:j], C.t[1:j])
             SBADF.values[m] <- drop(t.beta)
             m <- m + 1
         }
     } else {
-        for (i in 1:(N - floor(r0 * N) + 1)) {
-            for (j in (i + floor(r0 * N) - 1):N) {
+        for (i in 1:(N - floor(trim * N) + 1)) {
+            for (j in (i + floor(trim * N) - 1):N) {
                 c(., ., ., t.beta) %<-% OLS(diff(C.t)[i:j], C.t[i:j])
                 SBADF.values[m] <- drop(t.beta)
                 m <- m + 1
@@ -36,7 +43,7 @@ supSBADF.statistic <- function(y,
     return(
         list(
             y = y,
-            r0 = r0,
+            trim = trim,
             C.t = C.t,
             SBADF.values = SBADF.values,
             supSBADF.value = supSBADF.value

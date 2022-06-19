@@ -20,6 +20,7 @@ lr.var <- function(e, l = NULL) {
     return(lrv)
 }
 
+
 #' @title
 #' Calculating long-run variance
 #'
@@ -49,6 +50,7 @@ lr.var.AK <- function(e) {
     }
     return(lrv)
 }
+
 
 #' @title
 #' Calculating long-run variance
@@ -159,4 +161,45 @@ lr.var.SPC <- function(e,
     lrv <- min(lrv.recolored, N * 0.15 * lrv)
 
     return(lrv)
+}
+
+
+#' Estimating heteroscedasticity and autocorrelation consistent variance
+#'
+#' @references
+#' Andrews, Donald W. K.
+#' “Heteroskedasticity and Autocorrelation Consistent
+#' Covariance Matrix Estimation.”
+#' Econometrica 59, no. 3 (1991): 817–58.
+#' https://doi.org/10.2307/2938229.
+#'
+#' @importFrom zeallot %<-%
+lr.var.quad <- function(y) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+
+    N <- nrow(y)
+
+    c(beta, ., ., .) %<-% OLS(y[2:N, ], y[1:(N-1), ])
+    beta <- drop(beta)
+
+    a <- (4 * beta^2) / ((1 - beta)^4)
+    acf.y <- ACF(y)
+
+    lambda <- matrix(0, nrow = N - 1, ncol = 1)
+    s <- as.matrix(1:(N - 1))
+
+    m <- 1.3221 * (a * N)^(1 / 5)
+    delta <- (6 * pi * s) / (5 * m)
+
+    for (i in 1:(N - 1)) {
+        lambda[i] <-
+            3 * (sin(delta[i]) / delta[i] - cos(delta[i])) / (delta[i]^2)
+    }
+
+    return(
+        list(
+            h0 = drop(acf.y[1] + 2 * t(lambda) %*% acf.y[2:N]),
+            m = m
+        )
+    )
 }

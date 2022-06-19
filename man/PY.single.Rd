@@ -29,3 +29,10 @@ PY.single(
 \description{
 Perron-Yabu (2009) statistic for break at unknown date.
 }
+\references{
+Perron, Pierre, and Tomoyoshi Yabu.
+“Testing for Shifts in Trend With an Integrated or
+Stationary Noise Component.”
+Journal of Business & Economic Statistics 27, no. 3 (July 2009): 369–96.
+https://doi.org/10.1198/jbes.2009.07268.
+}

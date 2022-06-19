@@ -2,7 +2,7 @@
 % Please edit documentation in R/lagn.R
 \name{lagn}
 \alias{lagn}
-\title{Produce lagged vector backward of forward}
+\title{Produce a vector lagged backward of forward}
 \usage{
 lagn(x, i, na = NA)
 }
@@ -15,5 +15,5 @@ lagn(x, i, na = NA)
 Lagged or leaded vector.
 }
 \description{
-Produce lagged vector backward of forward
+Produce a vector lagged backward of forward
 }

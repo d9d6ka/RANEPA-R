@@ -1,11 +1,40 @@
 #' @title
-#' GSADF test based on NW estimation and reindexing.
+#' Generalized supremum ADF test with time transformation.
+#'
+#' @param y The input time series of interest.
+#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param const Whether the constant needs to be included.
+#' @param omega.est Whether the variance of Nadaraya-Watson residuals should be
+#' used.
+#' @param truncated Whether the truncation of Nadaraya-Watson residuals is
+#' needed.
+#' @param is.reindex Whether the Cavaliere and Taylor (2008) time transformation
+#' is needed.
+#' @param ksi.input The value of the truncation parameter. Can be either `auto`
+#' or the explicit numerical value. In the former case the numeric value is
+#' estimated.
+#' @param hc The scaling parameter for Nadaraya-Watson bandwidth.
+#' @param pc The scaling parameter for the estimated truncation parameter value.
+#' @param add.p.value Whether the p-value is to be returned. This argument is
+#' needed to suppress the calculation of p-values during the precalculation of
+#' tables needed for the p-values estimating.
+#'
+#' @references
+#' Cavaliere, Giuseppe, and A. M. Robert Taylor.
+#' “Time-Transformed Unit Root Tests for Models with Non-Stationary Volatility.”
+#' Journal of Time Series Analysis 29, no. 2 (March 2008): 300–330.
+#' https://doi.org/10.1111/j.1467-9892.2007.00557.x.
+#'
+#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+#' “Time-Transformed Test for the Explosive Bubbles under
+#' Non-Stationary Volatility.”
+#' arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
 #'
 #' @importFrom zeallot %<-%
 #'
 #' @export
 GSTADF.test <- function(y,
-                        r0 = 0.01 + 1.8 / sqrt(length(y)),
+                        trim = 0.01 + 1.8 / sqrt(length(y)),
                         const = FALSE,
                         omega.est = TRUE,
                         h = "auto_CV",
@@ -70,8 +99,8 @@ GSTADF.test <- function(y,
     t.values <- c()
     m <- 1
 
-    for (i in 1:(N - floor(r0 * N) + 1)) {
-        for (j in (i + floor(r0 * N) - 1):N) {
+    for (i in 1:(N - floor(trim * N) + 1)) {
+        for (j in (i + floor(trim * N) - 1):N) {
             ## If we consider a model with a constant,
             ## we subtract the moving average.
             if (const) {
@@ -103,7 +132,7 @@ GSTADF.test <- function(y,
         list(
             y = y,
             N = N,
-            r0 = r0,
+            trim = trim,
             const = const,
             omega.est = omega.est,
             h = h,

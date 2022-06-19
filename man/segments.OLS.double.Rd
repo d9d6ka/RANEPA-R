@@ -31,3 +31,9 @@ Procedure to minimize the SSR for 2 break points
 \details{
 See Carrion-i-Silvestre and Sansó (2007) for further details.
 }
+\references{
+Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+“The KPSS Test with Two Structural Breaks.”
+Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
+https://doi.org/10.1007/s10108-006-9017-8.
+}

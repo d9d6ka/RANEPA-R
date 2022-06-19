@@ -1,7 +1,7 @@
 #' @title
-#' Calculating ACF.
+#' Calculating ACF values.
 #'
-#' @param y The input time series.
+#' @param y The input time series of interest.
 #'
 #' @return
 #' The vector of ACF values for s from 0 to \eqn{N - 1}.

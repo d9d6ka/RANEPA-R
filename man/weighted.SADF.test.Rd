@@ -2,11 +2,11 @@
 % Please edit documentation in R/weighted.SADF.test.R
 \name{weighted.SADF.test}
 \alias{weighted.SADF.test}
-\title{Weighted SADF test (HLZ, 2018).}
+\title{Weighted supremum ADF test.}
 \usage{
 weighted.SADF.test(
   y,
-  r0 = 0.01 + 1.8/sqrt(length(y)),
+  trim = 0.01 + 1.8/sqrt(length(y)),
   const = TRUE,
   alpha = 0.05,
   iter = 4 * 200,
@@ -14,6 +14,27 @@ weighted.SADF.test(
   seed = round(10^4 * sd(y))
 )
 }
+\arguments{
+\item{y}{The input time series of interest.}
+
+\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+
+\item{const}{Whether the constant needs to be included.}
+
+\item{alpha}{The significance level of interest.}
+
+\item{iter}{The number of iterations.}
+
+\item{urs}{Use `union of rejections` strategy.}
+
+\item{seed}{The seed parameter for the random number generator.}
+}
 \description{
-Weighted SADF test (HLZ, 2018).
+Weighted supremum ADF test.
+}
+\references{
+Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+“Testing Explosive Bubbles with Time-Varying Volatility.”
+Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
+https://doi.org/10.1080/07474938.2018.1536099.
 }

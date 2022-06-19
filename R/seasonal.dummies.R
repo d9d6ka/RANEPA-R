@@ -1,5 +1,5 @@
 #' @title
-#' Generating seasomal monthly dummy variables.
+#' Generating monthly seasonal dummy variables.
 #'
 #' @param N number of observations.
 #'

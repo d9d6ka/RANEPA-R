@@ -1,5 +1,19 @@
 #' @title
-#' Weighted SADF test (HLZ, 2018).
+#' Weighted supremum ADF test.
+#'
+#' @param y The input time series of interest.
+#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param const Whether the constant needs to be included.
+#' @param alpha The significance level of interest.
+#' @param iter The number of iterations.
+#' @param urs Use `union of rejections` strategy.
+#' @param seed The seed parameter for the random number generator.
+#'
+#' @references
+#' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+#' “Testing Explosive Bubbles with Time-Varying Volatility.”
+#' Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
+#' https://doi.org/10.1080/07474938.2018.1536099.
 #'
 #' @import doSNOW
 #' @import foreach
@@ -7,7 +21,7 @@
 #'
 #' @export
 weighted.SADF.test <- function(y,
-                               r0 = 0.01 + 1.8 / sqrt(length(y)),
+                               trim = 0.01 + 1.8 / sqrt(length(y)),
                                const = TRUE,
                                alpha = 0.05,
                                iter = 4 * 200,
@@ -16,7 +30,7 @@ weighted.SADF.test <- function(y,
     N <- length(y)
 
     ## Find supBZ.value.
-    supBZ.model <- supBZ.statistic(y, r0)
+    supBZ.model <- supBZ.statistic(y, trim)
     sigma.sq <- supBZ.model$sigma.sq
     BZ.values <- supBZ.model$BZ.values
     supBZ.value <- supBZ.model$supBZ.value
@@ -45,10 +59,10 @@ weighted.SADF.test <- function(y,
         y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
         tmp.SADF.value <- NA
         if (urs) {
-            tmp.sadf.model <- SADF.test(y.star, r0, const)
+            tmp.sadf.model <- SADF.test(y.star, trim, const)
             tmp.SADF.value <- tmp.sadf.model$SADF.value
         }
-        tmp.supBZ.model <- supBZ.statistic(y.star, r0, sigma.sq)
+        tmp.supBZ.model <- supBZ.statistic(y.star, trim, sigma.sq)
         tmp.supBZ.value <- tmp.supBZ.model$supBZ.value
         c(tmp.SADF.value, tmp.supBZ.value)
     }
@@ -67,7 +81,7 @@ weighted.SADF.test <- function(y,
     ## A union of rejections strategy.
     if (urs == TRUE) {
         ## Find SADF.value.
-        sadf.model <- SADF.test(y, r0, const)
+        sadf.model <- SADF.test(y, trim, const)
         t.values <- sadf.model$t.values
         SADF.value <- sadf.model$SADF.value
 
@@ -109,7 +123,7 @@ weighted.SADF.test <- function(y,
     result <- c(
         list(
             y = y,
-            r0 = r0,
+            trim = trim,
             const = const,
             alpha = alpha,
             iter = iter,

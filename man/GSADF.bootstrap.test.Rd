@@ -2,17 +2,36 @@
 % Please edit documentation in R/GSADF.bootstrap.test.R
 \name{GSADF.bootstrap.test}
 \alias{GSADF.bootstrap.test}
-\title{SADF test with wild bootstrap.}
+\title{Generalized supremum ADF test with wild bootstrap.}
 \usage{
 GSADF.bootstrap.test(
   y,
-  r0 = 0.01 + 1.8/sqrt(length(y)),
+  trim = 0.01 + 1.8/sqrt(length(y)),
   const = TRUE,
   alpha = 0.05,
   iter = 4 * 200,
   seed = round(10^4 * sd(y))
 )
 }
+\arguments{
+\item{y}{The input time series of interest.}
+
+\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+
+\item{const}{Whether the constant needs to be included.}
+
+\item{alpha}{The significance level of interest.}
+
+\item{iter}{The number of iterations/}
+
+\item{seed}{The seed parameter for the random number generator.}
+}
 \description{
-SADF test with wild bootstrap.
+Generalized supremum ADF test with wild bootstrap.
+}
+\references{
+Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+“Time-Transformed Test for the Explosive Bubbles under
+Non-Stationary Volatility.”
+arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
 }

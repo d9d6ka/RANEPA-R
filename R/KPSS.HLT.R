@@ -1,3 +1,15 @@
+#' Unit root testing procedure under a single structural break.
+#'
+#' @param y The series of interest.
+#' @param const Whether a constant should be included.
+#' @param trim The trimming parameter to find the lower and upper bounds of
+#' possible break dates.
+#'
+#' @references
+#' Harvey, David I., Stephen J. Leybourne, and A. M. Robert Taylor.
+#' “Unit Root Testing under a Local Break in Trend.”
+#' Journal of Econometrics 167, no. 1 (2012): 140–67.
+#'
 #' @importFrom zeallot %<-%
 #' @export
 KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {

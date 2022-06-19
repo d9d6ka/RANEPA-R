@@ -7,9 +7,11 @@
 #' @details
 #' See Andrews and Kim (2006) for the detailed description.
 #'
-#' @param eq Base model formula
-#' @param m Post-break period length
-#' @param dataset Source of the data
+#' @param eq Base model formula. At the moment all the variables included should
+#' be defined explicitly, dynamic regressors (i.e. functions etc.) are not
+#' supported.
+#' @param m Post-break period length.
+#' @param dataset Source of the data.
 #'
 #' @return The list, containing
 #' \itemize{
@@ -18,6 +20,17 @@
 #' \item sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j}.
 #' \item the corresponding p-values.
 #' }
+#'
+#' @references
+#' Andrews, D. W. K.
+#' “End-of-Sample Instability Tests.”
+#' Econometrica 71, no. 6 (2003): 1661–94.
+#' https://doi.org/10.1111/1468-0262.00466.
+#'
+#' Andrews, Donald W. K, and Jae-Young Kim.
+#' “Tests for Cointegration Breakdown Over a Short Time Period.”
+#' Journal of Business & Economic Statistics 24, no. 4 (2006): 379–94.
+#' https://doi.org/10.1198/073500106000000297.
 #'
 #' @export
 eos.break.test <- function(eq, m, dataset) {

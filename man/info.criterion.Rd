@@ -7,17 +7,20 @@
 info.criterion(resid, extra, modification = FALSE, alpha = 0, y = NULL)
 }
 \arguments{
-\item{resid}{Input residuals.}
+\item{resid}{Input residuals needed for estimating the values of
+information criterions.}
 
-\item{extra}{Number of coefficients etc.}
+\item{extra}{Number of extra parameters needed for estimating the punishment
+term.}
 
-\item{modification}{Whether the unit-root test modificaton is needed.}
+\item{modification}{Whether the unit-root test modificaton is needed.
+See Ng and Perron (2001) for further information.}
 
-\item{alpha}{The coefficient \eqn{\alpha} of \eqn{y_{t-1}} in ADF model.}
+\item{alpha}{The coefficient \eqn{\alpha} of \eqn{y_{t-1}} in ADF model.
+Needed only for criterion modification purposes.}
 
-\item{y}{The vector of \eqn{y_{t-1}} in ADF model.}
-
-\item{criterion}{Needed information criterion: aic, bic, hq or lwz.}
+\item{y}{The vector of \eqn{y_{t-1}} in ADF model.
+Needed only for criterion modification purposes.}
 }
 \value{
 The value of the selected informational criterion.
@@ -32,4 +35,10 @@ Calculating the value of the following informational criterions:
 \item Schwarz (Bayesian),
 \item Hannan-Quinn,
 \item Liu et al.}
+}
+\references{
+Ng, Serena, and Pierre Perron. “Lag Length Selection and the Construction of
+Unit Root Tests with Good Size and Power.”
+Econometrica 69, no. 6 (2001): 1519–54.
+https://doi.org/10.1111/1468-0262.00256.
 }

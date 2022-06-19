@@ -2,10 +2,17 @@
 % Please edit documentation in R/supSBADF.statistic.R
 \name{supSBADF.statistic}
 \alias{supSBADF.statistic}
-\title{Calculate sup sign-based SADF statistic (HLZ, 2019)).}
+\title{Calculate superior sign-based SADF statistic.}
 \usage{
-supSBADF.statistic(y, r0 = 0.01 + 1.8/sqrt(length(y)), generalized = FALSE)
+supSBADF.statistic(y, trim = 0.01 + 1.8/sqrt(length(y)), generalized = FALSE)
 }
 \description{
-Calculate sup sign-based SADF statistic (HLZ, 2019)).
+Calculate superior sign-based SADF statistic.
+}
+\references{
+Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+“Sign-Based Unit Root Tests for Explosive Financial Bubbles in the Presence
+of Deterministically Time-Varying Volatility.”
+Econometric Theory 36, no. 1 (February 2020): 122–69.
+https://doi.org/10.1017/S0266466619000057.
 }

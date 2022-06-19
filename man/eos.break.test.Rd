@@ -7,11 +7,13 @@
 eos.break.test(eq, m, dataset)
 }
 \arguments{
-\item{eq}{Base model formula}
+\item{eq}{Base model formula. At the moment all the variables included should
+be defined explicitly, dynamic regressors (i.e. functions etc.) are not
+supported.}
 
-\item{m}{Post-break period length}
+\item{m}{Post-break period length.}
 
-\item{dataset}{Source of the data}
+\item{dataset}{Source of the data.}
 }
 \value{
 The list, containing
@@ -27,4 +29,15 @@ Test for structural break at the end of the sample.
 }
 \details{
 See Andrews and Kim (2006) for the detailed description.
+}
+\references{
+Andrews, D. W. K.
+“End-of-Sample Instability Tests.”
+Econometrica 71, no. 6 (2003): 1661–94.
+https://doi.org/10.1111/1468-0262.00466.
+
+Andrews, Donald W. K, and Jae-Young Kim.
+“Tests for Cointegration Breakdown Over a Short Time Period.”
+Journal of Business & Economic Statistics 24, no. 4 (2006): 379–94.
+https://doi.org/10.1198/073500106000000297.
 }
