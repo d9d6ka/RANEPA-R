@@ -139,11 +139,13 @@ print.mdfHHLT <- function(object) {
     cat("\t\tstat\tc.v.\t wild c.v.\n\n")
     for (v in c("MZa", "MSB", "MZt", "ADF")) {
         cat(
-            "%s stat:\t%.4f\t%.4f\t%.4f\n",
-            v,
-            object[[v]]$stat,
-            object[[v]]$cv,
-            object[[v]]$cv.bootstrap
+            sprintf(
+                "%s stat:\t%.4f\t%.4f\t%.4f\n",
+                v,
+                object[[v]]$stat,
+                object[[v]]$cv,
+                object[[v]]$cv.bootstrap
+            )
         )
     }
 }

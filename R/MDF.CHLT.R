@@ -92,10 +92,10 @@ MDF.CHLT <- function(y,
 
     for (tb in first.break:last.break) {
         b1 <- (y[tb] - y[1]) / (tb - 1)
-        b2 <- (y[N] - y[tb]) / (n - tb) - b1
+        b2 <- (y[N] - y[tb]) / (N - tb) - b1
         tmp.ssr <- (N - 1) * b1^2 + (N - tb) * b2^2 -
             2 * b1 * (y[N] - y[1]) - 2 * b2 * (y[N] - y[tb]) +
-            2 * b1 * b2 (N - tb)
+            2 * b1 * b2 * (N - tb)
         if (tmp.ssr <- res.ssr)
             tb.dy <- tb
     }
@@ -144,7 +144,7 @@ MDF.CHLT <- function(y,
         resid.GLS,
         const = FALSE, trend = FALSE,
         max.lag = k.t,
-        criterion = FALSE
+        criterion = NULL
     )$t.alpha
     c(MZa, MSB, MZt) %<-%
         MZ.statistic(resid.GLS, k.t)
@@ -330,7 +330,7 @@ MDF.CHLT <- function(y,
             cbind(
                 x.const,
                 DU.tb.dy
-            )[2:N]
+            )[2:N, ]
         )
     eps <- as.matrix(c(0, eps))
 
@@ -348,7 +348,7 @@ MDF.CHLT <- function(y,
         .options.snow = list(progress = progress)
     ) %dopar% {
         z <- rnorm(N)
-        y.wb <- cumsum(r * z)
+        y.wb <- cumsum(eps * z)
 
 
         if (tau.lam.MZ < trim) {
@@ -385,7 +385,7 @@ MDF.CHLT <- function(y,
                 const = FALSE, trend = FALSE,
                 max.lag = 0,
                 criterion = NULL
-            )
+            )$t.alpha
         } else {
             c(., resid.wb, ., .) %<-%
                 GLS.bt(y, tau.lam.ADF, cbar.tau.lam.ADF)
@@ -394,19 +394,19 @@ MDF.CHLT <- function(y,
                 const = FALSE, trend = FALSE,
                 max.lag = 0,
                 criterion = NULL
-            )
+            )$t.alpha
         }
 
         c(MZa.wb, MSB.wb, MZt.wb, ers.ADF.wb)
     }
 
-    s.stat <- sort(tmp.result[, 1])
+    s.stat <- sort(drop(tmp.result[, 1]))
     cv.MZa.0.wb <- s.stat[trunc(0.05 * iter)]
-    s.stat <- sort(tmp.result[, 2])
+    s.stat <- sort(drop(tmp.result[, 2]))
     cv.MSB.0.wb <- s.stat[trunc(0.05 * iter)]
-    s.stat <- sort(tmp.result[, 3])
+    s.stat <- sort(drop(tmp.result[, 3]))
     cv.MZt.0.wb <- s.stat[trunc(0.05 * iter)]
-    s.stat <- sort(tmp.result[, 4])
+    s.stat <- sort(drop(tmp.result[, 4]))
     cv.ADF.0.wb <- s.stat[trunc(0.05 * iter)]
 
     result <- list(

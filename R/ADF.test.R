@@ -132,7 +132,7 @@ ADF.test <- function(y,
             }
         }
     }
-    print(l)
+
     c(res.beta, res.resid, ., res.t.beta) %<-%
         OLS(
             d.y[(2 + max.lag):N, , drop = FALSE],
