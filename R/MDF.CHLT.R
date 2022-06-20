@@ -96,7 +96,8 @@ MDF.CHLT <- function(y,
         tmp.ssr <- (N - 1) * b1^2 + (N - tb) * b2^2 -
             2 * b1 * (y[N] - y[1]) - 2 * b2 * (y[N] - y[tb]) +
             2 * b1 * b2 * (N - tb)
-        if (tmp.ssr <- res.ssr)
+        if (tmp.ssr < res.ssr)
+            res.ssr <- tmp.ssr
             tb.dy <- tb
     }
 
@@ -399,6 +400,8 @@ MDF.CHLT <- function(y,
 
         c(MZa.wb, MSB.wb, MZt.wb, ers.ADF.wb)
     }
+
+    stopCluster(cluster)
 
     s.stat <- sort(drop(tmp.result[, 1]))
     cv.MZa.0.wb <- s.stat[trunc(0.05 * iter)]

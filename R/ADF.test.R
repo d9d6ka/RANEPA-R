@@ -96,13 +96,17 @@ ADF.test <- function(y,
             xr <- x
         }
 
-        c(., e, ., .) %<-%
+        c(b, e, ., .) %<-%
             OLS(
                 d.yr[(2 + max.lag):N, , drop = FALSE],
                 xr[(2 + max.lag):N, 1, drop = FALSE]
             )
 
-        res.ic <- log(drop(t(e) %*% e) / nrow(e))
+        res.ic <- info.criterion(
+            e, 0,
+            modification = modified.criterion,
+            alpha = b[1], y = xr[(2 + max.lag):N, 1, drop = FALSE]
+        )[[criterion]]
         res.lag <- 0
 
         for (l in 1:max.lag) {
