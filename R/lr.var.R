@@ -30,6 +30,18 @@ lr.var <- function(e, l = NULL) {
 #'
 #' @param e (Tx1) vector or residuals.
 #'
+#' @references
+#' Andrews, Donald W. K.
+#' “Heteroskedasticity and Autocorrelation Consistent
+#' Covariance Matrix Estimation.”
+#' Econometrica 59, no. 3 (1991): 817–58.
+#' https://doi.org/10.2307/2938229.
+#'
+#' Kurozumi, Eiji.
+#' “Testing for Stationarity with a Break.”
+#' Journal of Econometrics 108, no. 1 (May 1, 2002): 63–99.
+#' https://doi.org/10.1016/S0304-4076(01)00106-3.
+#'
 #' @return Long-run variance.
 lr.var.AK <- function(e) {
     if (!is.matrix(e)) e <- as.matrix(e)

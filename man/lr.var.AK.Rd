@@ -16,3 +16,15 @@ Long-run variance.
 Procedure ALRVR to estimate the long-run variance
 as in Andrews (1991) and Kurozumi (2002).
 }
+\references{
+Andrews, Donald W. K.
+“Heteroskedasticity and Autocorrelation Consistent
+Covariance Matrix Estimation.”
+Econometrica 59, no. 3 (1991): 817–58.
+https://doi.org/10.2307/2938229.
+
+Kurozumi, Eiji.
+“Testing for Stationarity with a Break.”
+Journal of Econometrics 108, no. 1 (May 1, 2002): 63–99.
+https://doi.org/10.1016/S0304-4076(01)00106-3.
+}
