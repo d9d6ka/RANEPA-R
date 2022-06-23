@@ -133,7 +133,6 @@ print.mdfHLTN <- function(object) {
 }
 
 
-#' @importFrom stringr str_split
 #' @export
 print.mdfHHLT <- function(object) {
     cat("\t\tstat\tc.v.\t wild c.v.\n\n")
@@ -145,6 +144,28 @@ print.mdfHHLT <- function(object) {
                 object[[v]]$stat,
                 object[[v]]$cv,
                 object[[v]]$cv.bootstrap
+            )
+        )
+    }
+}
+
+#' @export
+print.cointGH <- function(object) {
+    cat("Gregory-Hansen tests\n")
+    for (v in c("Za", "Zt", "ADF")) {
+        cat(
+            sprintf(
+                paste(
+                    "%s-type statistic:",
+                    "statistic: %.4f",
+                    "c.v.: %.4f",
+                    "asymptotic c.v.: %.4f\n",
+                    sep = "\n"
+                ),
+                v,
+                object[[v]]$stat,
+                object[[v]]$cv,
+                object[[v]]$asy.cv
             )
         )
     }
