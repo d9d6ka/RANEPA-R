@@ -4,7 +4,7 @@
 #' @param e (Tx1) vector or residuals.
 #'
 #' @return Long-run variance.
-lr.var <- function(e, l = NULL) {
+lr.var.bartlett <- function(e, l = NULL) {
     if (!is.matrix(e)) e <- as.matrix(e)
 
     N <- nrow(e)
@@ -12,12 +12,55 @@ lr.var <- function(e, l = NULL) {
     if (is.null(l))
         l <- trunc(4 * ((N / 100)^(1 / 4)))
 
-    lrv <- drop(t(e) %*% e) / N
+    # lrv <- drop(t(e) %*% e) / N
+    acf.e <- ACF(e)
+    lrv <- acf.e[1]
     for (i in 1:l) {
-        w <- (1 - i / (l + 1))
-        lrv <- lrv + 2 * drop(t(e[1:(N - i)]) %*% e[(1 + i):N]) * w / N
+        W <- (1 - i / (l + 1))
+        lrv <- lrv + 2 * W * acf.e[1 + i]
     }
     return(lrv)
+}
+
+
+#' Estimating heteroscedasticity and autocorrelation consistent variance
+#'
+#' @references
+#' Andrews, Donald W. K.
+#' “Heteroskedasticity and Autocorrelation Consistent
+#' Covariance Matrix Estimation.”
+#' Econometrica 59, no. 3 (1991): 817–58.
+#' https://doi.org/10.2307/2938229.
+#'
+#' @importFrom zeallot %<-%
+lr.var.quadratic <- function(y) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+
+    N <- nrow(y)
+
+    c(a, ., ., .) %<-% OLS(y[2:N, ], y[1:(N-1), ])
+    a <- drop(a)
+
+    acf.y <- ACF(y)
+
+    lambda <- matrix(0, nrow = N - 1, ncol = 1)
+    s <- as.matrix(1:(N - 1))
+
+    m <- 1.3221 * (4 * a^2 * N / ((1 - a)^4))^(1 / 5)
+
+    delta <- (6 * pi * s) / (5 * m)
+
+    for (i in 1:(N - 1)) {
+        lambda[i] <- (3 / delta[i]^2) *
+            (sin(delta[i]) / delta[i] - cos(delta[i]))
+    }
+
+    return(
+        list(
+            lrv = drop(acf.y[1] + 2 * t(lambda) %*% acf.y[2:N]),
+            m = m
+        )
+    )
 }
 
 
@@ -43,22 +86,28 @@ lr.var <- function(e, l = NULL) {
 #' https://doi.org/10.1016/S0304-4076(01)00106-3.
 #'
 #' @return Long-run variance.
-lr.var.AK <- function(e) {
+lr.var.bartlett.AK <- function(e) {
     if (!is.matrix(e)) e <- as.matrix(e)
 
     N <- nrow(e)
     k <- 0.8
-    a <- qr.solve(t(e[1:(N - 1)]) %*% e[1:(N - 1)]) %*%
-        t(e[1:(N - 1)]) %*% e[2:N]
+    c(rho, ., ., .) %<-%
+        OLS(
+            e[2:N, , drop = FALSE],
+            e[1:(N - 1), , drop = FALSE]
+        )
+    a <- drop(rho)
     l <- min(
         1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3),
         1.1447 * (4 * k^2 * N / ((1 + k)^2 * (1 - k)^2))^(1 / 3)
     )
     l <- trunc(l)
-    lrv <- drop(t(e) %*% e) / N
+    # lrv <- drop(t(e) %*% e) / N
+    acf.e <- ACF(e)
+    lrv <- acf.e[1]
     for (i in 1:l) {
-        w <- (1 - i / (l + 1))
-        lrv <- lrv + 2 * drop(t(e[1:(N - i)]) %*% e[(1 + i):N]) * w / N
+        W <- (1 - i / (l + 1))
+        lrv <- lrv + 2 * W * acf.e[1 + i]
     }
     return(lrv)
 }
@@ -103,68 +152,52 @@ lr.var.SPC <- function(e,
     N <- nrow(e)
 
     info.crit.min <- log(drop(t(e) %*% e) / (N - max.lag))
-    k <- 0
-    rho <- 0
-    res <- e
 
-    for (i in 1:max.lag) {
-        if (max.lag == 0) break
+    c(rho, res, ., ., k) %<-%
+        AR(e, NULL, max.lag, criterion)
+    info.crit <- info.criterion(res, k)[[criterion]]
 
-        temp <- e
-        for (j in 1:i) temp <- cbind(temp, lagn(e, j))
-        temp <- temp[(1 + i):nrow(temp), , drop = FALSE]
-
-        x.temp <- temp[, 2:ncol(temp), drop = FALSE]
-
-        rho.temp <- qr.solve(t(x.temp) %*% x.temp) %*%
-            t(x.temp) %*% temp[, 1, drop = FALSE]
-
-        res.temp <- temp[, 1, drop = FALSE] - x.temp %*% rho.temp
-
-        info.crit <- info.criterion(res.temp, i, criterion)
-
-        if (info.crit < info.crit.min) {
-            info.crit.min <- info.crit
-            k <- i
-            rho <- rho.temp
-            res <- res.temp
-        }
+    if (info.crit.min < info.crit) {
+        k <- 0
+        rho <- 0
+        res <- e
     }
 
+    acf.res <- ACF(res)
     if (k == 0) {
-        lrv <- drop(t(res) %*% res) / N
+        lrv <- acf.res[1]
+        #lrv <- drop(t(res) %*% res) / N
     } else {
         temp <- cbind(res, lagn(res, 1))
         temp <- temp[2:nrow(res), , drop = FALSE]
-        x.temp <- temp[, 2, drop = FALSE]
-        a <- drop(
-            qr.solve(t(x.temp) %*% x.temp) %*%
-                t(x.temp) %*% temp[, 1, drop = FALSE]
-        )
+
+        c(a, ., ., .) %<-%
+            OLS(
+                temp[, 1, drop = FALSE],
+                temp[, 2, drop = FALSE]
+            )
+        a <- drop(a)
 
         if (kernel == "bartlett") {
             l <- 1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3)
         } else if (kernel == "quadratic") {
-            l <- 1.3221 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 5)
+            l <- 1.3221 * (4 * a^2 * N / ((1 - a)^4))^(1 / 5)
         }
         l <- trunc(l)
 
-        lrv <- drop(t(res) %*% res) / N
+        lrv <- acf.res[1]
         for (i in 1:l) {
             if (l == 0) break
 
             if (kernel == "bartlett") {
                 ## Bartlett kernel
-                w <- (1 - i / (l + 1))
+                W <- (1 - i / (l + 1))
             } else if (kernel == "quadratic") {
                 ## Quadratic spectral kernel
-                w <- 25 / (12 * pi^2 * (i / l)^2) *
-                    (sin(6 * pi * i / (l * 5)) / (6 * pi * i / (l * 5)) -
-                        cos(6 * pi * i / (l * 5)))
+                delta <- 6 * pi * (i / l) / 5
+                W <- (3 / delta^2) * (sin(delta) / delta - cos(delta))
             }
-            lrv <- lrv + 2 * drop(t(res[1:(nrow(res) - i), , drop = FALSE]) %*%
-                res[(1 + i):nrow(res), , drop = FALSE]) *
-                w / N
+            lrv <- lrv + 2 * W * acf.res[1 + i]
         }
     }
 
@@ -173,45 +206,4 @@ lr.var.SPC <- function(e,
     lrv <- min(lrv.recolored, N * 0.15 * lrv)
 
     return(lrv)
-}
-
-
-#' Estimating heteroscedasticity and autocorrelation consistent variance
-#'
-#' @references
-#' Andrews, Donald W. K.
-#' “Heteroskedasticity and Autocorrelation Consistent
-#' Covariance Matrix Estimation.”
-#' Econometrica 59, no. 3 (1991): 817–58.
-#' https://doi.org/10.2307/2938229.
-#'
-#' @importFrom zeallot %<-%
-lr.var.quad <- function(y) {
-    if (!is.matrix(y)) y <- as.matrix(y)
-
-    N <- nrow(y)
-
-    c(beta, ., ., .) %<-% OLS(y[2:N, ], y[1:(N-1), ])
-    beta <- drop(beta)
-
-    a <- (4 * beta^2) / ((1 - beta)^4)
-    acf.y <- ACF(y)
-
-    lambda <- matrix(0, nrow = N - 1, ncol = 1)
-    s <- as.matrix(1:(N - 1))
-
-    m <- 1.3221 * (a * N)^(1 / 5)
-    delta <- (6 * pi * s) / (5 * m)
-
-    for (i in 1:(N - 1)) {
-        lambda[i] <-
-            3 * (sin(delta[i]) / delta[i] - cos(delta[i])) / (delta[i]^2)
-    }
-
-    return(
-        list(
-            h0 = drop(acf.y[1] + 2 * t(lambda) %*% acf.y[2:N]),
-            m = m
-        )
-    )
 }

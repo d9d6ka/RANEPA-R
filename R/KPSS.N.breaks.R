@@ -100,7 +100,7 @@ KPSS.N.breaks <- function(y, x,
     if (!is.null(kernel)) {
         test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
     } else {
-        test <- KPSS(resid, lr.var.AK(resid))
+        test <- KPSS(resid, lr.var.bartlett.AK(resid))
     }
 
     return(

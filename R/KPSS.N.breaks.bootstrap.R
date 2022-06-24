@@ -129,7 +129,7 @@ KPSS.N.breaks.bootstrap <- function(y, x,
         if (!is.null(kernel)) {
             temp.test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
         } else {
-            temp.test <- KPSS(resid, lr.var.AK(resid))
+            temp.test <- KPSS(resid, lr.var.bartlett.AK(resid))
         }
 
         temp.test

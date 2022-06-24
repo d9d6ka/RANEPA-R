@@ -143,6 +143,8 @@ ADF.test <- function(y,
             x[(2 + max.lag):N, 1:(1 + res.lag), drop = FALSE]
         )
 
+    Z.stat <- (N - max.lag - 1) * drop(res.beta[1] - 1)
+
     return(
         list(
             y = drop(y),
@@ -153,6 +155,7 @@ ADF.test <- function(y,
             t.beta = drop(res.t.beta),
             alpha = drop(res.beta[1]),
             t.alpha = drop(res.t.beta[1]),
+            Z.stat = Z.stat,
             residuals = res.resid,
             lag = res.lag
         )

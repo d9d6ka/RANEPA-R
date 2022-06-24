@@ -55,7 +55,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
         c(beta, resid, ., .) %<-% OLS(y, x)
 
-        lr.var.y <- lr.var(resid, bartlett.lag)
+        lr.var.y <- lr.var.bartlett(resid, bartlett.lag)
         inv.xx <- qr.solve(t(x) %*% x)
 
         t0.stat <-
@@ -69,7 +69,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
         c(beta, resid, ., .) %<-% OLS(d.y, x)
 
-        lr.var.dy <- lr.var(resid, bartlett.lag)
+        lr.var.dy <- lr.var.bartlett(resid, bartlett.lag)
         inv.xx <- qr.solve(t(x) %*% x)
 
         t1.stat <-
@@ -97,7 +97,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
     c(beta, resid, ., .) %<-% OLS(y, x)
 
-    lr.var.y <- lr.var(resid, bartlett.lag)
+    lr.var.y <- lr.var.bartlett(resid, bartlett.lag)
     kpss.y <- KPSS(resid, lr.var.y)
 
     DU1 <- c(rep(0, tb1), rep(1, N - tb1))
@@ -110,7 +110,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
     c(beta, resid, ., .) %<-% OLS(d.y, x)
 
-    lr.var.dy <- lr.var(resid, bartlett.lag)
+    lr.var.dy <- lr.var.bartlett(resid, bartlett.lag)
     kpss.dy <- KPSS(resid, lr.var.dy)
 
     lambda.kpss <- exp(-((500 * kpss.y * kpss.dy)^2))

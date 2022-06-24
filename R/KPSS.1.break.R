@@ -85,7 +85,7 @@ KPSS.1.break <- function(y, x,
         t.beta <- t.beta.min
     }
 
-    test <- KPSS(resid, lr.var.AK(resid))
+    test <- KPSS(resid, lr.var.bartlett.AK(resid))
 
     return(
         list(

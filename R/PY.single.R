@@ -223,7 +223,7 @@ PY.single <- function(y,
             }
 
             if (abs(a.hat.M) < 1)
-                c(h0, m) %<-% lr.var.quad(g.resid)
+                c(h0, m) %<-% lr.var.quadratic(g.resid)
         }
 
         VCV <- h0 * qr.solve(t(x.g) %*% x.g)

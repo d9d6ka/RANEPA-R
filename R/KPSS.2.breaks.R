@@ -50,7 +50,7 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
     if (!is.null(kernel)) {
         test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
     } else {
-        test <- KPSS(resid, lr.var.AK(resid))
+        test <- KPSS(resid, lr.var.bartlett.AK(resid))
     }
 
     return(
@@ -110,7 +110,7 @@ KPSS.2.breaks.unknown <- function(y, model, max.lag = 0, kernel = "bartlett") {
     if (!is.null(kernel)) {
         test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
     } else {
-        test <- KPSS(resid, lr.var.AK(resid))
+        test <- KPSS(resid, lr.var.bartlett.AK(resid))
     }
 
     return(

@@ -105,7 +105,7 @@ coint.test.GH <- function(...,
 
         nu <- e - rho * lagn(e, 1, na = 0)
 
-        lrv <- lr.var(nu)
+        lrv <- lr.var.bartlett(nu)
         lambda <- (lrv - drop(t(nu) %*% nu) / N) / 2
 
         rho.star <- sum(e[1:(N - 1), ] * e[2:N, ] - lambda) /
