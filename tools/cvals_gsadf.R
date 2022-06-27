@@ -142,8 +142,7 @@ for (step in N_obs) {
     .cval_GSADF_with_const[[as.character(step)]] <- tmp
     cat("\nLen:", length(tmp), "\n")
 
-    save(.cval_kpss_1p,
-        .cval_kpss_2p,
+    save(
         .cval_SADF_without_const,
         .cval_SADF_with_const,
         .cval_GSADF_without_const,

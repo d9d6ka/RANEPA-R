@@ -108,8 +108,10 @@ for (m in c("level", "level-trend", "regime")) {
 }
 stopCluster(cluster)
 
+.cval_coint_gh <- list()
+
 for (m in c("level", "level-trend", "regime")) {
-    .cval_coint_hg[[m]] <- list(
+    .cval_coint_gh[[m]] <- list(
         Za = list(
             b0 = matrix(0, nrow = 6, ncol = 5),
             b1 = matrix(0, nrow = 6, ncol = 5)
@@ -126,26 +128,38 @@ for (m in c("level", "level-trend", "regime")) {
 
     for (i in 1:6) {
         for (j in 1:5) {
-            c(b, ., ., .) %<-% OLS(
-                                   data[[m]][[i]]$Za[, j, drop = FALSE],
-                                   data[[m]][[i]]$Za[, 6:7, drop = FALSE]
+            ok <- complete.cases(
+                data[[m]][[i]]$Za[, j, drop = FALSE],
+                data[[m]][[i]]$Za[, 6:7, drop = FALSE]
+            )
+            c(b, ., ., .) %<-% breaktest:::OLS(
+                                   data[[m]][[i]]$Za[ok, j, drop = FALSE],
+                                   data[[m]][[i]]$Za[ok, 6:7, drop = FALSE]
                                )
-            .cval_coint_hg[[m]]$Za$b0[i, j] <- b[1]
-            .cval_coint_hg[[m]]$Za$b1[i, j] <- b[2]
+            .cval_coint_gh[[m]]$Za$b0[i, j] <- b[1]
+            .cval_coint_gh[[m]]$Za$b1[i, j] <- b[2]
 
-            c(b, ., ., .) %<-% OLS(
-                                   data[[m]][[i]]$Zt[, j, drop = FALSE],
-                                   data[[m]][[i]]$Zt[, 6:7, drop = FALSE]
+            ok <- complete.cases(
+                data[[m]][[i]]$Zt[, j, drop = FALSE],
+                data[[m]][[i]]$Zt[, 6:7, drop = FALSE]
+            )
+            c(b, ., ., .) %<-% breaktest:::OLS(
+                                   data[[m]][[i]]$Zt[ok, j, drop = FALSE],
+                                   data[[m]][[i]]$Zt[ok, 6:7, drop = FALSE]
                                )
-            .cval_coint_hg[[m]]$Zt$b0[i, j] <- b[1]
-            .cval_coint_hg[[m]]$Zt$b1[i, j] <- b[2]
+            .cval_coint_gh[[m]]$Zt$b0[i, j] <- b[1]
+            .cval_coint_gh[[m]]$Zt$b1[i, j] <- b[2]
 
-            c(b, ., ., .) %<-% OLS(
-                                   data[[m]][[i]]$ADF[, j, drop = FALSE],
-                                   data[[m]][[i]]$ADF[, 6:7, drop = FALSE]
+            ok <- complete.cases(
+                data[[m]][[i]]$ADF[, j, drop = FALSE],
+                data[[m]][[i]]$ADF[, 6:7, drop = FALSE]
+            )
+            c(b, ., ., .) %<-% breaktest:::OLS(
+                                   data[[m]][[i]]$ADF[ok, j, drop = FALSE],
+                                   data[[m]][[i]]$ADF[ok, 6:7, drop = FALSE]
                                )
-            .cval_coint_hg[[m]]$ADF$b0[i, j] <- b[1]
-            .cval_coint_hg[[m]]$ADF$b1[i, j] <- b[2]
+            .cval_coint_gh[[m]]$ADF$b0[i, j] <- b[1]
+            .cval_coint_gh[[m]]$ADF$b1[i, j] <- b[2]
         }
     }
 }
