@@ -44,7 +44,30 @@ If lag selection is not needed keep this NULL.}
 \description{
 Detrending bootstrap test by Smeekes (2013)
 }
+\details{
+This bootstrap test is based on the recursive detrending procedure of Taylor
+(2002). The main idea is to apply the standard ADF test to the series
+with nuissanse parameters eliminated.
+
+Critical values are calculated via a bootstrapping using MacKinnon-like
+regressions. For each number of observations and each number of variables
+obtained were 1999 values of test statistics. After that 1st, 2.5-th, 5-th,
+10-th, and 97.5-th percentiles were calculated and saved along with the
+corresponding number of observations. This step was repeated 5 times to cope
+with possible biases. After that MacKunnon-like regressions were estimated.
+}
 \references{
+Taylor, A. M. Robert.
+“Regression-Based Unit Root Tests With Recursive Mean Adjustment for
+Seasonal and Nonseasonal Time Series.”
+Journal of Business & Economic Statistics 20, no. 2 (April 2002): 269–81.
+https://doi.org/10.1198/073500102317352001.
+
+MacKinnon, James G.
+“Critical Values for Cointegration Tests.”
+Working Paper. Economics Department, Queen’s University, January 2010.
+https://ideas.repec.org/p/qed/wpaper/1227.html.
+
 Smeekes, Stephan.
 “Detrending Bootstrap Unit Root Tests.”
 Econometric Reviews 32, no. 8 (July 2013): 869–91.
