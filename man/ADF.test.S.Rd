@@ -28,7 +28,7 @@ ADF.test.S(
 
 \item{gamma}{A detrending type selection parameter. If 0 the OLS detrending
 is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
-coefficient is calculated as \eqn{1 + с^{\gamma} T^{-\gamma}}.}
+coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.}
 
 \item{trim}{The trimming parameter.}
 

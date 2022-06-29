@@ -18,7 +18,7 @@
 #' @param c A filtration parameter.
 #' @param gamma A detrending type selection parameter. If 0 the OLS detrending
 #' is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
-#' coefficient is calculated as \eqn{1 + с^{\gamma} T^{-\gamma}}.
+#' coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.
 #' @param trim The trimming parameter.
 #' @param max.lag The maximum lag for inner ADF testing.
 #' @param criterion A criterion used to select number of lags.
