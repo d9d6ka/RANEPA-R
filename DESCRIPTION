@@ -12,11 +12,11 @@ Author: Anton Skrobotov [aut, ctb],
         Vadim Zyamalov [aut, cre, ctb]
 Maintainer: Vadim Zyamalov <zyamalov@ranepa.rut>
 Depends: R (>= 3.1.0)
-Imports:
-    zeallot
+Encoding: UTF-8
+Imports: doSNOW, foreach, stringr, zeallot
 Description: This package contains a set of different unit root and
     cointegration tests in the presence of structural breaks in the data.
 License: GPL (>= 2)
 URL: https://github.com/d9d6ka/breaktest
 BugReports: https://github.com/d9d6ka/breaktest/issues
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
