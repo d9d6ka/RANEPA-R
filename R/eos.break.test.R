@@ -37,8 +37,6 @@ eos.break.test <- function(eq, m, dataset) {
     result <- list(m = m)
 
     dep.var <- eq[[2]]
-    reg.vars <- all.vars(eq)
-    reg.vars <- reg.vars[reg.vars != dep.var]
 
     N <- dim(dataset)[1] - m
 
@@ -57,12 +55,12 @@ eos.break.test <- function(eq, m, dataset) {
     for (j in seq_len(N - m + 1)) {
         low <- j
         high <- j + ceiling(m / 2) - 1
-        tmp.data <- dataset[1:N, ][-(low:high), ]
+        tmp.data <- dataset[1:N, , drop = FALSE][-(low:high), , drop = FALSE]
 
         tmp.model <- lm(formula = eq, data = tmp.data)
 
         tmp.resid <- dataset[[dep.var]][j:(j + m - 1)] -
-            predict(tmp.model, newdata = dataset[j:(j + m - 1), ])
+            predict(tmp.model, newdata = dataset[j:(j + m - 1), , drop = FALSE])
         tmp.resid <- as.matrix(tmp.resid)
 
         result$Pj[j] <- drop(t(tmp.resid) %*% tmp.resid)

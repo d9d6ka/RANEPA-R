@@ -139,11 +139,11 @@ ADF.test <- function(y,
 
     c(res.beta, res.resid, ., res.t.beta) %<-%
         OLS(
-            d.y[(2 + max.lag):N, , drop = FALSE],
-            x[(2 + max.lag):N, 1:(1 + res.lag), drop = FALSE]
+            d.y[(2 + res.lag):N, , drop = FALSE],
+            x[(2 + res.lag):N, 1:(1 + res.lag), drop = FALSE]
         )
 
-    Z.stat <- (N - max.lag - 1) * drop(res.beta[1] - 1)
+    Z.stat <- (N - res.lag - 1) * drop(res.beta[1] - 1)
 
     return(
         list(
