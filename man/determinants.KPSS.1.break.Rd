@@ -27,4 +27,6 @@ Construct determinant variables.
 \details{
 Procedure to compute deterministic terms
 for KPSS with 1 structural break.
+
+The function is not intended to be used directly so it's not exported.
 }

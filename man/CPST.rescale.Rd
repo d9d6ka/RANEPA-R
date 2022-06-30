@@ -7,13 +7,13 @@
 CPST.rescale(d.y, x, deter, k, max.lag)
 }
 \arguments{
-\item{d.y}{The series of first differences.}
+\item{d.y}{A series of first differences.}
 
-\item{x}{The matrix of ADF RHS variables.}
+\item{x}{A matrix of ADF RHS variables.}
 
-\item{deter}{The matrix of deterministic variables for detrending.}
+\item{deter}{A matrix of deterministic variables for detrending.}
 
-\item{k}{The lag of the corresponding ADF model.}
+\item{k}{A lag of the corresponding ADF model.}
 
 \item{max.lag}{The maximum possible lag.}
 }

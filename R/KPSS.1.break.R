@@ -9,8 +9,8 @@
 #'
 #' See Carrion-i-Silvestre and Sansó (2006) for further details.
 #'
-#' @param y (Tx1)-vector of the dependent variable.
-#' @param x (Txk)-matrix of explanatory stochastic regressors.
+#' @param y An input (LHS) time series of interest.
+#' @param x A matrix of (RHS) explanatory stochastic regressors.
 #' @param model \describe{
 #' \item{1}{for model An.}
 #' \item{2}{for model A.}

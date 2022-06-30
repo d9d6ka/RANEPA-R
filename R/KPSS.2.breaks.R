@@ -11,7 +11,7 @@
 #'
 #' See Carrion-i-Silvestre and Sansó (2007) for further details.
 #'
-#' @param y (Tx1)-vector of time series
+#' @param y An input (LHS) time series of interest.
 #' @param model \describe{
 #' \item{1}{for the AA (without trend) model.}
 #' \item{2}{for the AA (with trend) model.}

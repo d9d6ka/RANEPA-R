@@ -1,8 +1,8 @@
 #' @title
 #' Kejrival-Perron procedure of breaks number detection.
 #'
-#' @param y The input series of interest.
-#' @param const Allowing the break in constant.
+#' @param y An input series of interest.
+#' @param const Whether the break in constant is allowed.
 #' @param breaks Number of breaks.
 #' @param criterion Needed information criterion: aic, bic, hq or lwz.
 #' @param trim A trimming value for a possible break date bounds.

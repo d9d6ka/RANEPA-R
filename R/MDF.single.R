@@ -1,9 +1,10 @@
+#' @title
 #' MDF procedure for a single unknown break.
 #'
-#' @param y The series of interest.
+#' @param y A series of interest.
 #' @param const Whether the constant term should be included.
 #' @param trend Whether the trend term should be included.
-#' @param trim A trimming value for a possible break date bounds.
+#' @param trim Trimming value for a possible break date bounds.
 #'
 #' @importFrom zeallot %<-%
 #'

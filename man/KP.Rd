@@ -7,9 +7,9 @@
 KP(y, const = FALSE, breaks = 1, criterion = "aic", trim = 0.15)
 }
 \arguments{
-\item{y}{The input series of interest.}
+\item{y}{An input series of interest.}
 
-\item{const}{Allowing the break in constant.}
+\item{const}{Whether the break in constant is allowed.}
 
 \item{breaks}{Number of breaks.}
 

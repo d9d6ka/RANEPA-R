@@ -19,6 +19,9 @@ A list of arguments as well as the estimated bandwidth `h`.
 \description{
 NW.loocv - LOO-CV for h in Nadaraya–Watson kernel regression.
 }
+\details{
+The function is not intended to be used directly so it's not exported.
+}
 \references{
 Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
 “Nonparametric Estimation of the Variance Function

@@ -2,16 +2,21 @@
 % Please edit documentation in R/lr.var.R
 \name{lr.var.bartlett}
 \alias{lr.var.bartlett}
-\title{Calculating long-run variance}
+\title{Calculating long-run variance with Bartlett kernel}
 \usage{
-lr.var.bartlett(e, l = NULL)
+lr.var.bartlett(y, l = NULL)
 }
 \arguments{
-\item{e}{(Tx1) vector or residuals.}
+\item{y}{A series of interest.}
+
+\item{l}{Number of lags/leads. If `NULL` then it's estimated.}
 }
 \value{
 Long-run variance.
 }
 \description{
-Calculating long-run variance
+Calculating long-run variance with Bartlett kernel
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }

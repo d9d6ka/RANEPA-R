@@ -1,29 +1,39 @@
 #' @title
-#' Calculating long-run variance
+#' Calculating long-run variance with Bartlett kernel
 #'
-#' @param e (Tx1) vector or residuals.
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y A series of interest.
+#' @param l Number of lags/leads. If `NULL` then it's estimated.
 #'
 #' @return Long-run variance.
-lr.var.bartlett <- function(e, l = NULL) {
-    if (!is.matrix(e)) e <- as.matrix(e)
+lr.var.bartlett <- function(y, l = NULL) {
+    if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(e)
+    N <- nrow(y)
 
     if (is.null(l))
         l <- trunc(4 * ((N / 100)^(1 / 4)))
 
     # lrv <- drop(t(e) %*% e) / N
-    acf.e <- ACF(e)
-    lrv <- acf.e[1]
+    acf.y <- ACF(y)
+    lrv <- acf.e[y]
     for (i in 1:l) {
         W <- (1 - i / (l + 1))
-        lrv <- lrv + 2 * W * acf.e[1 + i]
+        lrv <- lrv + 2 * W * acf.y[1 + i]
     }
     return(lrv)
 }
 
 
-#' Estimating heteroscedasticity and autocorrelation consistent variance
+#' @title
+#' Calculating long-run variance with quadratic kernel
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y A series of interest.
 #'
 #' @references
 #' Andrews, Donald W. K.
@@ -86,15 +96,15 @@ lr.var.quadratic <- function(y) {
 #' https://doi.org/10.1016/S0304-4076(01)00106-3.
 #'
 #' @return Long-run variance.
-lr.var.bartlett.AK <- function(e) {
-    if (!is.matrix(e)) e <- as.matrix(e)
+lr.var.bartlett.AK <- function(y) {
+    if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(e)
+    N <- nrow(y)
     k <- 0.8
     c(rho, ., ., .) %<-%
         OLS(
-            e[2:N, , drop = FALSE],
-            e[1:(N - 1), , drop = FALSE]
+            y[2:N, , drop = FALSE],
+            y[1:(N - 1), , drop = FALSE]
         )
     a <- drop(rho)
     l <- min(
@@ -103,11 +113,11 @@ lr.var.bartlett.AK <- function(e) {
     )
     l <- trunc(l)
     # lrv <- drop(t(e) %*% e) / N
-    acf.e <- ACF(e)
-    lrv <- acf.e[1]
+    acf.y <- ACF(y)
+    lrv <- acf.y[1]
     for (i in 1:l) {
         W <- (1 - i / (l + 1))
-        lrv <- lrv + 2 * W * acf.e[1 + i]
+        lrv <- lrv + 2 * W * acf.y[1 + i]
     }
     return(lrv)
 }
@@ -122,7 +132,7 @@ lr.var.bartlett.AK <- function(e) {
 #'
 #' @details Used are Quadratic Spectral and Bartlett kernels.
 #'
-#' @param e (Tx1) vector or residuals.
+#' @param y (Tx1) vector or residuals.
 #' @param max.lag Maximum number of lags.
 #' The exact number is selected by information criterions.
 #' @param kernel Kernel for calculating long-run variance
@@ -134,11 +144,17 @@ lr.var.bartlett.AK <- function(e) {
 #' @param criterion The information crietreion: bic, aic or lwz.
 #'
 #' @return Long-run variance.
-lr.var.SPC <- function(e,
+#'
+#' @references
+#' Sul, Donggyu, Peter C. B. Phillips, and Chi-Young Choi.
+#' “Prewhitening Bias in HAC Estimation.”
+#' Oxford Bulletin of Economics and Statistics 67, no. 4 (August 2005): 517–46.
+#' https://doi.org/10.1111/j.1468-0084.2005.00130.x.
+lr.var.SPC <- function(y,
                        max.lag = 0,
                        kernel = "bartlett",
                        criterion = "bic") {
-    if (!is.matrix(e)) e <- as.matrix(e)
+    if (!is.matrix(y)) y <- as.matrix(y)
     if (max.lag < 0) max.lag <- 0
     if (!kernel %in% c("bartlett", "quadratic")) {
         warning("WARNING! Unknown kernel, Barlett is used")
@@ -149,18 +165,18 @@ lr.var.SPC <- function(e,
         criterion <- "bic"
     }
 
-    N <- nrow(e)
+    N <- nrow(y)
 
-    info.crit.min <- log(drop(t(e) %*% e) / (N - max.lag))
+    info.crit.min <- log(drop(t(y) %*% y) / (N - max.lag))
 
     c(rho, res, ., ., k) %<-%
-        AR(e, NULL, max.lag, criterion)
+        AR(y, NULL, max.lag, criterion)
     info.crit <- info.criterion(res, k)[[criterion]]
 
     if (info.crit.min < info.crit) {
         k <- 0
         rho <- 0
-        res <- e
+        res <- y
     }
 
     acf.res <- ACF(res)

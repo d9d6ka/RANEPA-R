@@ -2,8 +2,7 @@
 #' Perron-Yabu (2009) statistic for break at unknown date.
 #'
 #' @param y The input series of interest.
-#' @param const Allowing the break in constant.
-#' @param trend Allowing the break in trend.
+#' @param const,trend Allowing the break in constant or trend.
 #' @param criterion Needed information criterion: aic, bic, hq or lwz.
 #' @param trim A trimming value for a possible break date bounds.
 #' @param max.lag The maximum possible lag in the model.

@@ -18,7 +18,7 @@ supported.}
 \value{
 The list, containing
 \itemize{
-\item **m**
+\item `m`
 \item estimated values of P- and R-tests.
 \item sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j}.
 \item the corresponding p-values.

@@ -21,7 +21,7 @@ DOLS(y, x, model, break.point, k.lags, k.leads)
 \item{6}{for model E.}
 }}
 
-\item{break.point}{Position of the break point.}
+\item{break.point}{A position of the break point.}
 
 \item{k.lags, k.leads}{A number of lags and leads in DOLS regression.}
 }

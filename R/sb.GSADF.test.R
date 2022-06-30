@@ -1,6 +1,8 @@
 #' @title
 #' Sign-based SADF test (HLZ, 2019).
 #'
+#' @param y A series of interest.
+#'
 #' @import doSNOW
 #' @import foreach
 #' @import parallel

@@ -19,3 +19,6 @@ The matrix of recursive SSR values.
 \description{
 Pre-calculate matrix of recursive SSR values.
 }
+\details{
+The function is not intended to be used directly so it's not exported.
+}

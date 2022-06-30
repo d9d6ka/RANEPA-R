@@ -4,10 +4,10 @@
 \alias{lr.var.SPC}
 \title{Calculating long-run variance}
 \usage{
-lr.var.SPC(e, max.lag = 0, kernel = "bartlett", criterion = "bic")
+lr.var.SPC(y, max.lag = 0, kernel = "bartlett", criterion = "bic")
 }
 \arguments{
-\item{e}{(Tx1) vector or residuals.}
+\item{y}{(Tx1) vector or residuals.}
 
 \item{max.lag}{Maximum number of lags.
 The exact number is selected by information criterions.}
@@ -30,4 +30,10 @@ in Sul, Phillips and Choi (2003).
 }
 \details{
 Used are Quadratic Spectral and Bartlett kernels.
+}
+\references{
+Sul, Donggyu, Peter C. B. Phillips, and Chi-Young Choi.
+“Prewhitening Bias in HAC Estimation.”
+Oxford Bulletin of Economics and Statistics 67, no. 4 (August 2005): 517–46.
+https://doi.org/10.1111/j.1468-0084.2005.00130.x.
 }

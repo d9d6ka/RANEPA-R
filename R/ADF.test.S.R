@@ -13,20 +13,19 @@
 #' corresponding number of observations. This step was repeated 5 times to cope
 #' with possible biases. After that MacKunnon-like regressions were estimated.
 #'
-#' @param y The series of interest.
-#' @param const Whether the constant is to included.
-#' @param trend Whether the trend is to be included.
+#' @param y A series of interest.
+#' @param const,trend Whether the constant and trend are to be included.
 #' @param c A filtration parameter used to construct an autocorrelation
 #' coefficient.
-#' @param gamma A detrending type selection parameter. If 0 the OLS detrending
+#' @param gamma Detrending type selection parameter. If 0 the OLS detrending
 #' is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
 #' coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.
-#' @param trim The trimming parameter.
+#' @param trim A trimming parameter.
 #' @param max.lag The maximum lag for inner ADF testing.
 #' @param criterion A criterion used to select number of lags.
 #' If lag selection is not needed keep this NULL.
 #' @param modified.criterion Whether the unit-root test modificaton is needed.
-#' @param iter The number of bootstrap steps.
+#' @param iter The number of bootstrap iterations.
 #'
 #' @references
 #' Taylor, A. M. Robert.

@@ -11,8 +11,7 @@
 #' the test to the detrended series.
 #'
 #' @param y The input time series of interest.
-#' @param const Include const to the model if TRUE.
-#' @param trend Include trend to the model if TRUE.
+#' @param const,trend Whether a constand and trend are to be included.
 #' @param max.lag Maximum lag number
 #' @param criterion A criterion used to select number of lags.
 #' If lag selection is not needed keep this NULL.
@@ -173,10 +172,10 @@ ADF.test <- function(y,
 #' first difference normalized by the non-parametric local estimate of the
 #' variance.
 #'
-#' @param d.y The series of first differences.
-#' @param x The matrix of ADF RHS variables.
-#' @param deter The matrix of deterministic variables for detrending.
-#' @param k The lag of the corresponding ADF model.
+#' @param d.y A series of first differences.
+#' @param x A matrix of ADF RHS variables.
+#' @param deter A matrix of deterministic variables for detrending.
+#' @param k A lag of the corresponding ADF model.
 #' @param max.lag The maximum possible lag.
 #'
 #' @return A rescaled series.

@@ -7,9 +7,9 @@
 KPSS.1.break(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 }
 \arguments{
-\item{y}{(Tx1)-vector of the dependent variable.}
+\item{y}{An input (LHS) time series of interest.}
 
-\item{x}{(Txk)-matrix of explanatory stochastic regressors.}
+\item{x}{A matrix of (RHS) explanatory stochastic regressors.}
 
 \item{model}{\describe{
 \item{1}{for model An.}

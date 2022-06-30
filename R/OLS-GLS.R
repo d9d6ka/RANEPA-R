@@ -4,6 +4,9 @@
 #' @description
 #' Getting OLS estimates of betas, residuals, forecasted values and t-values.
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param y Dependent variable.
 #' @param x Explanatory variables.
 #'
@@ -32,8 +35,11 @@ OLS <- function(y, x) {
 #' @description
 #' Getting GLS estimates of betas, residuals, forecasted values and t-values.
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param y Dependent variable.
-#' @param x Explanatory variables.
+#' @param z Explanatory variables.
 #' @param c Coefficient for \eqn{\rho} calculation.
 #'
 #' @return The list of betas, residuals, forecasted values and t-values.
@@ -68,6 +74,17 @@ GLS <- function(y, z, c) {
 }
 
 
+#' @title
+#' Custom AR with extra information
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y Dependent variable.
+#' @param x Exogenous explanatory variables.
+#' @param max.lag The maximum number of lags.
+#' @param criterion A criterion for lag number estimation.
+#'
 #' @importFrom zeallot %<-%
 AR <- function(y, x, max.lag, criterion = "aic") {
     if (!is.null(criterion)) {

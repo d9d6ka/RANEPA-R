@@ -1,7 +1,7 @@
 #' @title
-#' Supremum ADF test with time transformation.
+#' Supremum ADF tests with time transformation.
 #'
-#' @param y The input time series of interest.
+#' @param y An input time series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
 #' @param const Whether the constant needs to be included.
 #' @param omega.est Whether the variance of Nadaraya-Watson residuals should be
@@ -26,9 +26,9 @@
 #' https://doi.org/10.1111/j.1467-9892.2007.00557.x.
 #'
 #' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
-#' “Time-Transformed Test for the Explosive Bubbles under
-#' Non-Stationary Volatility.”
-#' arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
+#' “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
+#' Journal of Financial Econometrics, April 23, 2022.
+#' https://doi.org/10.1093/jjfinec/nbac004.
 #'
 #' @importFrom zeallot %<-%
 #'

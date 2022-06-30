@@ -4,7 +4,10 @@
 #' @description
 #' A simple auxiliary function providing the estimates of autocorrelations.
 #'
-#' @param y The input time series of interest.
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y An input time series of interest.
 #'
 #' @return
 #' The vector of ACF values for s from 0 to \eqn{N - 1}.

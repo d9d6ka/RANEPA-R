@@ -1,8 +1,11 @@
+#' @title
 #' MDF test for a single break and possible heterscedasticity
 #'
-#' @param y The series of interest
+#' @param y A series of interest
 #' @param max.lag The maximum possible lag.
-#' @param trim The trimming parameter for lag selection
+#' @param trim Trimming parameter for lag selection
+#' @param iter Number of bootstrap iterations.
+#'
 #' @references
 #' Cavaliere, Giuseppe, David I. Harvey, Stephen J. Leybourne,
 #' and A.M. Robert Taylor.

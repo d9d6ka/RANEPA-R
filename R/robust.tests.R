@@ -1,3 +1,12 @@
+#' @title
+#' A wrapping function around [MDF.single()].
+#'
+#' @param y A series of interest.
+#' @param const Whether the constant term should be included.
+#' @param trend Whether the trend term should be included.
+#' @param season Whether the seasonal adjustment is needed.
+#' @param trim Trimming value for a possible break date bounds.
+#'
 #' @importFrom zeallot %<-%
 #'
 #' @export
@@ -33,6 +42,15 @@ robust.tests.single <- function(y,
 }
 
 
+#' @title
+#' A wrapping function around [KP()] and [MDF.multiple()].
+#'
+#' @param y A series of interest.
+#' @param const Whether the constant term should be included.
+#' @param season Whether the seasonal adjustment is needed.
+#' @param breaks Number of breaks.
+#' @param trim Trimming value for a possible break date bounds.
+#'
 #' @importFrom zeallot %<-%
 #'
 #' @export

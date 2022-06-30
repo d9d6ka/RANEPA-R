@@ -7,13 +7,13 @@
 MDF.single(y, const = FALSE, trend = FALSE, trim = 0.15)
 }
 \arguments{
-\item{y}{The series of interest.}
+\item{y}{A series of interest.}
 
 \item{const}{Whether the constant term should be included.}
 
 \item{trend}{Whether the trend term should be included.}
 
-\item{trim}{A trimming value for a possible break date bounds.}
+\item{trim}{Trimming value for a possible break date bounds.}
 }
 \description{
 MDF procedure for a single unknown break.

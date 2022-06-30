@@ -17,9 +17,7 @@ ADF.test(
 \arguments{
 \item{y}{The input time series of interest.}
 
-\item{const}{Include const to the model if TRUE.}
-
-\item{trend}{Include trend to the model if TRUE.}
+\item{const, trend}{Whether a constand and trend are to be included.}
 
 \item{max.lag}{Maximum lag number}
 

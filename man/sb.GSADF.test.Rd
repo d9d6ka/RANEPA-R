@@ -14,6 +14,9 @@ sb.GSADF.test(
   seed = round(10^4 * sd(y))
 )
 }
+\arguments{
+\item{y}{A series of interest.}
+}
 \description{
 Sign-based SADF test (HLZ, 2019).
 }

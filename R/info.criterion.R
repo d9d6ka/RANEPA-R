@@ -21,7 +21,7 @@
 #' Needed only for criterion modification purposes.
 #'
 #' @return
-#' The value of the selected informational criterion.
+#' The list of information criterions values.
 #'
 #' @references
 #' Ng, Serena, and Pierre Perron. “Lag Length Selection and the Construction of

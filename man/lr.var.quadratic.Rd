@@ -2,12 +2,18 @@
 % Please edit documentation in R/lr.var.R
 \name{lr.var.quadratic}
 \alias{lr.var.quadratic}
-\title{Estimating heteroscedasticity and autocorrelation consistent variance}
+\title{Calculating long-run variance with quadratic kernel}
 \usage{
 lr.var.quadratic(y)
 }
+\arguments{
+\item{y}{A series of interest.}
+}
 \description{
-Estimating heteroscedasticity and autocorrelation consistent variance
+Calculating long-run variance with quadratic kernel
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }
 \references{
 Andrews, Donald W. K.

@@ -5,6 +5,8 @@
 #' Procedure to compute deterministic terms
 #' for KPSS with 1 structural break.
 #'
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param model \describe{
 #' \item{1}{Model with trend, break in const.}
 #' \item{2}{Model with const and trend, break in const.}
@@ -66,6 +68,8 @@ determinants.KPSS.1.break <- function(model, N, break.point) {
 #' @details
 #' Procedure to compute deterministic terms
 #' for KPSS with 2 structural breaks.
+#'
+#' The function is not intended to be used directly so it's not exported.
 #'
 #' @param model \describe{
 #' \item{1}{for the AA (without trend) model.}
@@ -223,8 +227,7 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
 #' }
 #' @param N Number of observations.
 #' @param break.point Array of structural breaks.
-#' @param const Include constant if TRUE.
-#' @param trend Include trend if TRUE.
+#' @param const,ternd Include constant and trend if `TRUE`.
 #'
 #' @return Matrix of deterministic terms.
 determinants.KPSS.N.breaks <- function(model, N, break.point,
@@ -312,4 +315,32 @@ determinants.KPSS.N.breaks <- function(model, N, break.point,
     }
 
     return(xt)
+}
+
+
+#' @title
+#' Generating monthly seasonal dummy variables.
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param N number of observations.
+#'
+#' @return
+#' The matrix of values od seasonal dummies.
+seasonal.dummies <- function(N) {
+    s1 <- c(1 - 1 / 12, rep(-1 / 12, 11))
+
+    result <- NULL
+    for (i in 0:10) {
+        result <- cbind(
+            result,
+            c(
+                rep(-1 / 12, i),
+                rep(s1, length.out = N - i)
+            )
+        )
+    }
+
+    return(result)
 }

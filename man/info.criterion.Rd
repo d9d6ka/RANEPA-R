@@ -23,7 +23,7 @@ Needed only for criterion modification purposes.}
 Needed only for criterion modification purposes.}
 }
 \value{
-The value of the selected informational criterion.
+The list of information criterions values.
 }
 \description{
 Information criterions

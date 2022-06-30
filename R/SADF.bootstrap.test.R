@@ -1,18 +1,21 @@
 #' @title
-#' Supremum ADF test with wild bootstrap.
+#' Supremum ADF tests with wild bootstrap.
 #'
-#' @param y The input time series of interest.
+#' @param y An input time series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
 #' @param const Whether the constant needs to be included.
 #' @param alpha The significance level of interest.
-#' @param iter The number of iterations/
+#' @param iter The number of iterations.
 #' @param seed The seed parameter for the random number generator.
+#'
+#' @return
+#' An object of type `sadf` (see )
 #'
 #' @references
 #' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
-#' “Time-Transformed Test for the Explosive Bubbles under
-#' Non-Stationary Volatility.”
-#' arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
+#' “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
+#' Journal of Financial Econometrics, April 23, 2022.
+#' https://doi.org/10.1093/jjfinec/nbac004.
 #'
 #' @import doSNOW
 #' @import foreach

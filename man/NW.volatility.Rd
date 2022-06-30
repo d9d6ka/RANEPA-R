@@ -19,6 +19,9 @@ A list of arguments as well as the estimated omega and s.e.
 \description{
 NW.volatility - Nadaraya–Watson kernel volatility estimation
 }
+\details{
+The function is not intended to be used directly so it's not exported.
+}
 \references{
 Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
 and A. M. Robert Taylor.

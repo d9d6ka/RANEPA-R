@@ -4,8 +4,8 @@
 #' @description
 #' Procedure to compute the KPSS test with multiple known structural breaks
 #'
-#' @param y (Tx1)-vector of time series.
-#' @param x (Txk)-matrix of explanatory stochastic regressors.
+#' @param y An input (LHS) time series of interest.
+#' @param x A matrix of (RHS) explanatory stochastic regressors.
 #' @param model A scalar or vector of
 #' \describe{
 #' \item{1}{for the break in const.}
@@ -33,7 +33,7 @@
 #' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
 #' }
 #' @param criterion Information criterion for DOLS lags and leads selection:
-#' aic, bic or lwz.
+#' aic, bic, hq, or lwz.
 #'
 #' @return \describe{
 #' \item{beta}{DOLS estimates of the coefficients regressors.}

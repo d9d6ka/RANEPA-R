@@ -9,13 +9,16 @@ GLS(y, z, c)
 \arguments{
 \item{y}{Dependent variable.}
 
-\item{c}{Coefficient for \eqn{\rho} calculation.}
+\item{z}{Explanatory variables.}
 
-\item{x}{Explanatory variables.}
+\item{c}{Coefficient for \eqn{\rho} calculation.}
 }
 \value{
 The list of betas, residuals, forecasted values and t-values.
 }
 \description{
 Getting GLS estimates of betas, residuals, forecasted values and t-values.
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }

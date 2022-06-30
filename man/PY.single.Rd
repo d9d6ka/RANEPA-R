@@ -16,9 +16,7 @@ PY.single(
 \arguments{
 \item{y}{The input series of interest.}
 
-\item{const}{Allowing the break in constant.}
-
-\item{trend}{Allowing the break in trend.}
+\item{const, trend}{Allowing the break in constant or trend.}
 
 \item{criterion}{Needed information criterion: aic, bic, hq or lwz.}
 

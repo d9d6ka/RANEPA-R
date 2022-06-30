@@ -14,7 +14,7 @@ MDF.multiple(
 )
 }
 \arguments{
-\item{y}{The series of interest.}
+\item{y}{A series of interest.}
 
 \item{const}{Whether the constant term should be included.}
 
@@ -22,7 +22,7 @@ MDF.multiple(
 
 \item{breaks.star}{Number of breaks got from the Kejrival-Perron procedure.}
 
-\item{trim}{A trimming value for a possible break date bounds.}
+\item{trim}{Trimming value for a possible break date bounds.}
 
 \item{ZA}{Whether ZA variant should be used.}
 }

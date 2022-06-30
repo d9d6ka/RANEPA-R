@@ -1,10 +1,11 @@
+#' @title
 #' MDF procedure for multiple unknown breaks.
 #'
-#' @param y The series of interest.
+#' @param y A series of interest.
 #' @param const Whether the constant term should be included.
 #' @param breaks Number of breaks.
 #' @param breaks.star Number of breaks got from the Kejrival-Perron procedure.
-#' @param trim A trimming value for a possible break date bounds.
+#' @param trim Trimming value for a possible break date bounds.
 #' @param ZA Whether ZA variant should be used.
 #'
 #' @importFrom zeallot %<-%

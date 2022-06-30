@@ -7,7 +7,7 @@
 KPSS.2.breaks(y, model, break.point, max.lag, kernel)
 }
 \arguments{
-\item{y}{(Tx1)-vector of time series}
+\item{y}{An input (LHS) time series of interest.}
 
 \item{model}{\describe{
 \item{1}{for the AA (without trend) model.}

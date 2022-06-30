@@ -7,11 +7,13 @@
 MDF.CHLT(y, max.lag = 10, trim = 0.15, iter = 499)
 }
 \arguments{
-\item{y}{The series of interest}
+\item{y}{A series of interest}
 
 \item{max.lag}{The maximum possible lag.}
 
-\item{trim}{The trimming parameter for lag selection}
+\item{trim}{Trimming parameter for lag selection}
+
+\item{iter}{Number of bootstrap iterations.}
 }
 \description{
 MDF test for a single break and possible heterscedasticity

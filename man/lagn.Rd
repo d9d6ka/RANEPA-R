@@ -10,10 +10,15 @@ lagn(x, i, na = NA)
 \item{x}{Initial vector.}
 
 \item{i}{Size of lag (lead if negative).}
+
+\item{na}{Value to fill missing observations, `NA` by default.}
 }
 \value{
 Lagged or leaded vector.
 }
 \description{
 Produce a vector lagged backward of forward
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }

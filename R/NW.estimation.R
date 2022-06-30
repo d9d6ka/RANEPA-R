@@ -1,6 +1,9 @@
 #' @title
 #' NW.estimation - Nadaraya–Watson kernel regression.
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param y LHS dependent variable.
 #' @param x RHS explanation variable.
 #' @param h Bandwidth.
@@ -44,6 +47,9 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
 #' @title
 #' NW.volatility - Nadaraya–Watson kernel volatility estimation
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param e The series of interest.
 #' @param h Bandwidth.
 #' @param kernel Needed kernel, currently only `unif` and `gauss`.
@@ -85,6 +91,9 @@ NW.volatility <- function(e, h, kernel = "unif") {
 
 #' @title
 #' NW.loocv - LOO-CV for h in Nadaraya–Watson kernel regression.
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
 #'
 #' @param y LHS dependent variable.
 #' @param x RHS explanation variable.

@@ -18,20 +18,18 @@ ADF.test.S(
 )
 }
 \arguments{
-\item{y}{The series of interest.}
+\item{y}{A series of interest.}
 
-\item{const}{Whether the constant is to included.}
-
-\item{trend}{Whether the trend is to be included.}
+\item{const, trend}{Whether the constant and trend are to be included.}
 
 \item{c}{A filtration parameter used to construct an autocorrelation
 coefficient.}
 
-\item{gamma}{A detrending type selection parameter. If 0 the OLS detrending
+\item{gamma}{Detrending type selection parameter. If 0 the OLS detrending
 is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
 coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.}
 
-\item{trim}{The trimming parameter.}
+\item{trim}{A trimming parameter.}
 
 \item{max.lag}{The maximum lag for inner ADF testing.}
 
@@ -40,7 +38,7 @@ If lag selection is not needed keep this NULL.}
 
 \item{modified.criterion}{Whether the unit-root test modificaton is needed.}
 
-\item{iter}{The number of bootstrap steps.}
+\item{iter}{The number of bootstrap iterations.}
 }
 \description{
 Detrending bootstrap test by Smeekes (2013)

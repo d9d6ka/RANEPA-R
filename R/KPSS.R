@@ -1,6 +1,9 @@
 #' @title
 #' Auxiliary function returning KPSS statistic value.
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param resid The series of residuals.
 #' @param variance The value of the long-run variance.
 KPSS <- function(resid, variance) {

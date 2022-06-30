@@ -20,9 +20,9 @@ KPSS.N.breaks(
 )
 }
 \arguments{
-\item{y}{(Tx1)-vector of time series.}
+\item{y}{An input (LHS) time series of interest.}
 
-\item{x}{(Txk)-matrix of explanatory stochastic regressors.}
+\item{x}{A matrix of (RHS) explanatory stochastic regressors.}
 
 \item{model}{A scalar or vector of
 \describe{
@@ -58,7 +58,7 @@ using the BIC information criterion.}
 }}
 
 \item{criterion}{Information criterion for DOLS lags and leads selection:
-aic, bic or lwz.}
+aic, bic, hq, or lwz.}
 }
 \value{
 \describe{

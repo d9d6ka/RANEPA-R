@@ -11,9 +11,7 @@ SSR.recursive(y, x, beg, end, width = 2)
 
 \item{x}{(Txk)-vector of the explanatory stochastic regressors.}
 
-\item{beg}{The start of SSR calculating period.}
-
-\item{end}{The end of SSR calculating period.}
+\item{beg, end}{The start and the end of SSR calculating period.}
 
 \item{width}{Minimum spacing between the breaks.}
 }
@@ -24,5 +22,11 @@ The vector of calculated recursive SSR.
 Calculate SSR recursively
 }
 \details{
-Based on Brown, Durbin and Evans (1975).
+The function is not intended to be used directly so it's not exported.
+}
+\references{
+Brown, R. L., J. Durbin, and J. M. Evans.
+“Techniques for Testing the Constancy of Regression Relationships over Time.”
+Journal of the Royal Statistical Society.
+Series B (Methodological) 37, no. 2 (1975): 149–92.
 }

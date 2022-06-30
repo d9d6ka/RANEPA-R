@@ -4,7 +4,7 @@
 \alias{lr.var.bartlett.AK}
 \title{Calculating long-run variance}
 \usage{
-lr.var.bartlett.AK(e)
+lr.var.bartlett.AK(y)
 }
 \arguments{
 \item{e}{(Tx1) vector or residuals.}

@@ -1,18 +1,4 @@
-#' @title
-#' Generalized supremum ADF test with wild bootstrap.
-#'
-#' @param y The input time series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
-#' @param const Whether the constant needs to be included.
-#' @param alpha The significance level of interest.
-#' @param iter The number of iterations.
-#' @param seed The seed parameter for the random number generator.
-#'
-#' @references
-#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
-#' “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
-#' Journal of Financial Econometrics, April 23, 2022.
-#' https://doi.org/10.1093/jjfinec/nbac004.
+#' @rdname SADF.bootstrap.test
 #'
 #' @import doSNOW
 #' @import foreach

@@ -1,6 +1,9 @@
 #' @title
 #' Pre-calculate matrix of recursive SSR values.
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param y Dependent variable.
 #' @param x Explanatory variables.
 #' @param width Minimum spacing between the breaks.
@@ -30,15 +33,20 @@ SSR.matrix <- function(y, x, width = 2) {
 #' Calculate SSR recursively
 #'
 #' @details
-#' Based on Brown, Durbin and Evans (1975).
+#' The function is not intended to be used directly so it's not exported.
 #'
 #' @param y (Tx1)-vector of the dependent variable.
 #' @param x (Txk)-vector of the explanatory stochastic regressors.
-#' @param beg The start of SSR calculating period.
-#' @param end The end of SSR calculating period.
+#' @param beg,end The start and the end of SSR calculating period.
 #' @param width Minimum spacing between the breaks.
 #'
 #' @return The vector of calculated recursive SSR.
+#'
+#' @references
+#' Brown, R. L., J. Durbin, and J. M. Evans.
+#' “Techniques for Testing the Constancy of Regression Relationships over Time.”
+#' Journal of the Royal Statistical Society.
+#' Series B (Methodological) 37, no. 2 (1975): 149–92.
 #'
 #' @importFrom zeallot %<-%
 SSR.recursive <- function(y, x, beg, end, width = 2) {

@@ -1,8 +1,12 @@
 #' @title
 #' Produce a vector lagged backward of forward
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param x Initial vector.
 #' @param i Size of lag (lead if negative).
+#' @param na Value to fill missing observations, `NA` by default.
 #'
 #' @return Lagged or leaded vector.
 lagn <- function(x, i, na = NA) {

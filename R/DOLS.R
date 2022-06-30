@@ -15,7 +15,7 @@
 #' \item{5}{for model D.}
 #' \item{6}{for model E.}
 #' }
-#' @param break.point Position of the break point.
+#' @param break.point A position of the break point.
 #' @param k.lags,k.leads A number of lags and leads in DOLS regression.
 #'
 #' @return A list of

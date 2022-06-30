@@ -7,11 +7,14 @@
 ACF(y)
 }
 \arguments{
-\item{y}{The input time series of interest.}
+\item{y}{An input time series of interest.}
 }
 \value{
 The vector of ACF values for s from 0 to \eqn{N - 1}.
 }
 \description{
 A simple auxiliary function providing the estimates of autocorrelations.
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }

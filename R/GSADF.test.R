@@ -1,18 +1,4 @@
-#' @title
-#' Generalized supremum ADF test.
-#'
-#' @param y The input time series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
-#' @param const Whether the constant needs to be included.
-#' @param add.p.value Whether the p-value is to be returned. This argument is
-#' needed to suppress the calculation of p-values during the precalculation of
-#' tables needed for the p-values estimating.
-#'
-#' @references
-#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
-#' “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
-#' Journal of Financial Econometrics, April 23, 2022.
-#' https://doi.org/10.1093/jjfinec/nbac004.
+#' @rdname SADF.test
 #'
 #' @export
 GSADF.test <- function(y,

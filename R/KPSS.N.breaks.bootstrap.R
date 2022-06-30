@@ -4,8 +4,8 @@
 #' @description
 #' Procedure to compute the KPSS test with multiple unknown structural breaks
 #'
-#' @param y (Tx1)-vector of time series.
-#' @param x (Txk)-matrix of explanatory stochastic regressors.
+#' @param y An input (LHS) time series of interest.
+#' @param x A matrix of (RHS) explanatory stochastic regressors.
 #' @param model A scalar or vector of
 #' \describe{
 #' \item{1}{for the break in const.}
