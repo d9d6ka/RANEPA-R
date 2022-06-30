@@ -1,14 +1,8 @@
-#' KPSS-test with 2 known structural breaks
+#' @title
+#' KPSS-test with multiple known structural breaks
 #'
 #' @description
-#' Procedure to compute the KPSS test with two structural breaks
-#'
-#' @details
-#' The break points are known.
-#'
-#' The code provided is the original GAUSS code ported to R.
-#'
-#' See Carrion-i-Silvestre and Sansó (2006) for further details.
+#' Procedure to compute the KPSS test with multiple known structural breaks
 #'
 #' @param y (Tx1)-vector of time series.
 #' @param x (Txk)-matrix of explanatory stochastic regressors.
@@ -27,8 +21,8 @@
 #' \item{FALSE}{if the regressors are not weakly exogenous
 #' (DOLS is used in this case).}
 #' }
-#' @param lags.init Scalar, defines the initial number of lags for DOLS.
-#' @param leads.init Scalar, defines the initial number of leads for DOLS.
+#' @param lags.init,leads.init Scalars defininig the initial number of lags and
+#' leads for DOLS.
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected
 #' using the BIC information criterion.
@@ -49,6 +43,17 @@
 #' \item{DOLS.lags}{The estimated number of lags and leads in DOLS.}
 #' \item{break_point}{Break points.}
 #' }
+#'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “Testing the Null of Cointegration with Structural Breaks.”
+#' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
+#' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
+#'
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “The KPSS Test with Two Structural Breaks.”
+#' Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
+#' https://doi.org/10.1007/s10108-006-9017-8.
 #'
 #' @importFrom zeallot %<-%
 #'

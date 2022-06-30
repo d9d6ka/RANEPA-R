@@ -18,9 +18,9 @@ determinants.KPSS.N.breaks(model, N, break.point, const = FALSE, trend = FALSE)
 
 \item{break.point}{Array of structural breaks.}
 
-\item{const}{Include constant if **TRUE**.}
+\item{const}{Include constant if TRUE.}
 
-\item{trend}{Include trend if **TRUE**.}
+\item{trend}{Include trend if TRUE.}
 }
 \value{
 Matrix of deterministic terms.

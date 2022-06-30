@@ -1,11 +1,12 @@
 #' @title
-#' ADF.test - simple implementation of ADF test
+#' ADF.test - a simple implementation of ADF test
 #'
-#' @details
+#' @description
 #' A function for ADF test with the ability to select the number of lags.
 #' Lags are selected by informational criterions which can be modified as in
 #' Ng and Perron (2001) and Cavaliere et al. (2015).
 #'
+#' @details
 #' Due to the Frisch-Waugh-Lovell theorem we first detrend `y` and then apply
 #' the test to the detrended series.
 #'
@@ -163,13 +164,22 @@ ADF.test <- function(y,
 }
 
 
+#' @title
 #' Generating rescaled series as in Cavaliere et al. (2015).
+#'
+#' @description
+#' This rescaling procedure is needed to cope with possible heteroscedasticity
+#' in the data. Simply it's achieved by taking a cumulative sum of the
+#' first difference normalized by the non-parametric local estimate of the
+#' variance.
 #'
 #' @param d.y The series of first differences.
 #' @param x The matrix of ADF RHS variables.
 #' @param deter The matrix of deterministic variables for detrending.
 #' @param k The lag of the corresponding ADF model.
 #' @param max.lag The maximum possible lag.
+#'
+#' @return A rescaled series.
 #'
 #' @references
 #' Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,

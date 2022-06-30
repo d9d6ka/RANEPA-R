@@ -1,3 +1,4 @@
+#' @title
 #' Auxiliary function returning KPSS statistic value.
 #'
 #' @param resid The series of residuals.

@@ -1,3 +1,4 @@
+#' @title
 #' Detrending bootstrap test by Smeekes (2013)
 #'
 #' @details
@@ -15,7 +16,8 @@
 #' @param y The series of interest.
 #' @param const Whether the constant is to included.
 #' @param trend Whether the trend is to be included.
-#' @param c A filtration parameter.
+#' @param c A filtration parameter used to construct an autocorrelation
+#' coefficient.
 #' @param gamma A detrending type selection parameter. If 0 the OLS detrending
 #' is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
 #' coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.
@@ -55,39 +57,6 @@ ADF.test.S <- function(y,
                        max.lag = 0,
                        criterion = NULL, modified.criterion = FALSE,
                        iter = 999) {
-    inner.detrend <- function(y, x, c, g, l) {
-        if (is.null(x)) {
-            return(y)
-        }
-
-        N <- nrow(y)
-        beg <- trunc(l * N)
-        ct <- (c / N)^g
-
-        yt <- y - (1 - ct) * lagn(y, 1, na = 0)
-        xt <- x - (1 - ct) * lagn(x, 1, na = 0)
-
-        c(., yd, ., .) %<-% OLS(
-            yt[1:beg, , drop = FALSE],
-            xt[1:beg, , drop = FALSE]
-        )
-
-        yd <- rbind(
-            yd,
-            as.matrix(rep(0, N - beg))
-        )
-
-        for (lstar in (beg + 1):N) {
-            c(., ystar, ., .) %<-% OLS(
-                yt[1:lstar, , drop = FALSE],
-                xt[1:lstar, , drop = FALSE]
-            )
-            yd[lstar, ] <- ystar[lstar, ]
-        }
-
-        return(yd)
-    }
-
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
@@ -100,7 +69,7 @@ ADF.test.S <- function(y,
         x <- cbind(x, 1:N)
     }
 
-    yd <- inner.detrend(y, x, c, gamma, trim)
+    yd <- recursive.detrend(y, x, c, gamma, trim)
 
     res.ADF %<-%
         ADF.test(
@@ -151,7 +120,7 @@ ADF.test.S <- function(y,
             tmp.y[s] <- tmp.y[s - 1] + u[s]
         }
 
-        tmp.yd <- inner.detrend(tmp.y, x, c, gamma, trim)
+        tmp.yd <- recursive.detrend(tmp.y, x, c, gamma, trim)
 
         tmp.res <- ADF.test(
             tmp.yd, const, trend, res.lag,
@@ -172,3 +141,76 @@ ADF.test.S <- function(y,
         )
     )
 }
+
+#' @title
+#' Detrend the data recursively
+#'
+#' @description
+#' This procedure is aimed to provide a recursively detrended series. More or
+#' less classical approach of full-sample detrending may lead to the regressors
+#' correlated with the error term.
+#'
+#' @details
+#' Elliott et al (1996) recommend using \eqn{c = -7} for the model with only
+#' an intercept, and \eqn{c = -13.5} for the model with a linear trend.
+#'
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y The dependent (LHS) variable.
+#' @param x The matrix of explanatory (RHS) variables.
+#' @param c A filtration parameter used to construct an autocorrelation
+#' coefficient.
+#' @param gamma A detrending type selection parameter. If 0 the OLS detrending
+#' is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
+#' coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.
+#' @param trim The trimming parameter. It's used to find the minimum size of
+#' subsamples while calculating recursive estimates. The ending point of the
+#' subsample for the \eqn{t} is \eqn{max(t, trim \times T)}.
+#'
+#' @return A detrended series.
+#'
+#' @references
+#' Elliott, Graham, Thomas J. Rothenberg, and James H. Stock.
+#' “Efficient Tests for an Autoregressive Unit Root.”
+#' Econometrica 64, no. 4 (1996): 813–36.
+#' https://doi.org/10.2307/2171846.
+#'
+#' Taylor, A. M. Robert.
+#' “Regression-Based Unit Root Tests With Recursive Mean Adjustment for
+#' Seasonal and Nonseasonal Time Series.”
+#' Journal of Business & Economic Statistics 20, no. 2 (April 2002): 269–81.
+#' https://doi.org/10.1198/073500102317352001.
+#'
+#' @importFrom zeallot %<-%
+recursive.detrend <- function(y, x, c, gamma, trim) {
+        if (is.null(x)) {
+            return(y)
+        }
+
+        N <- nrow(y)
+        beg <- trunc(trim * N)
+        ct <- (c / N)^gamma
+
+        yt <- y - (1 + ct) * lagn(y, 1, na = 0)
+        xt <- x - (1 + ct) * lagn(x, 1, na = 0)
+
+        c(., yd, ., .) %<-% OLS(
+            yt[1:beg, , drop = FALSE],
+            xt[1:beg, , drop = FALSE]
+        )
+
+        yd <- rbind(
+            yd,
+            as.matrix(rep(0, N - beg))
+        )
+
+        for (lstar in (beg + 1):N) {
+            c(., ystar, ., .) %<-% OLS(
+                yt[1:lstar, , drop = FALSE],
+                xt[1:lstar, , drop = FALSE]
+            )
+            yd[lstar, ] <- ystar[lstar, ]
+        }
+
+        return(yd)
+    }

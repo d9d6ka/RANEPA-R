@@ -24,7 +24,8 @@ ADF.test.S(
 
 \item{trend}{Whether the trend is to be included.}
 
-\item{c}{A filtration parameter.}
+\item{c}{A filtration parameter used to construct an autocorrelation
+coefficient.}
 
 \item{gamma}{A detrending type selection parameter. If 0 the OLS detrending
 is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation

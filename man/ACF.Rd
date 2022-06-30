@@ -13,5 +13,5 @@ ACF(y)
 The vector of ACF values for s from 0 to \eqn{N - 1}.
 }
 \description{
-Calculating ACF values.
+A simple auxiliary function providing the estimates of autocorrelations.
 }

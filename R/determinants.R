@@ -223,8 +223,8 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
 #' }
 #' @param N Number of observations.
 #' @param break.point Array of structural breaks.
-#' @param const Include constant if **TRUE**.
-#' @param trend Include trend if **TRUE**.
+#' @param const Include constant if TRUE.
+#' @param trend Include trend if TRUE.
 #'
 #' @return Matrix of deterministic terms.
 determinants.KPSS.N.breaks <- function(model, N, break.point,

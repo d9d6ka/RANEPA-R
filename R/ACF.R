@@ -1,6 +1,9 @@
 #' @title
 #' Calculating ACF values.
 #'
+#' @description
+#' A simple auxiliary function providing the estimates of autocorrelations.
+#'
 #' @param y The input time series of interest.
 #'
 #' @return

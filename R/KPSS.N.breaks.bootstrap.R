@@ -1,13 +1,8 @@
 #' @title
-#' Calculating p-values using bootstrap
+#' KPSS-test with multiple unknown structural breaks
 #'
 #' @description
-#' Procedure to compute the KPSS test with two structural breaks
-#'
-#' @details
-#' The break points are known.
-#'
-#' See Cavaliere and Taylor (2006) for further details.
+#' Procedure to compute the KPSS test with multiple unknown structural breaks
 #'
 #' @param y (Tx1)-vector of time series.
 #' @param x (Txk)-matrix of explanatory stochastic regressors.
@@ -26,7 +21,8 @@
 #' \item{FALSE}{if the regressors are not weakly exogenous
 #' (DOLS is used in this case).}
 #' }
-#' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
+#' @param lags.init,leads.init Scalars defininig the initial number of lags and
+#' leads for DOLS.
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using the BIC
 #' information criterion.

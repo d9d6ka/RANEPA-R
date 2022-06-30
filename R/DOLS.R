@@ -1,3 +1,37 @@
+#' @title
+#' Estimating DOLS regression for multiple known break points
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y A dependent (LHS) variable.
+#' @param x A matrix of explanatory (RHS) variables.
+#' @param model See Carrion-i-Silvestre and Sansó (2006)
+#' \describe{
+#' \item{1}{for model An.}
+#' \item{2}{for model A.}
+#' \item{3}{for model B.}
+#' \item{4}{for model C.}
+#' \item{5}{for model D.}
+#' \item{6}{for model E.}
+#' }
+#' @param break.point Position of the break point.
+#' @param k.lags,k.leads A number of lags and leads in DOLS regression.
+#'
+#' @return A list of
+#' \itemize{
+#' \item Estimates of coefficients,
+#' \item Estimates of residuals,
+#' \item A value of BIC,
+#' \item \eqn{t}-statistics for the estimates of coefficients.}
+#'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “Testing the Null of Cointegration with Structural Breaks.”
+#' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
+#' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
+#'
+#' @importFrom zeallot %<-%
 DOLS <- function(y, x, model, break.point, k.lags, k.leads) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) {

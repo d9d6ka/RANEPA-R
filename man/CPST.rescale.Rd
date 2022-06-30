@@ -17,8 +17,14 @@ CPST.rescale(d.y, x, deter, k, max.lag)
 
 \item{max.lag}{The maximum possible lag.}
 }
+\value{
+A rescaled series.
+}
 \description{
-Generating rescaled series as in Cavaliere et al. (2015).
+This rescaling procedure is needed to cope with possible heteroscedasticity
+in the data. Simply it's achieved by taking a cumulative sum of the
+first difference normalized by the non-parametric local estimate of the
+variance.
 }
 \references{
 Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,

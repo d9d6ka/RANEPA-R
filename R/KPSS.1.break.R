@@ -1,3 +1,4 @@
+#' @title
 #' KPSS-test with known structural break
 #'
 #' @description
@@ -34,6 +35,12 @@
 #' \item{t.beta}{Individual significance t-statistics.}
 #' \item{break_point}{Break points.}
 #' }
+#'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “Testing the Null of Cointegration with Structural Breaks.”
+#' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
+#' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
 #' @importFrom zeallot %<-%
 #' @export
@@ -139,6 +146,12 @@ KPSS.1.break <- function(y, x,
 #' the min(SC) test and the estimated break point;
 #' the second row gives the value of the SC statistic,
 #' where the break point is estimated as min(SSR).
+#'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “Testing the Null of Cointegration with Structural Breaks.”
+#' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
+#' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
 #' @importFrom zeallot %<-%
 #' @export

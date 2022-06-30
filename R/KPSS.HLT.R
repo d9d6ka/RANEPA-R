@@ -1,3 +1,4 @@
+#' @title
 #' Unit root testing procedure under a single structural break.
 #'
 #' @param y The series of interest.

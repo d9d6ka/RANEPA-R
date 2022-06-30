@@ -2,7 +2,7 @@
 % Please edit documentation in R/KPSS.N.breaks.bootstrap.R
 \name{KPSS.N.breaks.bootstrap}
 \alias{KPSS.N.breaks.bootstrap}
-\title{Calculating p-values using bootstrap}
+\title{KPSS-test with multiple unknown structural breaks}
 \usage{
 KPSS.N.breaks.bootstrap(
   y,
@@ -46,6 +46,9 @@ KPSS.N.breaks.bootstrap(
 (DOLS is used in this case).}
 }}
 
+\item{lags.init, leads.init}{Scalars defininig the initial number of lags and
+leads for DOLS.}
+
 \item{max.lag}{scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected using the BIC
 information criterion.}
@@ -69,8 +72,6 @@ variable.}
 
 \item{criterion}{Information criterion for DOLS lags and leads selection:
 aic, bic or lwz.}
-
-\item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 }
 \value{
 List of 3 elements:
@@ -80,10 +81,5 @@ List of 3 elements:
 \item{bootstrapped}{Bootstrapped auxiliary statistics.}}
 }
 \description{
-Procedure to compute the KPSS test with two structural breaks
-}
-\details{
-The break points are known.
-
-See Cavaliere and Taylor (2006) for further details.
+Procedure to compute the KPSS test with multiple unknown structural breaks
 }

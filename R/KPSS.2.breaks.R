@@ -1,3 +1,4 @@
+#' @title
 #' KPSS-test with 2 known structural breaks
 #'
 #' @description
@@ -18,8 +19,7 @@
 #' \item{4}{for the CC model.}
 #' \item{5}{for the AC-CA model.}
 #' }
-#' @param tb1 The first break point.
-#' @param tb2 The second break point.
+#' @param tb1,tb2 The first and the second break points.
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using the
 #' BIC information criterion.
@@ -36,6 +36,12 @@
 #' \item{resid}{Residuals of the model.}
 #' \item{break_point}{Break points.}
 #' }
+#'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “The KPSS Test with Two Structural Breaks.”
+#' Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
+#' https://doi.org/10.1007/s10108-006-9017-8.
 #'
 #' @importFrom zeallot %<-%
 #' @export
@@ -97,6 +103,12 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
 #' }
 #'
 #' @return Value of test statistic.
+#'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “Testing the Null of Cointegration with Structural Breaks.”
+#' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
+#' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
 #' @importFrom zeallot %<-%
 #' @export
