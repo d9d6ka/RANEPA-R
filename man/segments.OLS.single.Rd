@@ -20,17 +20,17 @@ segments.OLS.single(beg, end, first.break, last.break, len, SSR.data)
 \item{SSR.data}{The matrix of recursive SSR values.}
 }
 \value{
-List containing
-\describe{
-\item{SSR}{Optimal SSR value.}
-\item{break_point}{The point of possible break.}
+A list of:
+\itemize{
+\item \code{SSR}: Optimal SSR value,
+\item \code{break.point}: The point of possible break.
 }
 }
 \description{
 Procedure to minimize the SSR for 1 break point
 }
 \details{
-See Carrion-i-Silvestre and Sansó (2006) for further details.
+The function is not intended to be used directly so it's not exported.
 }
 \references{
 Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.

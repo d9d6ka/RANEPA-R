@@ -23,6 +23,12 @@
 #' This argument is needed to suppress the calculation of critical values
 #' during the precalculation of tables needed for the p-values estimating.
 #'
+#' @return An object of type `cointGH`. It's a list of
+#' * `shift`: shift type,
+#' * `Za`: \eqn{MZ_\alpha} statistic and c.v.,
+#' * `Zt`: \eqn{MZ_t} statistic and c.v.,
+#' * `ADF`: \eqn{ADF} statistic and c.v..
+#'
 #' @references
 #' MacKinnon, James G.
 #' “Critical Values for Cointegration Tests.”
@@ -34,8 +40,6 @@
 #' “Residual-Based Tests for Cointegration in Models with Regime Shifts.”
 #' Journal of Econometrics 70, no. 1 (January 1, 1996): 99–126.
 #' https://doi.org/10.1016/0304-4076(69)41685-7.
-#'
-#' @importFrom zeallot %<-%
 #'
 #' @export
 coint.test.GH <- function(...,
@@ -98,7 +102,7 @@ coint.test.GH <- function(...,
             )
         }
 
-        c(., e, ., .) %<-% OLS(y1, x)
+        e <- OLS(y1, x)$residuals
 
         rho <- sum(e[1:(N - 1), ] * e[2:N, ]) /
             sum(e[1:(N - 1), ]^2)

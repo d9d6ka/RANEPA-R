@@ -7,42 +7,35 @@
 #' @param y An input (LHS) time series of interest.
 #' @param x A matrix of (RHS) explanatory stochastic regressors.
 #' @param model A scalar or vector of
-#' \describe{
-#' \item{1}{for the break in const.}
-#' \item{2}{for the break in trend.}
-#' \item{3}{for the break in const and trend.}
-#' }
+#' * 1: for the break in const,
+#' * 2: for the break in trend,
+#' * 3: for the break in const and trend.
 #' @param break.point Array of structural breaks.
-#' @param trend Include trend if `TRUE`.
+#' @param const,trend Whether a constant or trend should be included.
 #' @param weakly.exog Boolean where we specify
 #' whether the stochastic regressors are exogenous or not
-#' \describe{
-#' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous
-#' (DOLS is used in this case).}
-#' }
+#' * `TRUE`: if the regressors are weakly exogenous,
+#' * `FALSE`: if the regressors are not weakly exogenous
+#' (DOLS is used in this case).
 #' @param lags.init,leads.init Scalars defininig the initial number of lags and
 #' leads for DOLS.
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected
 #' using the BIC information criterion.
 #' @param kernel Kernel for calculating long-run variance
-#' \describe{
-#' \item{bartlett}{for Bartlett kernel.}
-#' \item{quadratic}{for Quadratic Spectral kernel.}
-#' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
-#' }
+#' * `bartlett`: for Bartlett kernel,
+#' * `quadratic`: for Quadratic Spectral kernel,
+#' * `NULL` for the Kurozumi's proposal, using Bartlett kernel.
 #' @param criterion Information criterion for DOLS lags and leads selection:
 #' aic, bic, hq, or lwz.
 #'
-#' @return \describe{
-#' \item{beta}{DOLS estimates of the coefficients regressors.}
-#' \item{tests}{SC test (coinKPSS-test).}
-#' \item{resid}{Residuals of the model.}
-#' \item{t.beta}{t-statistics for `beta`.}
-#' \item{DOLS.lags}{The estimated number of lags and leads in DOLS.}
-#' \item{break_point}{Break points.}
-#' }
+#' @return A list of
+#' * `beta`: DOLS estimates of the coefficients regressors,
+#' * `tests`: SC test (coinKPSS-test),
+#' * `resid`: Residuals of the model,
+#' * `t.beta`: \eqn{t}-statistics for `beta`,
+#' * `DOLS.lags`: The estimated number of lags and leads in DOLS,
+#' * `break_point`: Break points.
 #'
 #' @references
 #' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
@@ -54,8 +47,6 @@
 #' “The KPSS Test with Two Structural Breaks.”
 #' Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
 #' https://doi.org/10.1007/s10108-006-9017-8.
-#'
-#' @importFrom zeallot %<-%
 #'
 #' @export
 KPSS.N.breaks <- function(y, x,
@@ -78,41 +69,51 @@ KPSS.N.breaks <- function(y, x,
             determinants.KPSS.N.breaks(model, N, break.point, const, trend)
         )
 
-        c(beta, resid, ., t.beta) %<-% OLS(y, xt)
+        tmp.OLS <- OLS(y, xt)
+        beta <- tmp.OLS$beta
+        resids <- tmp.OLS$residuals
+        t.beta <- tmp.OLS$t.beta
         DOLS.lags <- 0
         DOLS.leads <- 0
+        rm(tmp.OLS)
     } else {
         info.crit.min <- Inf
         for (i in lags.init:1) {
             for (j in leads.init:1) {
-                c(beta, resid, info.crit, t.beta) %<-%
-                    DOLS.N.breaks(y, x, model, break.point, const, trend, i, j)
+                tmp.DOLS <- DOLS.N.breaks(
+                    y, x, model, break.point, const, trend, i, j
+                )
+                beta <- tmp.DOLS$beta
+                resids <- tmp.DOLS$residuals
+                t.beta <- tmp.DOLS$t.beta
+                info.crit <- tmp.DOLS$criterions
                 if (info.crit[[criterion]] < info.crit.min) {
                     info.crit.min <- info.crit[[criterion]]
                     beta.min <- beta
                     t.beta.min <- t.beta
-                    resid.min <- resid
+                    resid.min <- resids
                     DOLS.lags <- i
                     DOLS.leads <- j
                 }
+                rm(tmp.DOLS)
             }
         }
-        resid <- resid.min
+        resids <- resid.min
         beta <- beta.min
         t.beta <- t.beta.min
     }
 
     if (!is.null(kernel)) {
-        test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
+        test <- KPSS(resids, lr.var.SPC(resids, max.lag, kernel))
     } else {
-        test <- KPSS(resid, lr.var.bartlett.AK(resid))
+        test <- KPSS(resids, lr.var.bartlett.AK(resids))
     }
 
     return(
         list(
             beta = beta,
             test = test,
-            resid = resid,
+            residuals = resids,
             t.beta = t.beta,
             DOLS.lags = DOLS.lags,
             DOLS.leads = DOLS.leads,

@@ -10,7 +10,13 @@
 #' @param y Dependent variable.
 #' @param x Explanatory variables.
 #'
-#' @return The list of betas, residuals, forecasted values and t-values.
+#' @return The list of:
+#' * `beta`: estimates of coefficients,
+#' * `resid`: estimated residuals,
+#' * `predict`: forecasted values,
+#' * `t.beta`: \eqn{t}-statistics for `beta`.
+#'
+#' @importFrom stats .lm.fit
 OLS <- function(y, x) {
     tmp.model <- .lm.fit(x, y)
     fitted.values <- y - tmp.model$residuals
@@ -21,7 +27,7 @@ OLS <- function(y, x) {
     return(
         list(
             beta = as.matrix(tmp.model$coefficients),
-            resid = tmp.model$residuals,
+            residuals = tmp.model$residuals,
             predict = fitted.values,
             t.beta = t.beta
         )
@@ -43,8 +49,6 @@ OLS <- function(y, x) {
 #' @param c Coefficient for \eqn{\rho} calculation.
 #'
 #' @return The list of betas, residuals, forecasted values and t-values.
-#'
-#' @importFrom zeallot %<-%
 GLS <- function(y, z, c) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(z)) z <- as.matrix(z)
@@ -59,16 +63,16 @@ GLS <- function(y, z, c) {
     z.hat <- z - rho * lagn(z, 1)
     z.hat[1, ] <- z[1, ]
 
-    c(beta, ., ., t.beta) %<-% OLS(y.hat, z.hat)
-    predict <- z %*% beta
-    resid <- y - predict
+    res.OLS <- OLS(y.hat, z.hat)
+    fitted.values <- z %*% res.OLS$beta
+    resids <- y - fitted.values
 
     return(
         list(
-            beta = beta,
-            resid = resid,
-            predict = predict,
-            t.beta = t.beta
+            beta = res.OLS$beta,
+            residuals = resids,
+            predict = fitted.values,
+            t.beta = res.OLS$t.beta
         )
     )
 }
@@ -85,7 +89,12 @@ GLS <- function(y, z, c) {
 #' @param max.lag The maximum number of lags.
 #' @param criterion A criterion for lag number estimation.
 #'
-#' @importFrom zeallot %<-%
+#' @return A list of:
+#' * `beta`: estimates of coefficients,
+#' * `residuals`: estimated residuals,
+#' * `predict`: forecasted values,
+#' * `t.beta`: \eqn{t}-statistics for `beta`,
+#' * `lag`: estimated number of lags.
 AR <- function(y, x, max.lag, criterion = "aic") {
     if (!is.null(criterion)) {
         if (!criterion %in% c("bic", "aic", "lwz", "hq")) {
@@ -116,22 +125,34 @@ AR <- function(y, x, max.lag, criterion = "aic") {
 
     if (is.null(criterion)) {
         res.lag <- max.lag
-        c(res.beta, res.resid, res.predict, res.t.beta) %<-%
-            OLS(tmp.y, tmp.x[, 1:(k + res.lag), drop = FALSE])
+        tmp.OLS <- OLS(tmp.y, tmp.x[, 1:(k + res.lag), drop = FALSE])
+        res.beta <- tmp.OLS$beta
+        res.resid <- tmp.OLS$residuals
+        res.predict <- tmp.OLS$predict
+        res.t.beta <- tmp.OLS$t.beta
+        rm(tmp.OLS)
     } else {
         res.lag <- 0
 
         if (!is.null(x)) {
-            c(res.beta, res.resid, res.predict, res.t.beta) %<-%
-                OLS(tmp.y, tmp.x[, 1:k, drop = FALSE])
-            res.IC <- log(drop(t(resid) %*% resid) / (N - max.lag))
+            tmp.OLS <- OLS(tmp.y, tmp.x[, 1:k, drop = FALSE])
+            res.beta <- tmp.OLS$beta
+            res.resid <- tmp.OLS$residuals
+            res.predict <- tmp.OLS$predict
+            res.t.beta <- tmp.OLS$t.beta
+            rm(tmp.OLS)
+            res.IC <- log(drop(t(res.resid) %*% res.resid) / (N - max.lag))
         } else {
             res.IC <- Inf
         }
 
         for (l in 1:max.lag) {
-            c(tmp.beta, tmp.resid, tmp.predict, tmp.t.beta) %<-%
-                OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
+            tmp.OLS <- OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
+            tmp.beta <- tmp.OLS$beta
+            tmp.resid <- tmp.OLS$residuals
+            tmp.predict <- tmp.OLS$predict
+            tmp.t.beta <- tmp.OLS$t.beta
+            rm(tmp.OLS)
             temp.IC <- info.criterion(tmp.resid, l)[[criterion]]
 
             if (temp.IC < res.IC) {
@@ -148,7 +169,7 @@ AR <- function(y, x, max.lag, criterion = "aic") {
     return(
         list(
             beta = res.beta,
-            resid = res.resid,
+            residuals = res.resid,
             predict = res.predict,
             t.beta = res.t.beta,
             lag = res.lag

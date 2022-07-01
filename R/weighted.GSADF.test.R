@@ -1,28 +1,14 @@
-#' @title
-#' Weighted generalized supremum ADF test.
-#'
-#' @param y The input time series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
-#' @param const Whether the constant needs to be included.
-#' @param alpha The significance level of interest.
-#' @param iter The number of iterations.
-#' @param urs Use `union of rejections` strategy.
-#' @param seed The seed parameter for the random number generator.
-#'
-#' @references
-#' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
-#' “Testing Explosive Bubbles with Time-Varying Volatility.”
-#' Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
-#' https://doi.org/10.1080/07474938.2018.1536099.
-#'
-#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
-#' “Time-Transformed Test for the Explosive Bubbles under
-#' Non-Stationary Volatility.”
-#' arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
+#' @rdname weighted.SADF.test
+#' @order 2
 #'
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
+#' @importFrom stats quantile
+#' @importFrom stats rnorm
+#' @importFrom stats sd
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 weighted.GSADF.test <- function(y,

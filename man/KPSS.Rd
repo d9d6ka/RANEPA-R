@@ -4,10 +4,10 @@
 \alias{KPSS}
 \title{Auxiliary function returning KPSS statistic value.}
 \usage{
-KPSS(resid, variance)
+KPSS(resids, variance)
 }
 \arguments{
-\item{resid}{The series of residuals.}
+\item{resids}{The series of residuals.}
 
 \item{variance}{The value of the long-run variance.}
 }

@@ -7,12 +7,11 @@
 #'
 #' The function is not intended to be used directly so it's not exported.
 #'
-#' @param model \describe{
-#' \item{1}{Model with trend, break in const.}
-#' \item{2}{Model with const and trend, break in const.}
-#' \item{3}{Model with const and trend, break in trend.}
-#' \item{4}{Model with const and trend, break in const and trend.}
-#' }
+#' @param model A scalar equal to
+#' * 1: Model with trend, break in const,
+#' * 2: Model with const and trend, break in const,
+#' * 3: Model with const and trend, break in trend,
+#' * 4: Model with const and trend, break in const and trend.
 #' @param N Number of observations.
 #' @param break.point Break point.
 #'
@@ -71,15 +70,14 @@ determinants.KPSS.1.break <- function(model, N, break.point) {
 #'
 #' The function is not intended to be used directly so it's not exported.
 #'
-#' @param model \describe{
-#' \item{1}{for the AA (without trend) model.}
-#' \item{2}{for the AA (with trend) model.}
-#' \item{3}{for the BB model.}
-#' \item{4}{for the CC model.}
-#' \item{5}{for the AC-CA model.}
-#' \item{6}{for the AC-CA model.}
-#' \item{7}{for the AC-CA model.}
-#' }
+#' @param model A scalar equal to
+#' * 1: for the AA (without trend) model,
+#' * 2: for the AA (with trend) model,
+#' * 3: for the BB model,
+#' * 4: for the CC model,
+#' * 5: for the AC-CA model,
+#' * 6: for the AC-CA model,
+#' * 7: for the AC-CA model.
 #' @param N Number of observations.
 #' @param break.point Positions for the first and second structural breaks
 #'            (respective to the origin which is 1).
@@ -220,14 +218,12 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
 #' **break.point** is achieved.
 #'
 #' @param model A scalar or vector of
-#' \describe{
-#' \item{1}{for the break in const.}
-#' \item{2}{for the break in trend.}
-#' \item{3}{for the break in const and trend.}
-#' }
+#' * 1: for the break in const,
+#' * 2: for the break in trend,
+#' * 3: for the break in const and trend.
 #' @param N Number of observations.
 #' @param break.point Array of structural breaks.
-#' @param const,ternd Include constant and trend if `TRUE`.
+#' @param const,trend Include constant and trend if `TRUE`.
 #'
 #' @return Matrix of deterministic terms.
 determinants.KPSS.N.breaks <- function(model, N, break.point,

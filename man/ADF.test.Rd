@@ -2,7 +2,7 @@
 % Please edit documentation in R/ADF.test.R
 \name{ADF.test}
 \alias{ADF.test}
-\title{ADF.test - a simple implementation of ADF test}
+\title{A simple implementation of ADF test}
 \usage{
 ADF.test(
   y,
@@ -40,7 +40,8 @@ List containing:
 \item t-statistic value
 \item critical value
 \item Number of lags
-\item indicator of stationarity}
+\item indicator of stationarity
+}
 }
 \description{
 A function for ADF test with the ability to select the number of lags.
@@ -48,7 +49,7 @@ Lags are selected by informational criterions which can be modified as in
 Ng and Perron (2001) and Cavaliere et al. (2015).
 }
 \details{
-Due to the Frisch-Waugh-Lovell theorem we first detrend `y` and then apply
+Due to the Frisch-Waugh-Lovell theorem we first detrend \code{y} and then apply
 the test to the detrended series.
 }
 \references{

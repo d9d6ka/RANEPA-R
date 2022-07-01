@@ -1,5 +1,11 @@
 #' @title
-#' Supremum ADF tests with time transformation.
+#' Supremum ADF tests with time transformation
+#' @order 1
+#'
+#' @description
+#' See [SADF.test]. Tests with time transformation are the modified versions of
+#' the ordinary `SADF` and `GSADF` tests using Nadaraya-Watson residuals and
+#' reindexing procedure by Cavaliere-Taylor (2008).
 #'
 #' @param y An input time series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
@@ -19,6 +25,29 @@
 #' needed to suppress the calculation of p-values during the precalculation of
 #' tables needed for the p-values estimating.
 #'
+#' @return An object of type `sadf`. It's a list of:
+#' * `y`,
+#' * `N`: Number of observations,
+#' * `trim`,
+#' * `const`,
+#' * `omega.est`,
+#' * `truncated`,
+#' * `is.reindex`,
+#' * `new.index`: the vector of new indices,
+#' * `ksi.input`,
+#' * `hc`,
+#' * `h.est`,
+#' * `u.hat`,
+#' * `pc`,
+#' * `w.sq`,
+#' * `t.values`: vector of \eqn{t}-values,
+#' * the value of the corresponding test statistic,
+#' * `u.hat.truncated`: truncated residuals if truncation was asked for,
+#' * `ksi`, `sigma`: estimated values of the truncation parameter and resulting
+#' s.e. if `ksi.input` equals `auto`,
+#' * `eta.hat`: the values of reindexing function if reindexing was asked for,
+#' * \eqn{p}-value if it was asked for.
+#'
 #' @references
 #' Cavaliere, Giuseppe, and A. M. Robert Taylor.
 #' “Time-Transformed Unit Root Tests for Models with Non-Stationary Volatility.”
@@ -30,14 +59,13 @@
 #' Journal of Financial Econometrics, April 23, 2022.
 #' https://doi.org/10.1093/jjfinec/nbac004.
 #'
-#' @importFrom zeallot %<-%
+#' @importFrom stats sd
 #'
 #' @export
 STADF.test <- function(y,
                        trim = 0.01 + 1.8 / sqrt(length(y)),
                        const = FALSE,
                        omega.est = TRUE,
-                       h = "auto_CV",
                        truncated = TRUE,
                        is.reindex = TRUE,
                        ksi.input = "auto",
@@ -88,7 +116,10 @@ STADF.test <- function(y,
 
     ## Part 4.2. Reindex.
     if (is.reindex == TRUE) {
-        c(., ., eta.hat, ., new.index) %<-% reindex(u.hat.star)
+        tmp.reindex <- reindex(u.hat.star)
+        eta.hat <- tmp.reindex$eta.hat
+        new.index <- tmp.reindex$new.index
+        rm(tmp.reindex)
     } else {
         new.index <- c(0:(N - 1))
     }
@@ -132,7 +163,6 @@ STADF.test <- function(y,
             trim = trim,
             const = const,
             omega.est = omega.est,
-            h = h,
             truncated = truncated,
             is.reindex = is.reindex,
             new.index = new.index,

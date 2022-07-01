@@ -1,5 +1,12 @@
 #' @title
 #' Supremum ADF tests with wild bootstrap.
+#' @order 1
+#'
+#' @description
+#' `SADF.bootstrap.test` is a wild bootstrapping procedure for estimating
+#' critical and \eqn{p}-values for [SADF.test].
+#'
+#' `GSADF.bootstrap.test` is the same procedure but for [GSADF.test].
 #'
 #' @param y An input time series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
@@ -8,8 +15,18 @@
 #' @param iter The number of iterations.
 #' @param seed The seed parameter for the random number generator.
 #'
-#' @return
-#' An object of type `sadf` (see )
+#' @return An object of type `sadf`. It's a list of:
+#' * `y`,
+#' * `trim`,
+#' * `const`,
+#' * `alpha`,
+#' * `iter`,
+#' * `seed`,
+#' * vector of \eqn{t}-values,
+#' * the value of the corresponding test statistic,
+#' * series of bootstrapped test statistics,
+#' * bootstrapped critical values,
+#' * \eqn{p}-value.
 #'
 #' @references
 #' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
@@ -20,13 +37,18 @@
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
+#' @importFrom stats quantile
+#' @importFrom stats rnorm
+#' @importFrom stats sd
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 SADF.bootstrap.test <- function(y,
                                 trim = 0.01 + 1.8 / sqrt(length(y)),
                                 const = TRUE,
                                 alpha = 0.05,
-                                iter = 4 * 200,
+                                iter = 999,
                                 seed = round(10^4 * sd(y))) {
     N <- length(y)
 

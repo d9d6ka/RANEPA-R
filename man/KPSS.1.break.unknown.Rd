@@ -11,21 +11,21 @@ KPSS.1.break.unknown(y, x, model, weakly.exog, ll.init)
 
 \item{x}{(Txk)-matrix of explanatory stochastic regressors}
 
-\item{model}{Scalar, denotes the deterministic component:
-\describe{
-\item{1}{for model An.}
-\item{2}{for model A.}
-\item{3}{for model B.}
-\item{4}{for model C.}
-\item{5}{for model D.}
-\item{6}{for model E.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: for model An,
+\item 2: for model A,
+\item 3: for model B,
+\item 4: for model C,
+\item 5: for model D,
+\item 6: for model E.
 }}
 
 \item{weakly.exog}{Exogeneity of the stochastic regressors
-\describe{
-\item{TRUE}{if the regressors are weakly exogenous,}
-\item{FALSE}{if the regressors are not weakly exogenous
-(DOLS is used in this case).}
+\itemize{
+\item \code{TRUE}: if the regressors are weakly exogenous,
+\item \code{FALSE}: if the regressors are not weakly exogenous
+(DOLS is used in this case).
 }}
 
 \item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}

@@ -11,7 +11,7 @@ lagn(x, i, na = NA)
 
 \item{i}{Size of lag (lead if negative).}
 
-\item{na}{Value to fill missing observations, `NA` by default.}
+\item{na}{Value to fill missing observations, \code{NA} by default.}
 }
 \value{
 Lagged or leaded vector.

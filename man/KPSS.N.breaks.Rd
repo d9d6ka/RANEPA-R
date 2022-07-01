@@ -25,22 +25,22 @@ KPSS.N.breaks(
 \item{x}{A matrix of (RHS) explanatory stochastic regressors.}
 
 \item{model}{A scalar or vector of
-\describe{
-\item{1}{for the break in const.}
-\item{2}{for the break in trend.}
-\item{3}{for the break in const and trend.}
+\itemize{
+\item 1: for the break in const,
+\item 2: for the break in trend,
+\item 3: for the break in const and trend.
 }}
 
 \item{break.point}{Array of structural breaks.}
 
-\item{trend}{Include trend if `TRUE`.}
+\item{const, trend}{Whether a constant or trend should be included.}
 
 \item{weakly.exog}{Boolean where we specify
 whether the stochastic regressors are exogenous or not
-\describe{
-\item{TRUE}{if the regressors are weakly exogenous,}
-\item{FALSE}{if the regressors are not weakly exogenous
-(DOLS is used in this case).}
+\itemize{
+\item \code{TRUE}: if the regressors are weakly exogenous,
+\item \code{FALSE}: if the regressors are not weakly exogenous
+(DOLS is used in this case).
 }}
 
 \item{lags.init, leads.init}{Scalars defininig the initial number of lags and
@@ -51,23 +51,24 @@ The final order of the parametric correction is selected
 using the BIC information criterion.}
 
 \item{kernel}{Kernel for calculating long-run variance
-\describe{
-\item{bartlett}{for Bartlett kernel.}
-\item{quadratic}{for Quadratic Spectral kernel.}
-\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+\itemize{
+\item \code{bartlett}: for Bartlett kernel,
+\item \code{quadratic}: for Quadratic Spectral kernel,
+\item \code{NULL} for the Kurozumi's proposal, using Bartlett kernel.
 }}
 
 \item{criterion}{Information criterion for DOLS lags and leads selection:
 aic, bic, hq, or lwz.}
 }
 \value{
-\describe{
-\item{beta}{DOLS estimates of the coefficients regressors.}
-\item{tests}{SC test (coinKPSS-test).}
-\item{resid}{Residuals of the model.}
-\item{t.beta}{t-statistics for `beta`.}
-\item{DOLS.lags}{The estimated number of lags and leads in DOLS.}
-\item{break_point}{Break points.}
+A list of
+\itemize{
+\item \code{beta}: DOLS estimates of the coefficients regressors,
+\item \code{tests}: SC test (coinKPSS-test),
+\item \code{resid}: Residuals of the model,
+\item \code{t.beta}: \eqn{t}-statistics for \code{beta},
+\item \code{DOLS.lags}: The estimated number of lags and leads in DOLS,
+\item \code{break_point}: Break points.
 }
 }
 \description{

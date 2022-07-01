@@ -1,18 +1,20 @@
 #' @title
+#' Critical values for KPSS test with 1 break
+#'
+#' @description
 #' Auxiliary function returning pre-calculated critical values for
-#' [KPSS.1.break()].
+#' [KPSS.1.break]
 #'
 #' @details
 #' The function is not intended to be used directly so it's not exported.
 #'
-#' @param model \describe{
-#' \item{1}{for model An.}
-#' \item{2}{for model A.}
-#' \item{3}{for model B.}
-#' \item{4}{for model C.}
-#' \item{5}{for model D.}
-#' \item{6}{for model E.}
-#' }
+#' @param model A scalar equal to
+#' * 1: for model An,
+#' * 2: for model A,
+#' * 3: for model B,
+#' * 4: for model C,
+#' * 5: for model D,
+#' * 6: for model E.
 #' @param break.point Position of the break point.
 #' @param N Number of observations.
 #' @param k Number of RHS variables.
@@ -22,25 +24,27 @@ critical.values.KPSS.1p <- function(model, break.point, N, k) {
     if (i == 0) i <- 1
     if (i == 10) i <- 9
 
-    m_vc <- .cval_KPSS_1p[[model]][[k]]
+    m_vc <- .cval_kpss_1p[[model]][[k]]
 
     return(m_vc[, i, drop = FALSE])
 }
 
 #' @title
+#' Critical values for KPSS test with 2 breaks
+#'
+#' @description
 #' Auxiliary function returning pre-calculated critical values for
-#' [KPSS.2.breaks()].
+#' [KPSS.2.breaks]
 #'
 #' @details
 #' The function is not intended to be used directly so it's not exported.
 #'
-#' @param model \describe{
-#' \item{1}{for the AA (without trend) model.}
-#' \item{2}{for the AA (with trend) model.}
-#' \item{3}{for the BB model.}
-#' \item{4}{for the CC model.}
-#' \item{5}{for the AC-CA model.}
-#' }
+#' @param model A scalar equal to
+#' * 1: for the AA (without trend) model,
+#' * 2: for the AA (with trend) model,
+#' * 3: for the BB model,
+#' * 4: for the CC model,
+#' * 5: for the AC-CA model.
 #' @param break.point Position of the break point.
 #' @param N Number of observations.
 critical.values.KPSS.2p <- function(model, break.point, N) {
@@ -53,7 +57,7 @@ critical.values.KPSS.2p <- function(model, break.point, N) {
         j <- j - 1
     }
 
-    v_vc <- .cval_KPSS_2p[[model]]
+    v_vc <- .cval_kpss_2p[[model]]
 
     return(
         c(
@@ -67,6 +71,9 @@ critical.values.KPSS.2p <- function(model, break.point, N) {
 
 
 #' @title
+#' Critical values for SADF-type tests
+#'
+#' @description
 #' Interpolating p-value for intermediate observation numbers for SADF-type
 #' tests.
 #'
@@ -97,7 +104,7 @@ p.values.SADF <- function(statistic, N.obs, cr.values) {
         length(cr.values[[as.character(i.1)]])
 
     if (i.0 != i.1) {
-        p.value <- p.0 + (p.1 - p.0) * (N - i.0) / (i.1 - i.0)
+        p.value <- p.0 + (p.1 - p.0) * (N.obs - i.0) / (i.1 - i.0)
     } else {
         p.value <- p.0
     }

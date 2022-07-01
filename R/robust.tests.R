@@ -7,8 +7,6 @@
 #' @param season Whether the seasonal adjustment is needed.
 #' @param trim Trimming value for a possible break date bounds.
 #'
-#' @importFrom zeallot %<-%
-#'
 #' @export
 robust.tests.single <- function(y,
                                 const = FALSE, trend = FALSE, season = FALSE,
@@ -25,7 +23,7 @@ robust.tests.single <- function(y,
             x.const,
             seasonal.dummies(N)
         )
-        c(., y, ., .) %<-% OLS(y, SEAS)
+        y <- OLS(y, SEAS)$residuals
     }
 
     result <- MDF.single(
@@ -51,8 +49,6 @@ robust.tests.single <- function(y,
 #' @param breaks Number of breaks.
 #' @param trim Trimming value for a possible break date bounds.
 #'
-#' @importFrom zeallot %<-%
-#'
 #' @export
 robust.tests.multiple <- function(y,
                                   const = FALSE, season = FALSE,
@@ -71,7 +67,7 @@ robust.tests.multiple <- function(y,
             x.const,
             seasonal.dummies(N)
         )
-        c(., y, ., .) %<-% OLS(y, SEAS)
+        y <- OLS(y, SEAS)$residuals
     }
 
     m.star <- KP(

@@ -11,33 +11,35 @@ KPSS.1.break(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 
 \item{x}{A matrix of (RHS) explanatory stochastic regressors.}
 
-\item{model}{\describe{
-\item{1}{for model An.}
-\item{2}{for model A.}
-\item{3}{for model B.}
-\item{4}{for model C.}
-\item{5}{for model D.}
-\item{6}{for model E.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: for model An,
+\item 2: for model A,
+\item 3: for model B,
+\item 4: for model C,
+\item 5: for model D,
+\item 6: for model E.
 }}
 
 \item{break.point}{Position of the break point.}
 
 \item{weakly.exog}{Exogeneity of the stochastic regressors
-\describe{
-\item{TRUE}{if the regressors are weakly exogenous,}
-\item{FALSE}{if the regressors are not weakly exogenous
-(DOLS is used in this case).}
+\itemize{
+\item \code{TRUE}: if the regressors are weakly exogenous,
+\item \code{FALSE}: if the regressors are not weakly exogenous
+(DOLS is used in this case).
 }}
 
 \item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
 }
 \value{
-\describe{
-\item{beta}{DOLS estimates of the coefficients regressors.}
-\item{tests}{SC test (coinKPSS-test).}
-\item{resid}{Residuals of the model.}
-\item{t.beta}{Individual significance t-statistics.}
-\item{break_point}{Break points.}
+A list of:
+\itemize{
+\item \code{beta}: DOLS estimates of the coefficients regressors,
+\item \code{tests}: SC test (coinKPSS-test),
+\item \code{resid}: Residuals of the model,
+\item \code{t.beta}: Individual significance t-statistics,
+\item \code{break_point}: Break points.
 }
 }
 \description{

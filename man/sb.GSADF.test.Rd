@@ -2,21 +2,40 @@
 % Please edit documentation in R/sb.GSADF.test.R
 \name{sb.GSADF.test}
 \alias{sb.GSADF.test}
-\title{Sign-based SADF test (HLZ, 2019).}
+\title{Sign-based SADF test}
 \usage{
 sb.GSADF.test(
   y,
-  r0 = 0.01 + 1.8/sqrt(length(y)),
+  trim = 0.01 + 1.8/sqrt(length(y)),
   const = TRUE,
   alpha = 0.05,
-  iter = 4 * 200,
+  iter = 999,
   urs = TRUE,
   seed = round(10^4 * sd(y))
 )
 }
 \arguments{
 \item{y}{A series of interest.}
+
+\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+
+\item{const}{Whether the constant needs to be included.}
+
+\item{alpha}{Needed level of significance.}
+
+\item{iter}{Number of bootstrapping iterations.}
+
+\item{urs}{Use union of rejections strategy if \code{TRUE}.}
+
+\item{seed}{The seed parameter for the random number generator.}
 }
 \description{
-Sign-based SADF test (HLZ, 2019).
+Sign-based SADF test
+}
+\references{
+Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+“Sign-Based Unit Root Tests for Explosive Financial Bubbles
+in the Presence of Deterministically Time-Varying Volatility.”
+Econometric Theory 36, no. 1 (February 2020): 122–69.
+https://doi.org/10.1017/S0266466619000057.
 }

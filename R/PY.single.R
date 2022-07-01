@@ -7,14 +7,14 @@
 #' @param trim A trimming value for a possible break date bounds.
 #' @param max.lag The maximum possible lag in the model.
 #'
+#' @return A list of the estimated Wald statistic as well as its c.v.
+#'
 #' @references
 #' Perron, Pierre, and Tomoyoshi Yabu.
 #' “Testing for Shifts in Trend With an Integrated or
 #' Stationary Noise Component.”
 #' Journal of Business & Economic Statistics 27, no. 3 (July 2009): 369–96.
 #' https://doi.org/10.1198/jbes.2009.07268.
-#'
-#' @importFrom zeallot %<-%
 #'
 #' @export
 PY.single <- function(y,
@@ -97,12 +97,12 @@ PY.single <- function(y,
 
         k.hat <- max(1, AR(y, x, max.lag, criterion)$lag)
 
-        c(., resid, ., .) %<-% OLS(y, x)
+        resids <- OLS(y, x)$residuals
 
-        d.resid <- c(0, diff(resid))
+        d.resid <- c(0, diff(resids))
 
-        y.u <- resid[k.hat:N, , drop = FALSE]
-        x.u <- lagn(resid, 1, na = 0)
+        y.u <- resids[k.hat:N, , drop = FALSE]
+        x.u <- lagn(resids, 1, na = 0)
         if (k.hat > 1) {
             for (l in 1:(k.hat - 1)) {
                 x.u <- cbind(x.u, lagn(d.resid, l, na = 0))
@@ -110,7 +110,10 @@ PY.single <- function(y,
         }
         x.u <- x.u[k.hat:N, , drop = FALSE]
 
-        c(beta.u, u.resid, ., .) %<-% OLS(y.u, x.u)
+        tmp.OLS <- OLS(y.u, x.u)
+        beta.u <- tmp.OLS$beta
+        u.resid <- tmp.OLS$residuals
+        rm(tmp.OLS)
 
         VCV <- qr.solve(t(x.u) %*% x.u) *
             drop(t(u.resid) %*% u.resid) / nrow(u.resid)
@@ -159,7 +162,10 @@ PY.single <- function(y,
             x[2:N, , drop = FALSE] - a.hat.M * x[1:(N - 1), , drop = FALSE]
         )
 
-        c(beta.g, g.resid, ., .) %<-% OLS(y.g, x.g)
+        tmp.OLS <- OLS(y.g, x.g)
+        beta.g <- tmp.OLS$beta
+        g.resid <- tmp.OLS$residuals
+        rm(tmp.OLS)
 
         if (k.hat == 1)
             h0 <- drop(t(g.resid) %*% g.resid) / nrow(g.resid)
@@ -172,7 +178,10 @@ PY.single <- function(y,
                 y.v <- g.resid[(k.hat - 1):nrow(g.resid), , drop = FALSE]
                 x.v <- x.v[(k.hat - 1):nrow(g.resid), , drop = FALSE]
 
-                c(beta.v, v.resid, ., .) %<-% OLS(y.v, x.v)
+                tmp.OLS <- OLS(y.v, x.v)
+                beta.v <- tmp.OLS$beta
+                v.resid <- tmp.OLS$residuals
+                rm(tmp.OLS)
 
                 if (const && !trend) {
                     BETAS <- matrix(0, nrow = k.hat - 1, ncol = 3)
@@ -187,7 +196,7 @@ PY.single <- function(y,
                             x.ki[1, ],
                             x.ki[2:N, ] - a.hat.M * x.ki[1:(N - 1), ]
                         )
-                        c(beta.ki, ., ., .) %<-% OLS(y.g, x.g.ki)
+                        beta.ki <- OLS(y.g, x.g.ki)$beta
                         BETAS[k.i, ] <- drop(beta.ki)
                     }
                     beta.g[2] <- beta.g[2] -
@@ -211,7 +220,7 @@ PY.single <- function(y,
                             x.ki[1, ],
                             x.ki[2:N, ] - a.hat.M * x.ki[1:(N - 1), ]
                         )
-                        c(beta.ki, ., ., .) %<-% OLS(y.g, x.g.ki)
+                        beta.ki <- OLS(y.g, x.g.ki)$beta
                         BETAS[k.i, ] <- drop(beta.ki)
                         sig.e <- drop(t(v.resid) %*% v.resid) / (N - k.hat)
                         h0 <- sig.e / ((1 - sum(beta.v))^2)
@@ -222,7 +231,7 @@ PY.single <- function(y,
             }
 
             if (abs(a.hat.M) < 1)
-                c(h0, m) %<-% lr.var.quadratic(g.resid)
+                h0 <- lr.var.quadratic(g.resid)$lrv
         }
 
         VCV <- h0 * qr.solve(t(x.g) %*% x.g)
@@ -232,10 +241,10 @@ PY.single <- function(y,
 
     wald <- log(sum(exp(vect1 / 2)) / N)
     if (trim == 0.01) cv <- c.v[1, ]
-	if (trim == 0.05) cv <- c.v[2, ]
-	if (trim == 0.10) cv <- c.v[3, ]
-	if (trim == 0.15) cv <- c.v[4, ]
-	if (trim == 0.25) cv <- c.v[5, ]
+    if (trim == 0.05) cv <- c.v[2, ]
+    if (trim == 0.10) cv <- c.v[3, ]
+    if (trim == 0.15) cv <- c.v[4, ]
+    if (trim == 0.25) cv <- c.v[5, ]
 
     return(
         list(

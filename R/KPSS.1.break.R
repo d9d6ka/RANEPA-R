@@ -11,30 +11,26 @@
 #'
 #' @param y An input (LHS) time series of interest.
 #' @param x A matrix of (RHS) explanatory stochastic regressors.
-#' @param model \describe{
-#' \item{1}{for model An.}
-#' \item{2}{for model A.}
-#' \item{3}{for model B.}
-#' \item{4}{for model C.}
-#' \item{5}{for model D.}
-#' \item{6}{for model E.}
-#' }
+#' @param model A scalar equal to
+#' * 1: for model An,
+#' * 2: for model A,
+#' * 3: for model B,
+#' * 4: for model C,
+#' * 5: for model D,
+#' * 6: for model E.
 #' @param break.point Position of the break point.
 #' @param weakly.exog Exogeneity of the stochastic regressors
-#' \describe{
-#' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous
-#' (DOLS is used in this case).}
-#' }
+#' * `TRUE`: if the regressors are weakly exogenous,
+#' * `FALSE`: if the regressors are not weakly exogenous
+#' (DOLS is used in this case).
 #' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
 #'
-#' @return \describe{
-#' \item{beta}{DOLS estimates of the coefficients regressors.}
-#' \item{tests}{SC test (coinKPSS-test).}
-#' \item{resid}{Residuals of the model.}
-#' \item{t.beta}{Individual significance t-statistics.}
-#' \item{break_point}{Break points.}
-#' }
+#' @return A list of:
+#' * `beta`: DOLS estimates of the coefficients regressors,
+#' * `tests`: SC test (coinKPSS-test),
+#' * `resid`: Residuals of the model,
+#' * `t.beta`: Individual significance t-statistics,
+#' * `break_point`: Break points.
 #'
 #' @references
 #' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
@@ -42,7 +38,6 @@
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
-#' @importFrom zeallot %<-%
 #' @export
 KPSS.1.break <- function(y, x,
                          model, break.point,
@@ -74,31 +69,40 @@ KPSS.1.break <- function(y, x,
             xt <- cbind(deter, x, xdu)
         }
 
-        c(beta, resid, ., t.beta) %<-% OLS(y, xt)
+        tmp.OLS <- OLS(y, xt)
+        beta <- tmp.OLS$beta
+        resids <- tmp.OLS$residuals
+        t.beta <- tmp.OLS$t.beta
+        rm(tmp.OLS)
     } else {
         bic.min <- Inf
         for (i in ll.init:1) {
-            c(beta, resid, bic, t.beta) %<-%
-                DOLS(y, x, model, break.point, i, i)
+            tmp.DOLS <- DOLS(y, x, model, break.point, i, i)
+            beta <- tmp.DOLS$beta
+            resids <- tmp.DOLS$residuals
+            bic <- tmp.DOLS$bic
+            t.beta <- tmp.DOLS$t.beta
+            rm(tmp.DOLS)
+
             if (bic < bic.min) {
                 bic.min <- bic
                 beta.min <- beta
                 t.beta.min <- t.beta
-                resid.min <- resid
+                resid.min <- resids
             }
         }
-        resid <- resid.min
+        resids <- resid.min
         beta <- beta.min
         t.beta <- t.beta.min
     }
 
-    test <- KPSS(resid, lr.var.bartlett.AK(resid))
+    test <- KPSS(resids, lr.var.bartlett.AK(resids))
 
     return(
         list(
             beta = beta,
             test = test,
-            resid = resid,
+            residuals = resids,
             t.beta = t.beta,
             break.point = break.point
         )
@@ -125,21 +129,17 @@ KPSS.1.break <- function(y, x,
 #'
 #' @param y (Tx1)-vector of the dependent variable
 #' @param x (Txk)-matrix of explanatory stochastic regressors
-#' @param model Scalar, denotes the deterministic component:
-#' \describe{
-#' \item{1}{for model An.}
-#' \item{2}{for model A.}
-#' \item{3}{for model B.}
-#' \item{4}{for model C.}
-#' \item{5}{for model D.}
-#' \item{6}{for model E.}
-#' }
+#' @param model A scalar equal to
+#' * 1: for model An,
+#' * 2: for model A,
+#' * 3: for model B,
+#' * 4: for model C,
+#' * 5: for model D,
+#' * 6: for model E.
 #' @param weakly.exog Exogeneity of the stochastic regressors
-#' \describe{
-#' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous
-#' (DOLS is used in this case).}
-#' }
+#' * `TRUE`: if the regressors are weakly exogenous,
+#' * `FALSE`: if the regressors are not weakly exogenous
+#' (DOLS is used in this case).
 #' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
 #'
 #' @return (2x2)-matrix, where the first rows gives the value of
@@ -153,7 +153,6 @@ KPSS.1.break <- function(y, x,
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
-#' @importFrom zeallot %<-%
 #' @export
 KPSS.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -165,10 +164,10 @@ KPSS.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
 
     for (i in 3:(N - 3)) {
         if (ll.init + 2 < i & i < N - 5 - ll.init) {
-            c(beta, tests, resid, t_b, tb) %<-%
-                KPSS.1.break(y, x, model, i, weakly.exog, ll.init)
-            temp.result[i - 2, 1] <- tests
-            temp.result[i - 2, 2] <- drop(t(resid) %*% resid)
+            tmp.kpss <- KPSS.1.break(y, x, model, i, weakly.exog, ll.init)
+            temp.result[i - 2, 1] <- tmp.kpss$test
+            temp.result[i - 2, 2] <-
+                drop(t(tmp.kpss$residuals) %*% tmp.kpss$residuals)
         } else {
             temp.result[i - 2, 1] <- 2^20
             temp.result[i - 2, 2] <- 2^20

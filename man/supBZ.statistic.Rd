@@ -16,11 +16,27 @@ supBZ.statistic(
 
 \item{trim}{Trimming parameter to determine the lower and upper bounds.}
 
-\item{sigma.sq}{Local non-parametric estimates of variance. If `NULL` they
+\item{sigma.sq}{Local non-parametric estimates of variance. If \code{NULL} they
 will be estimated via Nadaraya-Watson procedure.}
+
+\item{generalized}{Whether to calculate generalized statistic value.}
+}
+\value{
+A list of:
+\itemize{
+\item \code{y},
+\item \code{trim},
+\item \code{sigma.sq},
+\item \code{BZ.values}: a series of BZ-statistic,
+\item \code{supBZ.value}: the maximum of \code{supBZ.values},
+\item \code{h.est}: the estimated value of bandwidth if \code{sigma.sq} is \code{NULL}.
+}
 }
 \description{
 Calculate supBZ statistic
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }
 \references{
 Harvey, David I., Stephen J. Leybourne, and Yang Zu.

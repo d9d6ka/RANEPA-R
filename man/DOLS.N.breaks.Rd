@@ -20,11 +20,11 @@ DOLS.N.breaks(
 
 \item{x}{A matrix of explanatory (RHS) variables.}
 
-\item{model}{A scalar or vector of
-\describe{
-\item{1}{for the break in const.}
-\item{2}{for the break in trend.}
-\item{3}{for the break in const and trend.}
+\item{model}{A scalar or vector of break types:
+\itemize{
+\item 1: for the break in const.
+\item 2: for the break in trend.
+\item 3: for the break in const and trend.
 }}
 
 \item{break.point}{An array of moments of structural breaks.}
@@ -34,12 +34,13 @@ DOLS.N.breaks(
 \item{k.lags, k.leads}{A number of lags and leads in DOLS regression.}
 }
 \value{
-A list of
+A list of:
 \itemize{
 \item Estimates of coefficients,
 \item Estimates of residuals,
 \item A set of informational criterions values,
-\item \eqn{t}-statistics for the estimates of coefficients.}
+\item \eqn{t}-statistics for the estimates of coefficients.
+}
 }
 \description{
 Estimating DOLS regression for multiple known break points

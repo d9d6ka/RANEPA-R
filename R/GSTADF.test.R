@@ -1,13 +1,13 @@
 #' @rdname STADF.test
+#' @order 2
 #'
-#' @importFrom zeallot %<-%
+#' @importFrom stats sd
 #'
 #' @export
 GSTADF.test <- function(y,
                         trim = 0.01 + 1.8 / sqrt(length(y)),
                         const = FALSE,
                         omega.est = TRUE,
-                        h = "auto_CV",
                         truncated = TRUE,
                         is.reindex = TRUE,
                         ksi.input = "auto",
@@ -59,7 +59,10 @@ GSTADF.test <- function(y,
 
     ## Part 4.2. Reindex.
     if (is.reindex == TRUE) {
-        c(., ., eta.hat, ., new.index) %<-% reindex(u.hat.star)
+        tmp.reindex <- reindex(u.hat.star)
+        eta.hat <- tmp.reindex$eta.hat
+        new.index <- tmp.reindex$new.index
+        rm(tmp.reindex)
     } else {
         new.index <- c(0:(N - 1))
     }
@@ -105,7 +108,6 @@ GSTADF.test <- function(y,
             trim = trim,
             const = const,
             omega.est = omega.est,
-            h = h,
             truncated = truncated,
             is.reindex = is.reindex,
             new.index = new.index,

@@ -7,31 +7,26 @@
 #' @param y A dependent (LHS) variable.
 #' @param x A matrix of explanatory (RHS) variables.
 #' @param model See Carrion-i-Silvestre and Sansó (2006)
-#' \describe{
-#' \item{1}{for model An.}
-#' \item{2}{for model A.}
-#' \item{3}{for model B.}
-#' \item{4}{for model C.}
-#' \item{5}{for model D.}
-#' \item{6}{for model E.}
-#' }
+#' * 1: for model An.
+#' * 2: for model A.
+#' * 3: for model B.
+#' * 4: for model C.
+#' * 5: for model D.
+#' * 6: for model E.
 #' @param break.point A position of the break point.
 #' @param k.lags,k.leads A number of lags and leads in DOLS regression.
 #'
-#' @return A list of
-#' \itemize{
-#' \item Estimates of coefficients,
-#' \item Estimates of residuals,
-#' \item A value of BIC,
-#' \item \eqn{t}-statistics for the estimates of coefficients.}
+#' @return A list of:
+#' * Estimates of coefficients,
+#' * Estimates of residuals,
+#' * A value of BIC,
+#' * \eqn{t}-statistics for the estimates of coefficients.
 #'
 #' @references
 #' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
 #' “Testing the Null of Cointegration with Structural Breaks.”
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
-#'
-#' @importFrom zeallot %<-%
 DOLS <- function(y, x, model, break.point, k.lags, k.leads) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) {
@@ -108,21 +103,20 @@ DOLS <- function(y, x, model, break.point, k.lags, k.leads) {
         )
     }
 
-    c(beta, resid, ., t.beta) %<-%
-        OLS(
-            y[(k.lags + 2):(N - k.leads), 1, drop = FALSE],
-            xreg
-        )
+    res.OLS <- OLS(
+        y[(k.lags + 2):(N - k.leads), 1, drop = FALSE],
+        xreg
+    )
 
-    bic <- log(drop(t(resid) %*% resid) / nrow(xreg)) +
+    bic <- log(drop(t(res.OLS$residuals) %*% res.OLS$residuals) / nrow(xreg)) +
         ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
 
     return(
         list(
-            beta   = beta,
-            resid  = resid,
+            beta   = res.OLS$beta,
+            resid  = res.OLS$residuals,
             bic    = bic,
-            t.beta = t.beta
+            t.beta = res.OLS$t.beta
         )
     )
 }

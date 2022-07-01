@@ -1,5 +1,6 @@
 #' @title
-#' Weighted supremum ADF test.
+#' Weighted supremum ADF test
+#' @order 1
 #'
 #' @param y The input time series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
@@ -9,15 +10,49 @@
 #' @param urs Use `union of rejections` strategy.
 #' @param seed The seed parameter for the random number generator.
 #'
+#' @return An object of type `sadf`. It's a list of:
+#' * `y`,
+#' * `trim`,
+#' * `const`,
+#' * `alpha`,
+#' * `iter`,
+#' * `urs`,
+#' * `seed`,
+#' * `sigma.sq`: the estimated variance,
+#' * `BZ.values`: a series of BZ-statistic,
+#' * `supBZ.value`: the maximum of `supBZ.values`,
+#' * `supBZ.bootstsrap.values`: bootstrapped supremum BZ values,
+#' * `supBZ.cr.value`: supremum BZ \eqn{\alpha} critical value,
+#' * `p.value`,
+#' * `is.explosive`: 1 if `supBZ.value` is greater than `supBZ.cr.value`.
+#'
+#' if `urs` is `TRUE` the following items are also included:
+#' * vector of \eqn{t}-values,
+#' * the value of the SADF test statistic,
+#' * `SADF.bootstrap.values`: bootstrapped SADF values,
+#' * `U.value`: union test statistic value,
+#' * `U.bootstrap.values`: bootstrapped series of `U.value`,
+#' * `U.cr.value`: critical value of `U.value`.
+#'
 #' @references
 #' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
 #' “Testing Explosive Bubbles with Time-Varying Volatility.”
 #' Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
 #' https://doi.org/10.1080/07474938.2018.1536099.
 #'
+#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+#' “Time-Transformed Test for the Explosive Bubbles under
+#' Non-Stationary Volatility.”
+#' arXiv, November 15, 2021. http://arxiv.org/abs/2012.13937.
+#'
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
+#' @importFrom stats quantile
+#' @importFrom stats rnorm
+#' @importFrom stats sd
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 weighted.SADF.test <- function(y,

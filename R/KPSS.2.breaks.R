@@ -12,30 +12,28 @@
 #' See Carrion-i-Silvestre and Sansó (2007) for further details.
 #'
 #' @param y An input (LHS) time series of interest.
-#' @param model \describe{
-#' \item{1}{for the AA (without trend) model.}
-#' \item{2}{for the AA (with trend) model.}
-#' \item{3}{for the BB model.}
-#' \item{4}{for the CC model.}
-#' \item{5}{for the AC-CA model.}
-#' }
-#' @param tb1,tb2 The first and the second break points.
+#' @param model A scalar equal to
+#' * 1: for the AA (without trend) model,
+#' * 2: for the AA (with trend) model,
+#' * 3: for the BB model,
+#' * 4: for the CC model,
+#' * 5: for the AC-CA model.
+#' @param break.point Positions for the first and second structural breaks
+#'            (respective to the origin which is 1).
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using the
 #' BIC information criterion.
 #' @param kernel Kernel for calculating long-run variance
-#' \describe{
-#' \item{bartlett}{for Bartlett kernel.}
-#' \item{quadratic}{for Quadratic Spectral kernel.}
-#' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
-#' }
+#' * `bartlett`: for Bartlett kernel,
+#' * `quadratic`: for Quadratic Spectral kernel,
+#' * `NULL` for the Kurozumi's proposal, using Bartlett kernel.
 #'
-#' @return \describe{
-#' \item{beta}{DOLS estimates of the coefficients regressors.}
-#' \item{tests}{SC test (coinKPSS-test).}
-#' \item{resid}{Residuals of the model.}
-#' \item{break_point}{Break points.}
-#' }
+#' @return A list of:
+#' * `beta`: DOLS estimates of the coefficients regressors,
+#' * `tests`: SC test (coinKPSS-test),
+#' * `resid`: Residuals of the model,
+#' * `t.beta`: \eqn{t}-statistics for `beta`,
+#' * `break_point`: Break points.
 #'
 #' @references
 #' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
@@ -43,7 +41,6 @@
 #' Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
 #' https://doi.org/10.1007/s10108-006-9017-8.
 #'
-#' @importFrom zeallot %<-%
 #' @export
 KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -51,20 +48,27 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
     N <- nrow(y)
 
     z <- determinants.KPSS.2.breaks(model, N, break.point)
-    c(beta, resid, ., t.beta) %<-% OLS(y, z)
+
+    res.OLS <- OLS(y, z)
 
     if (!is.null(kernel)) {
-        test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
+        test <- KPSS(
+            res.OLS$residuals,
+            lr.var.SPC(res.OLS$residuals, max.lag, kernel)
+        )
     } else {
-        test <- KPSS(resid, lr.var.bartlett.AK(resid))
+        test <- KPSS(
+            res.OLS$residuals,
+            lr.var.bartlett.AK(res.OLS$residuals)
+        )
     }
 
     return(
         list(
-            beta = beta,
+            beta = res.OLS$beta,
             test = test,
-            resid = resid,
-            t.beta = t.beta,
+            residuals = res.OLS$residuals,
+            t.beta = res.OLS$t.beta,
             break_point = break.point
         )
     )
@@ -110,26 +114,31 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
-#' @importFrom zeallot %<-%
 #' @export
 KPSS.2.breaks.unknown <- function(y, model, max.lag = 0, kernel = "bartlett") {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
 
-    c(resid, tb1, tb2) %<-% segments.OLS.double(y, model)
+    res.segs <- segments.OLS.double(y, model)
 
     if (!is.null(kernel)) {
-        test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
+        test <- KPSS(
+            res.segs$residuals,
+            lr.var.SPC(res.segs$residuals, max.lag, kernel)
+        )
     } else {
-        test <- KPSS(resid, lr.var.bartlett.AK(resid))
+        test <- KPSS(
+            res.segs$residuals,
+            lr.var.bartlett.AK(res.segs$residuals)
+        )
     }
 
     return(
         list(
             test = test,
-            tb1 = tb1,
-            tb2 = tb2
+            tb1 = res.segs$tb1,
+            tb2 = res.segs$tb2
         )
     )
 }

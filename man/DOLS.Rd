@@ -12,13 +12,13 @@ DOLS(y, x, model, break.point, k.lags, k.leads)
 \item{x}{A matrix of explanatory (RHS) variables.}
 
 \item{model}{See Carrion-i-Silvestre and Sansó (2006)
-\describe{
-\item{1}{for model An.}
-\item{2}{for model A.}
-\item{3}{for model B.}
-\item{4}{for model C.}
-\item{5}{for model D.}
-\item{6}{for model E.}
+\itemize{
+\item 1: for model An.
+\item 2: for model A.
+\item 3: for model B.
+\item 4: for model C.
+\item 5: for model D.
+\item 6: for model E.
 }}
 
 \item{break.point}{A position of the break point.}
@@ -26,12 +26,13 @@ DOLS(y, x, model, break.point, k.lags, k.leads)
 \item{k.lags, k.leads}{A number of lags and leads in DOLS regression.}
 }
 \value{
-A list of
+A list of:
 \itemize{
 \item Estimates of coefficients,
 \item Estimates of residuals,
 \item A value of BIC,
-\item \eqn{t}-statistics for the estimates of coefficients.}
+\item \eqn{t}-statistics for the estimates of coefficients.
+}
 }
 \description{
 Estimating DOLS regression for multiple known break points

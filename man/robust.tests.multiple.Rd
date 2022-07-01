@@ -2,7 +2,7 @@
 % Please edit documentation in R/robust.tests.R
 \name{robust.tests.multiple}
 \alias{robust.tests.multiple}
-\title{A wrapping function around [KP()] and [MDF.multiple()].}
+\title{A wrapping function around \code{\link[=KP]{KP()}} and \code{\link[=MDF.multiple]{MDF.multiple()}}.}
 \usage{
 robust.tests.multiple(
   y,
@@ -24,5 +24,5 @@ robust.tests.multiple(
 \item{trim}{Trimming value for a possible break date bounds.}
 }
 \description{
-A wrapping function around [KP()] and [MDF.multiple()].
+A wrapping function around \code{\link[=KP]{KP()}} and \code{\link[=MDF.multiple]{MDF.multiple()}}.
 }

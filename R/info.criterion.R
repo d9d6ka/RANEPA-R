@@ -3,13 +3,12 @@
 #'
 #' @details
 #' Calculating the value of the following informational criterions:
-#' \itemize{
-#' \item Akaike,
-#' \item Schwarz (Bayesian),
-#' \item Hannan-Quinn,
-#' \item Liu et al.}
+#' * Akaike,
+#' * Schwarz (Bayesian),
+#' * Hannan-Quinn,
+#' * Liu et al.
 #'
-#' @param resid Input residuals needed for estimating the values of
+#' @param resids Input residuals needed for estimating the values of
 #' information criterions.
 #' @param extra Number of extra parameters needed for estimating the punishment
 #' term.
@@ -30,21 +29,21 @@
 #' https://doi.org/10.1111/1468-0262.00256.
 #'
 #' @export
-info.criterion <- function(resid, extra,
+info.criterion <- function(resids, extra,
                            modification = FALSE,
                            alpha = 0, y = NULL) {
-    if (!is.matrix(resid)) resid <- as.matrix(resid)
+    if (!is.matrix(resids)) resids <- as.matrix(resids)
 
-    N <- nrow(resid)
+    N <- nrow(resids)
 
     if (modification) {
-        s2 <- drop(t(resid) %*% resid) / N
+        s2 <- drop(t(resids) %*% resids) / N
         tau <- (alpha ^ 2) * drop(t(y) %*% y) / s2
     } else {
         tau <- 0
     }
 
-    log.RSS <- log(drop(t(resid) %*% resid) / N)
+    log.RSS <- log(drop(t(resids) %*% resids) / N)
 
     return(
         list(

@@ -2,19 +2,19 @@
 % Please edit documentation in R/critical.values.R
 \name{critical.values.KPSS.1p}
 \alias{critical.values.KPSS.1p}
-\title{Auxiliary function returning pre-calculated critical values for
-[KPSS.1.break()].}
+\title{Critical values for KPSS test with 1 break}
 \usage{
 critical.values.KPSS.1p(model, break.point, N, k)
 }
 \arguments{
-\item{model}{\describe{
-\item{1}{for model An.}
-\item{2}{for model A.}
-\item{3}{for model B.}
-\item{4}{for model C.}
-\item{5}{for model D.}
-\item{6}{for model E.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: for model An,
+\item 2: for model A,
+\item 3: for model B,
+\item 4: for model C,
+\item 5: for model D,
+\item 6: for model E.
 }}
 
 \item{break.point}{Position of the break point.}
@@ -25,7 +25,7 @@ critical.values.KPSS.1p(model, break.point, N, k)
 }
 \description{
 Auxiliary function returning pre-calculated critical values for
-[KPSS.1.break()].
+\link{KPSS.1.break}
 }
 \details{
 The function is not intended to be used directly so it's not exported.

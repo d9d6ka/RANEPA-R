@@ -4,10 +4,10 @@
 \alias{info.criterion}
 \title{Information criterions}
 \usage{
-info.criterion(resid, extra, modification = FALSE, alpha = 0, y = NULL)
+info.criterion(resids, extra, modification = FALSE, alpha = 0, y = NULL)
 }
 \arguments{
-\item{resid}{Input residuals needed for estimating the values of
+\item{resids}{Input residuals needed for estimating the values of
 information criterions.}
 
 \item{extra}{Number of extra parameters needed for estimating the punishment
@@ -34,7 +34,8 @@ Calculating the value of the following informational criterions:
 \item Akaike,
 \item Schwarz (Bayesian),
 \item Hannan-Quinn,
-\item Liu et al.}
+\item Liu et al.
+}
 }
 \references{
 Ng, Serena, and Pierre Perron. “Lag Length Selection and the Construction of

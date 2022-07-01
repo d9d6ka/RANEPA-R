@@ -7,7 +7,7 @@
 lr.var.bartlett.AK(y)
 }
 \arguments{
-\item{e}{(Tx1) vector or residuals.}
+\item{y}{(Tx1) vector or residuals.}
 }
 \value{
 Long-run variance.

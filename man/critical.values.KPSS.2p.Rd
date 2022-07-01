@@ -2,18 +2,18 @@
 % Please edit documentation in R/critical.values.R
 \name{critical.values.KPSS.2p}
 \alias{critical.values.KPSS.2p}
-\title{Auxiliary function returning pre-calculated critical values for
-[KPSS.2.breaks()].}
+\title{Critical values for KPSS test with 2 breaks}
 \usage{
 critical.values.KPSS.2p(model, break.point, N)
 }
 \arguments{
-\item{model}{\describe{
-\item{1}{for the AA (without trend) model.}
-\item{2}{for the AA (with trend) model.}
-\item{3}{for the BB model.}
-\item{4}{for the CC model.}
-\item{5}{for the AC-CA model.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: for the AA (without trend) model,
+\item 2: for the AA (with trend) model,
+\item 3: for the BB model,
+\item 4: for the CC model,
+\item 5: for the AC-CA model.
 }}
 
 \item{break.point}{Position of the break point.}
@@ -22,7 +22,7 @@ critical.values.KPSS.2p(model, break.point, N)
 }
 \description{
 Auxiliary function returning pre-calculated critical values for
-[KPSS.2.breaks()].
+\link{KPSS.2.breaks}
 }
 \details{
 The function is not intended to be used directly so it's not exported.

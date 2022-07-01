@@ -7,14 +7,15 @@
 determinants.KPSS.2.breaks(model, N, break.point)
 }
 \arguments{
-\item{model}{\describe{
-\item{1}{for the AA (without trend) model.}
-\item{2}{for the AA (with trend) model.}
-\item{3}{for the BB model.}
-\item{4}{for the CC model.}
-\item{5}{for the AC-CA model.}
-\item{6}{for the AC-CA model.}
-\item{7}{for the AC-CA model.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: for the AA (without trend) model,
+\item 2: for the AA (with trend) model,
+\item 3: for the BB model,
+\item 4: for the CC model,
+\item 5: for the AC-CA model,
+\item 6: for the AC-CA model,
+\item 7: for the AC-CA model.
 }}
 
 \item{N}{Number of observations.}

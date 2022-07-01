@@ -2,8 +2,7 @@
 % Please edit documentation in R/critical.values.R
 \name{p.values.SADF}
 \alias{p.values.SADF}
-\title{Interpolating p-value for intermediate observation numbers for SADF-type
-tests.}
+\title{Critical values for SADF-type tests}
 \usage{
 p.values.SADF(statistic, N.obs, cr.values)
 }

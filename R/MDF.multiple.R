@@ -8,7 +8,10 @@
 #' @param trim Trimming value for a possible break date bounds.
 #' @param ZA Whether ZA variant should be used.
 #'
-#' @importFrom zeallot %<-%
+#' @return A list of sublists each containing
+#' * The value of statistic: \eqn{MDF-GLS}, \eqn{MDF-OLS},
+#' * The asymptotic critical values.
+#' \eqn{UR} values are included as well.
 #'
 #' @export
 MDF.multiple <- function(y,
@@ -117,9 +120,9 @@ MDF.multiple <- function(y,
     x <- cbind(x.const, x.trend)
 
     ## GLS case
-    c(., resid.GLS.t, ., .) %<-% GLS(y, x, -13.5)
+    resid.GLS.t <- GLS(y, x, -13.5)$residuals
 
-    c(beta.OLS.t, resid.OLS.t, ., .) %<-% OLS(y, x)
+    resid.OLS.t <- OLS(y, x)$residuals
     DF.OLS.t <- ADF.test(resid.OLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
@@ -147,7 +150,7 @@ MDF.multiple <- function(y,
 
     for (tb1 in first.break:last.break) {
         DU1 <- as.numeric(x.trend > tb1)
-		DT1 <- DU1 * (x.trend - tb1)
+        DT1 <- DU1 * (x.trend - tb1)
 
         x <- cbind(
             x.const,
@@ -156,7 +159,7 @@ MDF.multiple <- function(y,
             DT1
         )
 
-        c(beta.OLS, resid.OLS, ., .) %<-% OLS(y, x)
+        resid.OLS <- OLS(y, x)$residuals
         DF1.tb <- ADF.test(resid.OLS,
                            const = FALSE, trend = FALSE,
                            max.lag = max.lag,
@@ -175,7 +178,7 @@ MDF.multiple <- function(y,
             stat.OLS <- DF1.tb$t.alpha
         }
 
-        c(., resid.GLS, ., .) %<-% GLS(y, x, -17.6)
+        resid.GLS <- GLS(y, x, -17.6)$residuals
         DF1.tb <- ADF.test(resid.GLS,
                            const = FALSE, trend = FALSE,
                            max.lag = k.t,
@@ -205,7 +208,7 @@ MDF.multiple <- function(y,
                 DT2
             )
 
-            c(beta.OLS, resid.OLS, ., .) %<-% OLS(y, x)
+            resid.OLS <- OLS(y, x)$residuals
             DF2.tb <- ADF.test(resid.OLS,
                 const = FALSE, trend = FALSE,
                 max.lag = max.lag,
@@ -226,7 +229,7 @@ MDF.multiple <- function(y,
                 stat.OLS <- DF2.tb$t.alpha
             }
 
-            c(., resid.GLS, ., .) %<-% GLS(y, x, -21.5)
+            resid.GLS <- GLS(y, x, -21.5)$residuals
             DF2.tb <- ADF.test(resid.GLS,
                 const = FALSE, trend = FALSE,
                 max.lag = k.t,
@@ -263,7 +266,7 @@ MDF.multiple <- function(y,
                     DT3
                 )
 
-                c(beta.OLS, resid.OLS, ., .) %<-% OLS(y, x)
+                resid.OLS <- OLS(y, x)$residuals
                 DF3.tb <- ADF.test(resid.OLS,
                     const = FALSE, trend = FALSE,
                     max.lag = max.lag,
@@ -284,7 +287,7 @@ MDF.multiple <- function(y,
                      stat.OLS <- DF3.tb$t.alpha
                  }
 
-                c(., resid.GLS, ., .) %<-% GLS(y, x, -25.5)
+                resid.GLS <- GLS(y, x, -25.5)$residuals
                 DF3.tb <- ADF.test(resid.GLS,
                     const = FALSE, trend = FALSE,
                     max.lag = k.t,
@@ -299,12 +302,12 @@ MDF.multiple <- function(y,
 
     ## Alternative break selection
     if (breaks == 2) {
-        c(tb1, tb2) %<-% segments.GLS(y, const, TRUE, 2)
+        tbs <- segments.GLS(y, const, TRUE, 2)
 
-        DU1 <- as.numeric(x.trend > tb1)
-        DT1 <- DU1 * (x.trend - tb1)
-        DU2 <- as.numeric(x.trend > tb2)
-        DT2 <- DU2 * (x.trend - tb2)
+        DU1 <- as.numeric(x.trend > tbs[1])
+        DT1 <- DU1 * (x.trend - tbs[1])
+        DU2 <- as.numeric(x.trend > tbs[2])
+        DT2 <- DU2 * (x.trend - tbs[2])
 
         x <- cbind(
             x.const,
@@ -315,19 +318,22 @@ MDF.multiple <- function(y,
             DT2
         )
 
-        c(bb, rr, ., .) %<-% OLS(y, x)
+        tmp.OLS <- OLS(y, x)
+        bb <- tmp.OLS$beta
+        rr <- tmp.OLS$residuals
+        rm(tmp.OLS)
         t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / N)
         t.alpha.2.id <- as.numeric(t.alpha > 1)
     }
     if (breaks == 3) {
-        c(tb1, tb2, tb3) %<-% segments.GLS(y, const, TRUE, 3)
+        tbs <- segments.GLS(y, const, TRUE, 3)
 
-        DU1 <- as.numeric(x.trend > tb1)
-        DT1 <- DU1 * (x.trend - tb1)
-        DU2 <- as.numeric(x.trend > tb2)
-        DT2 <- DU2 * (x.trend - tb2)
-        DU3 <- as.numeric(x.trend > tb3)
-        DT3 <- DU3 * (x.trend - tb3)
+        DU1 <- as.numeric(x.trend > tbs[1])
+        DT1 <- DU1 * (x.trend - tbs[1])
+        DU2 <- as.numeric(x.trend > tbs[2])
+        DT2 <- DU2 * (x.trend - tbs[2])
+        DU3 <- as.numeric(x.trend > tbs[3])
+        DT3 <- DU3 * (x.trend - tbs[3])
 
         x <- cbind(
             x.const,
@@ -340,7 +346,10 @@ MDF.multiple <- function(y,
             DT3
         )
 
-        c(bb, rr, ., .) %<-% OLS(y, x)
+        tmp.OLS <- OLS(y, x)
+        bb <- tmp.OLS$beta
+        rr <- tmp.OLS$residuals
+        rm(tmp.OLS)
         t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / N)
         t.alpha.3.id <- as.numeric(t.alpha > 1)
     }
@@ -395,7 +404,7 @@ MDF.multiple <- function(y,
             as.numeric(breaks.star == 0) *
             ((1-t.alpha.2.id) * ur2.2olsgls.sa + t.alpha.2.id * ur2.2ols.sa)
 
-        ## without pre-test	for breaks
+        ## without pre-test    for breaks
 
         ur2.ols.sa <- as.numeric(
         (DF.OLS.t < (sap.cv.ur.2 * sap.ur2.ols * cv.DF.OLS.t)) ||

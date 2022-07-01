@@ -1,5 +1,5 @@
 #' @title
-#' ADF.test - a simple implementation of ADF test
+#' A simple implementation of ADF test
 #'
 #' @description
 #' A function for ADF test with the ability to select the number of lags.
@@ -19,17 +19,16 @@
 #' @param rescale.criterion Whether the rescaling informational criterion
 #' is needed. Designed to cope with heteroscedasticity in residuals.
 #'
-#' @return List containing:
-#' \itemize{
-#' \item y
-#' \item const
-#' \item trend
-#' \item residuals
-#' \item coefficient estimates
-#' \item t-statistic value
-#' \item critical value
-#' \item Number of lags
-#' \item indicator of stationarity}
+#' @returns List containing:
+#' * y
+#' * const
+#' * trend
+#' * residuals
+#' * coefficient estimates
+#' * t-statistic value
+#' * critical value
+#' * Number of lags
+#' * indicator of stationarity
 #'
 #' @references
 #' Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
@@ -42,8 +41,6 @@
 #' Unit Root Tests with Good Size and Power.”
 #' Econometrica 69, no. 6 (2001): 1519–54.
 #' https://doi.org/10.1111/1468-0262.00256.
-#'
-#' @importFrom zeallot %<-%
 #'
 #' @export
 ADF.test <- function(y,
@@ -72,7 +69,7 @@ ADF.test <- function(y,
 
     ## Detrending
     if (!is.null(deter)) {
-        c(., yd, ., .) %<-% OLS(y, deter)
+        yd <- OLS(y, deter)$residuals
     } else {
         yd <- y
     }
@@ -90,17 +87,22 @@ ADF.test <- function(y,
         res.lag <- max.lag
     } else {
         if (rescale.criterion) {
-            c(d.yr, xr) %<-% CPST.rescale(d.y, x, deter, 0, max.lag)
+            tmp.rescale <- CPST.rescale(d.y, x, deter, 0, max.lag)
+            d.yr <- tmp.rescale$d.y
+            xr <- tmp.rescale$x
+            rm(tmp.rescale)
         } else {
             d.yr <- d.y
             xr <- x
         }
 
-        c(b, e, ., .) %<-%
-            OLS(
-                d.yr[(2 + max.lag):N, , drop = FALSE],
-                xr[(2 + max.lag):N, 1, drop = FALSE]
-            )
+        tmp.ols <- OLS(
+            d.yr[(2 + max.lag):N, , drop = FALSE],
+            xr[(2 + max.lag):N, 1, drop = FALSE]
+        )
+        b <- tmp.ols$beta
+        e <- tmp.ols$residuals
+        rm(tmp.ols)
 
         res.ic <- info.criterion(
             e, 0,
@@ -112,17 +114,23 @@ ADF.test <- function(y,
         for (l in 1:max.lag) {
             if (max.lag == 0) break
 
-            if (rescale.criterion)
-                c(d.yr, xr) %<-% CPST.rescale(d.y, x, deter, l, max.lag)
-            else {
+            if (rescale.criterion) {
+                tmp.rescale <- CPST.rescale(d.y, x, deter, l, max.lag)
+                d.yr <- tmp.rescale$d.y
+                xr <- tmp.rescale$x
+                rm(tmp.rescale)
+            } else {
                 d.yr <- d.y
                 xr <- x
             }
 
-            c(b, e, ., .) %<-% OLS(
+            tmp.ols <- OLS(
                 d.yr[(2 + max.lag):N, , drop = FALSE],
                 xr[(2 + max.lag):N, 1:(1 + l), drop = FALSE]
             )
+            b <- tmp.ols$beta
+            e <- tmp.ols$residuals
+            rm(tmp.ols)
 
             tmp.ic <- info.criterion(
                 e, l,
@@ -137,13 +145,12 @@ ADF.test <- function(y,
         }
     }
 
-    c(res.beta, res.resid, ., res.t.beta) %<-%
-        OLS(
-            d.y[(2 + res.lag):N, , drop = FALSE],
-            x[(2 + res.lag):N, 1:(1 + res.lag), drop = FALSE]
-        )
+    res.OLS <- OLS(
+        d.y[(2 + res.lag):N, , drop = FALSE],
+        x[(2 + res.lag):N, 1:(1 + res.lag), drop = FALSE]
+    )
 
-    Z.stat <- (N - res.lag - 1) * drop(res.beta[1] - 1)
+    Z.stat <- (N - res.lag - 1) * drop(res.OLS$beta[1] - 1)
 
     return(
         list(
@@ -151,12 +158,12 @@ ADF.test <- function(y,
             yd = drop(yd),
             const = const,
             trend = trend,
-            beta = res.beta,
-            t.beta = drop(res.t.beta),
-            alpha = drop(res.beta[1]),
-            t.alpha = drop(res.t.beta[1]),
+            beta = res.OLS$beta,
+            t.beta = drop(res.OLS$t.beta),
+            alpha = drop(res.OLS$beta[1]),
+            t.alpha = drop(res.OLS$t.beta[1]),
             Z.stat = Z.stat,
-            residuals = res.resid,
+            residuals = res.OLS$residuals,
             lag = res.lag
         )
     )
@@ -164,7 +171,7 @@ ADF.test <- function(y,
 
 
 #' @title
-#' Generating rescaled series as in Cavaliere et al. (2015).
+#' Generating rescaled series as in Cavaliere et al. (2015)
 #'
 #' @description
 #' This rescaling procedure is needed to cope with possible heteroscedasticity
@@ -186,10 +193,8 @@ ADF.test <- function(y,
 #' in the Presence of Nonstationary Volatility.”
 #' Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
 #' https://doi.org/10.1080/07474938.2013.808065.
-#'
-#' @importFrom zeallot %<-%
 CPST.rescale <- function(d.y, x, deter, k, max.lag) {
-    c(., e, ., .) %<-% OLS(d.y, x[, 1:(1 + k), drop = FALSE])
+    e <- OLS(d.y, x[, 1:(1 + k), drop = FALSE])$residuals
 
     NW.se <- NW.volatility(
         e,
@@ -198,8 +203,9 @@ CPST.rescale <- function(d.y, x, deter, k, max.lag) {
 
     yr <- cumsum(d.y / NW.se)
 
-    if (!is.null(deter))
-        c(., yr, ., .) %<-% OLS(yr, deter)
+    if (!is.null(deter)) {
+        yr <- OLS(yr, deter)$residuals
+    }
 
     d.yr <- as.matrix(c(0, diff(yr)))
 

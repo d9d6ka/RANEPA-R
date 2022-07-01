@@ -1,8 +1,14 @@
 #' @rdname SADF.bootstrap.test
+#' @order 2
 #'
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
+#' @importFrom stats quantile
+#' @importFrom stats rnorm
+#' @importFrom stats sd
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 GSADF.bootstrap.test <- function(y,

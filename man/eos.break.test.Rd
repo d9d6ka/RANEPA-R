@@ -16,11 +16,11 @@ supported.}
 \item{dataset}{Source of the data.}
 }
 \value{
-The list, containing
+A list of
 \itemize{
-\item `m`
-\item estimated values of P- and R-tests.
-\item sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j}.
+\item \code{m},
+\item estimated values of P- and R-tests,
+\item sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j},
 \item the corresponding p-values.
 }
 }

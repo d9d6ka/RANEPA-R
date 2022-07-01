@@ -7,52 +7,46 @@
 #' @param y An input (LHS) time series of interest.
 #' @param x A matrix of (RHS) explanatory stochastic regressors.
 #' @param model A scalar or vector of
-#' \describe{
-#' \item{1}{for the break in const.}
-#' \item{2}{for the break in trend.}
-#' \item{3}{for the break in const and trend.}
-#' }
+#' * 1: for the break in const,
+#' * 2: for the break in trend,
+#' * 3: for the break in const and trend.
 #' @param break.point Array of structural breaks.
 #' @param const Include constant if **TRUE**.
 #' @param trend Include trend if **TRUE**.
-#' @param weakly.exog Exogeneity of the stochastic regressors
-#' \describe{
-#' \item{TRUE}{if the regressors are weakly exogenous,}
-#' \item{FALSE}{if the regressors are not weakly exogenous
-#' (DOLS is used in this case).}
-#' }
+#' @param weakly.exog Boolean where we specify
+#' whether the stochastic regressors are exogenous or not
+#' * `TRUE`: if the regressors are weakly exogenous,
+#' * `FALSE`: if the regressors are not weakly exogenous
+#' (DOLS is used in this case).
 #' @param lags.init,leads.init Scalars defininig the initial number of lags and
 #' leads for DOLS.
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using the BIC
 #' information criterion.
 #' @param kernel Kernel for calculating long-run variance
-#' \describe{
-#' \item{bartlett}{for Bartlett kernel.}
-#' \item{quadratic}{for Quadratic Spectral kernel.}
-#' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
-#' }
+#' * `bartlett`: for Bartlett kernel,
+#' * `quadratic`: for Quadratic Spectral kernel,
+#' * `NULL` for the Kurozumi's proposal, using Bartlett kernel.
 #' @param iter Number of bootstrap iterations.
 #' @param bootstrap Type of bootstrapping:
-#' \describe{
-#' \item{sample}{sampling from residuals with replacement.}
-#' \item{Cavaliere-Taylor}{multiplying residuals by \eqn{N(0, 1)}-distributed
-#' variable.}
-#' \item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
-#' }
+#' * `"sample"`: sampling from residuals with replacement,
+#' * `"Cavaliere-Taylor"`: multiplying residuals by \eqn{N(0, 1)}-distributed
+#' variable,
+#' * `"Rademacher"`: multiplying residuals by Rademacher-distributed variable.
 #' @param criterion Information criterion for DOLS lags and leads selection:
 #' aic, bic or lwz.
 #'
-#' @return List of 3 elements:
-#' \describe{
-#' \item{test}{The value of KPSS test statistic.}
-#' \item{p.value}{The estimates p-value.}
-#' \item{bootstrapped}{Bootstrapped auxiliary statistics.}}
+#' @return A list of:
+#' * `test`: The value of KPSS test statistic,
+#' * `p.value`: The estimates p-value,
+#' * `bootstrapped`: Bootstrapped auxiliary statistics.
 #'
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
-#' @importFrom zeallot %<-%
+#' @importFrom stats rnorm
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 KPSS.N.breaks.bootstrap <- function(y, x,
@@ -71,16 +65,20 @@ KPSS.N.breaks.bootstrap <- function(y, x,
 
     N <- nrow(y)
 
-    c(., test, u, ., DOLS.lags, DOLS.leads, .) %<-%
-        KPSS.N.breaks(
-            y, x,
-            model, break.point,
-            const, trend,
-            weakly.exog,
-            lags.init, leads.init,
-            max.lag, kernel,
-            criterion
-        )
+    tmp.kpss <- KPSS.N.breaks(
+        y, x,
+        model, break.point,
+        const, trend,
+        weakly.exog,
+        lags.init, leads.init,
+        max.lag, kernel,
+        criterion
+    )
+    test <- tmp.kpss$test
+    u <- tmp.kpss$residuals
+    DOLS.lags <- tmp.kpss$DOLS.lags
+    DOLS.leads <- tmp.kpss$DOLS.leads
+    rm(tmp.kpss)
 
     if (weakly.exog) {
         xreg <- cbind(
@@ -88,13 +86,12 @@ KPSS.N.breaks.bootstrap <- function(y, x,
             determinants.KPSS.N.breaks(model, N, break.point, const, trend)
         )
     } else {
-        c(., xreg) %<-%
-            DOLS.vars.N.breaks(
-                y, x,
-                model, break.point,
-                const, trend,
-                DOLS.lags, DOLS.leads
-            )
+        xreg <- DOLS.vars.N.breaks(
+            y, x,
+            model, break.point,
+            const, trend,
+            DOLS.lags, DOLS.leads
+        )$xreg
     }
 
     cores <- detectCores()
@@ -120,12 +117,12 @@ KPSS.N.breaks.bootstrap <- function(y, x,
             temp.y <- z * u
         }
 
-        c(beta, resid, ., .) %<-% OLS(temp.y, xreg)
+        resids <- OLS(temp.y, xreg)$residuals
 
         if (!is.null(kernel)) {
-            temp.test <- KPSS(resid, lr.var.SPC(resid, max.lag, kernel))
+            temp.test <- KPSS(resids, lr.var.SPC(resids, max.lag, kernel))
         } else {
-            temp.test <- KPSS(resid, lr.var.bartlett.AK(resid))
+            temp.test <- KPSS(resids, lr.var.bartlett.AK(resids))
         }
 
         temp.test

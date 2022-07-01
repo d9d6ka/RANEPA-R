@@ -8,17 +8,17 @@ determinants.KPSS.N.breaks(model, N, break.point, const = FALSE, trend = FALSE)
 }
 \arguments{
 \item{model}{A scalar or vector of
-\describe{
-\item{1}{for the break in const.}
-\item{2}{for the break in trend.}
-\item{3}{for the break in const and trend.}
+\itemize{
+\item 1: for the break in const,
+\item 2: for the break in trend,
+\item 3: for the break in const and trend.
 }}
 
 \item{N}{Number of observations.}
 
 \item{break.point}{Array of structural breaks.}
 
-\item{const, ternd}{Include constant and trend if `TRUE`.}
+\item{const, trend}{Include constant and trend if \code{TRUE}.}
 }
 \value{
 Matrix of deterministic terms.
@@ -28,7 +28,7 @@ Procedure to compute deterministic terms
 for KPSS with \eqn{m} structural breaks.
 }
 \details{
-**model** should be either a scalar or a vector of the same size as the
-**break.point**. If scalar **model** will be repeated till the length of
-**break.point** is achieved.
+\strong{model} should be either a scalar or a vector of the same size as the
+\strong{break.point}. If scalar \strong{model} will be repeated till the length of
+\strong{break.point} is achieved.
 }

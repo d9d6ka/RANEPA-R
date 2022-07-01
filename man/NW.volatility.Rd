@@ -11,7 +11,7 @@ NW.volatility(e, h, kernel = "unif")
 
 \item{h}{Bandwidth.}
 
-\item{kernel}{Needed kernel, currently only `unif` and `gauss`.}
+\item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}.}
 }
 \value{
 A list of arguments as well as the estimated omega and s.e.

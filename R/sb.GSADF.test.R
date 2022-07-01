@@ -1,24 +1,42 @@
 #' @title
-#' Sign-based SADF test (HLZ, 2019).
+#' Sign-based SADF test
 #'
 #' @param y A series of interest.
+#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param const Whether the constant needs to be included.
+#' @param alpha Needed level of significance.
+#' @param iter Number of bootstrapping iterations.
+#' @param urs Use union of rejections strategy if `TRUE`.
+#' @param seed The seed parameter for the random number generator.
+#'
+#' @references
+#' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+#' “Sign-Based Unit Root Tests for Explosive Financial Bubbles
+#' in the Presence of Deterministically Time-Varying Volatility.”
+#' Econometric Theory 36, no. 1 (February 2020): 122–69.
+#' https://doi.org/10.1017/S0266466619000057.
 #'
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
+#' @importFrom stats quantile
+#' @importFrom stats rnorm
+#' @importFrom stats sd
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 sb.GSADF.test <- function(y,
-                          r0 = 0.01 + 1.8 / sqrt(length(y)),
+                          trim = 0.01 + 1.8 / sqrt(length(y)),
                           const = TRUE,
                           alpha = 0.05,
-                          iter = 4 * 200,
+                          iter = 999,
                           urs = TRUE,
                           seed = round(10^4 * sd(y))) {
     N <- length(y)
 
     ## Find supSBADF_value.
-    supSBADF.model <- supSBADF.statistic(y, r0)
+    supSBADF.model <- supSBADF.statistic(y, trim)
 
     ## Do parallel.
     cores <- detectCores()
@@ -45,10 +63,10 @@ sb.GSADF.test <- function(y,
         tmp.GSADF.value <- NA
         supSBADF.value <- NA
         if (urs == TRUE) {
-            gsadf.model <- GSADF.test(y.star, r0, const)
+            gsadf.model <- GSADF.test(y.star, trim, const)
             tmp.GSADF.value <- gsadf.model$sadf.value
         }
-        supSBADF.model <- supSBADF.statistic(y.star, r0)
+        supSBADF.model <- supSBADF.statistic(y.star, trim)
         tmp.supSBADF.value <- supSBADF.model$supSBADF.value
         c(tmp.GSADF.value, tmp.supSBADF.value)
     }
@@ -67,12 +85,12 @@ sb.GSADF.test <- function(y,
     ## A union of rejections strategy.
     if (urs == TRUE) {
         ## Find sadf_value.
-        gsadf.model <- GSADF.test(y, r0, const)
+        gsadf.model <- GSADF.test(y, trim, const)
         t.values <- gsadf.model$t.values
         GSADF.value <- gsadf.model$GSADF.value
 
         ## Get sadf_supSBADF_bootstrap_values
-        GSADF.bootstrap.values <- SGADF.supSBADF.bootstrap.values[, 1]
+        GSADF.bootstrap.values <- GSADF.supSBADF.bootstrap.values[, 1]
 
         ## Find critical value.
         GSADF.cr.value <- as.numeric(quantile(
@@ -91,7 +109,8 @@ sb.GSADF.test <- function(y,
         for (b in 1:iter) {
             U.bootstrap.values[b] <- max(
                 GSADF.bootstrap.values[b],
-                GSADF.cr.value / supSBADF.cr.value * supSBADF.bootstrap.values[b]
+                GSADF.cr.value /
+                    supSBADF.cr.value * supSBADF.bootstrap.values[b]
             )
         }
 
@@ -111,7 +130,7 @@ sb.GSADF.test <- function(y,
     result <- c(
         list(
             y = y,
-            r0 = r0,
+            trim = trim,
             const = const,
             alpha = alpha,
             iter = iter,
@@ -128,8 +147,8 @@ sb.GSADF.test <- function(y,
             list(
                 t.values = t.values,
                 GSADF.value = GSADF.value,
-                GSADF.bootstrap.values = SADF.bootstrap.values,
-                GSADF.cr.value = SADF.cr.value,
+                GSADF.bootstrap.values = GSADF.bootstrap.values,
+                GSADF.cr.value = GSADF.cr.value,
                 U.value = U.value,
                 U.bootstrap.values = U.bootstrap.values,
                 U.cr.value = U.cr.value

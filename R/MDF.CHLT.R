@@ -6,6 +6,12 @@
 #' @param trim Trimming parameter for lag selection
 #' @param iter Number of bootstrap iterations.
 #'
+#' @return An object of type `mdfCHLT`. It's a list of four sublists
+#' each containing:
+#' * The value of \eqn{MZ_\alpha}, \eqn{MSB}, \eqn{MZ_t}, or \eqn{ADF},
+#' * The asymptotic c.v.,
+#' * The bootstrapped c.v.
+#'
 #' @references
 #' Cavaliere, Giuseppe, David I. Harvey, Stephen J. Leybourne,
 #' and A.M. Robert Taylor.
@@ -17,7 +23,9 @@
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
-#' @importFrom zeallot %<-%
+#' @importFrom stats rnorm
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 MDF.CHLT <- function(y,
@@ -115,12 +123,12 @@ MDF.CHLT <- function(y,
         cumsum(x.trend),
         cumsum(DT.tb.dy)
     )
-    c(., u.resid, ., .) %<-% OLS(z, x)
+    u.resid <- OLS(z, x)$residuals
     x <- cbind(
         x.trend,
         cumsum(x.trend)
     )
-    c(., r.resid, ., .) %<-% OLS(z, x)
+    r.resid <- OLS(z, x)$residuals
     W.stat.dy <- drop(t(r.resid) %*% r.resid) /
         drop(t(u.resid) %*% u.resid) - 1
 
@@ -136,8 +144,8 @@ MDF.CHLT <- function(y,
         x.trend
     )
 
-    c(., resid.GLS, ., .) %<-% GLS(y, x, -13.5)
-    c(., resid.OLS, ., .) %<-% OLS(y, x)
+    resid.GLS <- GLS(y, x, -13.5)$residuals
+    resid.OLS <- OLS(y, x)$residuals
     k.t <- ADF.test(
         resid.OLS,
         const = FALSE, trend = FALSE,
@@ -150,8 +158,12 @@ MDF.CHLT <- function(y,
         max.lag = k.t,
         criterion = NULL
     )$t.alpha
-    c(MZa, MSB, MZt) %<-%
-        MZ.statistic(resid.GLS, k.t)
+
+    tmp.MZ <- MZ.statistic(resid.GLS, k.t)
+    MZa <- tmp.MZ$mza
+    MSB <- tmp.MZ$msb
+    MZt <- tmp.MZ$mzt
+    rm(tmp.MZ)
 
     ## MZ
     if (tau.lam.MZ < trim) {
@@ -207,22 +219,20 @@ MDF.CHLT <- function(y,
                 weight.u * tau.cbar.MZt.cv.lim[tau.u.index, 3]
         }
 
-        c(., resid.GLS.bt, ., .) %<-%
-            GLS.bt(y, tau.lam.MZ, cbar.tau.lam.MZ)
+        resid.GLS.bt <- GLS.bt(y, tau.lam.MZ, cbar.tau.lam.MZ)$residuals
 
         tb.lam.MZ <- trunc(tau.lam.MZ * N)
         DTr <- as.numeric(x.trend > tb.lam.MZ) *
             (x.trend - tb.lam.MZ)
 
-        c(., resid.OLS.bt, ., .) %<-%
-            OLS(
-                y,
-                cbind(
-                    x.const,
-                    x.trend,
-                    DTr
-                )
+        resid.OLS.bt <- OLS(
+            y,
+            cbind(
+                x.const,
+                x.trend,
+                DTr
             )
+        )$residuals
 
         k.bt <- ADF.test(
             resid.OLS.bt,
@@ -231,11 +241,11 @@ MDF.CHLT <- function(y,
             criterion = NULL
         )$lag
 
-        c(
-            MZa.tau.lam.MZ,
-            MSB.tau.lam.MZ,
-            MZt.tau.lam.MZ
-        ) %<-% MZ.statistic(resid.GLS.bt, k.bt)
+        tmp.MZ <- MZ.statistic(resid.GLS.bt, k.bt)
+        MZa.tau.lam.MZ <- tmp.MZ$mza
+        MSB.tau.lam.MZ <- tmp.MZ$msb
+        MZt.tau.lam.MZ <- tmp.MZ$mzt
+        rm(tmp.MZ)
 
         HHLT.MZa.kMAIC <- MZa.tau.lam.MZ
         HHLT.MZa.kMAIC.cv <- cv.MZa.tau.lam.MZ.lim
@@ -285,22 +295,20 @@ MDF.CHLT <- function(y,
                 weight.u * tau.cbar.ADF.cv.lim[tau.u.index, 3]
         }
 
-        c(., resid.GLS.bt, ., .) %<-%
-            GLS.bt(y, tau.lam.ADF, cbar.tau.lam.ADF)
+        resid.GLS.bt <- GLS.bt(y, tau.lam.ADF, cbar.tau.lam.ADF)$residuals
 
         tb.lam.ADF <- trunc(tau.lam.ADF * N)
         DTr <- as.numeric(x.trend > tb.lam.ADF) *
             (x.trend - tb.lam.ADF)
 
-        c(., resid.OLS.bt, ., .) %<-%
-            OLS(
-                y,
-                cbind(
-                    x.const,
-                    x.trend,
-                    DTr
-                )
+        resid.OLS.bt <- OLS(
+            y,
+            cbind(
+                x.const,
+                x.trend,
+                DTr
             )
+        )$residuals
 
         k.bt <- ADF.test(
             resid.OLS.bt,
@@ -328,14 +336,13 @@ MDF.CHLT <- function(y,
     }
 
     ## Bootstrap
-    c(., eps, ., .) %<-%
-        OLS(
-            d.y,
-            cbind(
-                x.const,
-                DU.tb.dy
-            )[2:N, ]
-        )
+    eps <- OLS(
+        d.y,
+        cbind(
+            x.const,
+            DU.tb.dy
+        )[2:N, ]
+    )$residuals
     eps <- as.matrix(c(0, eps))
 
     cores <- detectCores()
@@ -356,34 +363,37 @@ MDF.CHLT <- function(y,
 
 
         if (tau.lam.MZ < trim) {
-            c(., resid.wb, ., .) %<-%
-                GLS(
-                    y.wb,
-                    cbind(
-                        x.const,
-                        x.trend
-                    ),
-                    -13.5
-                )
-            c(MZa.wb, MSB.wb, MZt.wb) %<-%
-                MZ.statistic(resid.wb, 0)
+            resid.wb <- GLS(
+                y.wb,
+                cbind(
+                    x.const,
+                    x.trend
+                ),
+                -13.5
+            )$residuals
+            MZ.wb <- MZ.statistic(resid.wb, 0)
+            MZa.wb <- MZ.wb$mza
+            MSB.wb <- MZ.wb$msb
+            MZt.wb <- MZ.wb$mzt
+            rm(MZ.wb)
         } else {
-            c(., resid.wb, ., .) %<-%
-                GLS.bt(y, tau.lam.MZ, cbar.tau.lam.MZ)
-            c(MZa.wb, MSB.wb, MZt.wb) %<-%
-                MZ.statistic(resid.wb, 0)
+            resid.wb <- GLS.bt(y, tau.lam.MZ, cbar.tau.lam.MZ)$residuals
+            MZ.wb <- MZ.statistic(resid.wb, 0)
+            MZa.wb <- MZ.wb$mza
+            MSB.wb <- MZ.wb$msb
+            MZt.wb <- MZ.wb$mzt
+            rm(MZ.wb)
         }
 
         if (tau.lam.ADF < trim) {
-            c(., resid.wb, ., .) %<-%
-                GLS(
-                    y.wb,
-                    cbind(
-                        x.const,
-                        x.trend
-                    ),
-                    -13.5
-                )
+            resid.wb <- GLS(
+                y.wb,
+                cbind(
+                    x.const,
+                    x.trend
+                ),
+                -13.5
+            )$residuals
             ers.ADF.wb <- ADF.test(
                 resid.wb,
                 const = FALSE, trend = FALSE,
@@ -391,8 +401,7 @@ MDF.CHLT <- function(y,
                 criterion = NULL
             )$t.alpha
         } else {
-            c(., resid.wb, ., .) %<-%
-                GLS.bt(y, tau.lam.ADF, cbar.tau.lam.ADF)
+            resid.wb <- GLS.bt(y, tau.lam.ADF, cbar.tau.lam.ADF)$residuals
             ers.ADF.wb <- ADF.test(
                 resid.wb,
                 const = FALSE, trend = FALSE,
@@ -438,11 +447,17 @@ MDF.CHLT <- function(y,
         )
     )
 
-    class(result) <- "mdfHHLT"
+    class(result) <- "mdfCHLT"
 
     return(result)
 }
 
+#' @title
+#' GLS fitering
+#'
+#' @param y Series of interest.
+#' @param trim Trimming parameter.
+#' @param c Filtering parameter.
 GLS.bt <- function(y, trim, c) {
     N <- nrow(y)
 

@@ -27,23 +27,24 @@ KPSS.N.breaks.bootstrap(
 \item{x}{A matrix of (RHS) explanatory stochastic regressors.}
 
 \item{model}{A scalar or vector of
-\describe{
-\item{1}{for the break in const.}
-\item{2}{for the break in trend.}
-\item{3}{for the break in const and trend.}
+\itemize{
+\item 1: for the break in const,
+\item 2: for the break in trend,
+\item 3: for the break in const and trend.
 }}
 
 \item{break.point}{Array of structural breaks.}
 
-\item{const}{Include constant if **TRUE**.}
+\item{const}{Include constant if \strong{TRUE}.}
 
-\item{trend}{Include trend if **TRUE**.}
+\item{trend}{Include trend if \strong{TRUE}.}
 
-\item{weakly.exog}{Exogeneity of the stochastic regressors
-\describe{
-\item{TRUE}{if the regressors are weakly exogenous,}
-\item{FALSE}{if the regressors are not weakly exogenous
-(DOLS is used in this case).}
+\item{weakly.exog}{Boolean where we specify
+whether the stochastic regressors are exogenous or not
+\itemize{
+\item \code{TRUE}: if the regressors are weakly exogenous,
+\item \code{FALSE}: if the regressors are not weakly exogenous
+(DOLS is used in this case).
 }}
 
 \item{lags.init, leads.init}{Scalars defininig the initial number of lags and
@@ -54,31 +55,32 @@ The final order of the parametric correction is selected using the BIC
 information criterion.}
 
 \item{kernel}{Kernel for calculating long-run variance
-\describe{
-\item{bartlett}{for Bartlett kernel.}
-\item{quadratic}{for Quadratic Spectral kernel.}
-\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+\itemize{
+\item \code{bartlett}: for Bartlett kernel,
+\item \code{quadratic}: for Quadratic Spectral kernel,
+\item \code{NULL} for the Kurozumi's proposal, using Bartlett kernel.
 }}
 
 \item{iter}{Number of bootstrap iterations.}
 
 \item{bootstrap}{Type of bootstrapping:
-\describe{
-\item{sample}{sampling from residuals with replacement.}
-\item{Cavaliere-Taylor}{multiplying residuals by \eqn{N(0, 1)}-distributed
-variable.}
-\item{Rademacher}{multiplying residuals by Rademacher-distributed variable.}
+\itemize{
+\item \code{"sample"}: sampling from residuals with replacement,
+\item \code{"Cavaliere-Taylor"}: multiplying residuals by \eqn{N(0, 1)}-distributed
+variable,
+\item \code{"Rademacher"}: multiplying residuals by Rademacher-distributed variable.
 }}
 
 \item{criterion}{Information criterion for DOLS lags and leads selection:
 aic, bic or lwz.}
 }
 \value{
-List of 3 elements:
-\describe{
-\item{test}{The value of KPSS test statistic.}
-\item{p.value}{The estimates p-value.}
-\item{bootstrapped}{Bootstrapped auxiliary statistics.}}
+A list of:
+\itemize{
+\item \code{test}: The value of KPSS test statistic,
+\item \code{p.value}: The estimates p-value,
+\item \code{bootstrapped}: Bootstrapped auxiliary statistics.
+}
 }
 \description{
 Procedure to compute the KPSS test with multiple unknown structural breaks

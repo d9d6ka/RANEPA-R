@@ -1,4 +1,5 @@
 #' @rdname SADF.test
+#' @order 2
 #'
 #' @export
 GSADF.test <- function(y,

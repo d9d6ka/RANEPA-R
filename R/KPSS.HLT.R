@@ -11,7 +11,6 @@
 #' “Unit Root Testing under a Local Break in Trend.”
 #' Journal of Econometrics 167, no. 1 (2012): 140–67.
 #'
-#' @importFrom zeallot %<-%
 #' @export
 KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -54,13 +53,13 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
             DT
         )
 
-        c(beta, resid, ., .) %<-% OLS(y, x)
+        tmp.OLS <- OLS(y, x)
 
-        lr.var.y <- lr.var.bartlett(resid, bartlett.lag)
+        lr.var.y <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
         inv.xx <- qr.solve(t(x) %*% x)
 
-        t0.stat <-
-            abs(beta[ncol(x)] / sqrt(lr.var.y * inv.xx[ncol(x), ncol(x)]))
+        t0.stat <- abs(tmp.OLS$beta[ncol(x)] / 
+                       sqrt(lr.var.y * inv.xx[ncol(x), ncol(x)]))
 
         x <- cbind(
             rep(1, N - 1),
@@ -68,13 +67,13 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
             DU[2:N]
         )
 
-        c(beta, resid, ., .) %<-% OLS(d.y, x)
+        tmp.OLS <- OLS(d.y, x)
 
-        lr.var.dy <- lr.var.bartlett(resid, bartlett.lag)
+        lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
         inv.xx <- qr.solve(t(x) %*% x)
 
-        t1.stat <-
-            abs(beta[ncol(x)] / sqrt(lr.var.dy * inv.xx[ncol(x), ncol(x)]))
+        t1.stat <- abs(tmp.OLS$beta[ncol(x)] / 
+                       sqrt(lr.var.dy * inv.xx[ncol(x), ncol(x)]))
 
         if (t0.stat > t0) {
             t0 <- t0.stat
@@ -96,10 +95,10 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
         DT0
     )
 
-    c(beta, resid, ., .) %<-% OLS(y, x)
+    tmp.OLS <- OLS(y, x)
 
-    lr.var.y <- lr.var.bartlett(resid, bartlett.lag)
-    kpss.y <- KPSS(resid, lr.var.y)
+    lr.var.y <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
+    kpss.y <- KPSS(tmp.OLS$residuals, lr.var.y)
 
     DU1 <- c(rep(0, tb1), rep(1, N - tb1))
 
@@ -109,10 +108,10 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
         DU1[2:N]
     )
 
-    c(beta, resid, ., .) %<-% OLS(d.y, x)
+    ctmp.OLS <- OLS(d.y, x)
 
-    lr.var.dy <- lr.var.bartlett(resid, bartlett.lag)
-    kpss.dy <- KPSS(resid, lr.var.dy)
+    lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
+    kpss.dy <- KPSS(tmp.OLS$residuals, lr.var.dy)
 
     lambda.kpss <- exp(-((500 * kpss.y * kpss.dy)^2))
     t.lambda.kpss <- lambda.kpss * t0 + m.ksi * (1 - lambda.kpss) * t1

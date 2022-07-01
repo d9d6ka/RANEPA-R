@@ -9,7 +9,7 @@ lr.var.bartlett(y, l = NULL)
 \arguments{
 \item{y}{A series of interest.}
 
-\item{l}{Number of lags/leads. If `NULL` then it's estimated.}
+\item{l}{Number of lags/leads. If \code{NULL} then it's estimated.}
 }
 \value{
 Long-run variance.

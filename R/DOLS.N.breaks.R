@@ -6,24 +6,21 @@
 #'
 #' @param y A dependent (LHS) variable.
 #' @param x A matrix of explanatory (RHS) variables.
-#' @param model A scalar or vector of
-#' \describe{
-#' \item{1}{for the break in const.}
-#' \item{2}{for the break in trend.}
-#' \item{3}{for the break in const and trend.}
-#' }
+#' @param model A scalar or vector of break types:
+#' * 1: for the break in const.
+#' * 2: for the break in trend.
+#' * 3: for the break in const and trend.
 #' @param break.point An array of moments of structural breaks.
 #' @param const,trend Whether a constant or trend are to be included.
 #' @param k.lags,k.leads A number of lags and leads in DOLS regression.
 #'
-#' @return A list of
-#' \itemize{
-#' \item Estimates of coefficients,
-#' \item Estimates of residuals,
-#' \item A set of informational criterions values,
-#' \item \eqn{t}-statistics for the estimates of coefficients.}
+#' @return A list of:
+#' * Estimates of coefficients,
+#' * Estimates of residuals,
+#' * A set of informational criterions values,
+#' * \eqn{t}-statistics for the estimates of coefficients.
 #'
-#' @importFrom zeallot %<-%
+#'
 DOLS.N.breaks <- function(y,
                           x,
                           model,
@@ -40,26 +37,26 @@ DOLS.N.breaks <- function(y,
 
     N <- nrow(y)
 
-    c(yreg, xreg) %<-%
-        DOLS.vars.N.breaks(
-            y, x,
-            model, break.point,
-            const, trend,
-            k.lags, k.leads
-        )
+    dols.vars <- DOLS.vars.N.breaks(
+        y, x,
+        model, break.point,
+        const, trend,
+        k.lags, k.leads
+    )
 
-    c(beta, resid, ., t.beta) %<-% OLS(yreg, xreg)
+    res.OLS <- OLS(dols.vars$yreg, dols.vars$xreg)
 
-    s2 <- drop(t(resid) %*% resid) / nrow(xreg)
+    s2 <- drop(t(res.OLS$residuals) %*% res.OLS$residuals) /
+        nrow(dols.vars$xreg)
 
-    criterions <- info.criterion(resid, ncol(xreg))
+    criterions <- info.criterion(res.OLS$residuals, ncol(dols.vars$xreg))
 
     return(
         list(
-            beta = beta,
-            resid = resid,
+            beta = res.OLS$beta,
+            residuals = res.OLS$residuals,
             criterions = criterions,
-            t.beta = t.beta
+            t.beta = res.OLS$t.beta
         )
     )
 }
@@ -74,11 +71,9 @@ DOLS.N.breaks <- function(y,
 #' @param y A dependent (LHS) variable.
 #' @param x A matrix of explanatory (RHS) variables.
 #' @param model A scalar or vector of
-#' \describe{
-#' \item{1}{for the break in const.}
-#' \item{2}{for the break in trend.}
-#' \item{3}{for the break in const and trend.}
-#' }
+#' * 1: for the break in const.
+#' * 2: for the break in trend.
+#' * 3: for the break in const and trend.
 #' @param break.point An array of moments of structural breaks.
 #' @param const,trend Whether a constant or trend are to be included.
 #' @param k.lags,k.leads A number of lags and leads in DOLS regression.

@@ -15,6 +15,16 @@ AR(y, x, max.lag, criterion = "aic")
 
 \item{criterion}{A criterion for lag number estimation.}
 }
+\value{
+A list of:
+\itemize{
+\item \code{beta}: estimates of coefficients,
+\item \code{residuals}: estimated residuals,
+\item \code{predict}: forecasted values,
+\item \code{t.beta}: \eqn{t}-statistics for \code{beta},
+\item \code{lag}: estimated number of lags.
+}
+}
 \description{
 Custom AR with extra information
 }

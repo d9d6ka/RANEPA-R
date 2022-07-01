@@ -1,5 +1,5 @@
 #' @title
-#' NW.estimation - Nadaraya–Watson kernel regression.
+#' Nadaraya–Watson kernel regression.
 #'
 #' @details
 #' The function is not intended to be used directly so it's not exported.
@@ -90,7 +90,7 @@ NW.volatility <- function(e, h, kernel = "unif") {
 
 
 #' @title
-#' NW.loocv - LOO-CV for h in Nadaraya–Watson kernel regression.
+#' LOO-CV for h in Nadaraya–Watson kernel regression.
 #'
 #' @details
 #' The function is not intended to be used directly so it's not exported.
@@ -142,6 +142,27 @@ NW.loocv <- function(y, x, kernel = "unif") {
     )
 }
 
+
+#' @title
+#' Nadaraya–Watson kernel series
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param i Current index.
+#' @param x Kernel variable.
+#' @param h Bandwidth.
+#' @param kernel Needed kernel, currently only `unif` and `gauss`.
+#'
+#' @references
+#' Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
+#' “Nonparametric Estimation of the Variance Function
+#' in an Explosive Autoregression Model.”
+#' School of Economics. University of Nottingham, 2022.
+#'
+#' @return A series of kernel function values.
+#'
+#' @importFrom stats pnorm
 NW.kernel <- function(i, x, h, kernel = "unif") {
     if (kernel == "unif") {
         W <- ifelse(abs((x - x[i]) / h) <= 1, 1, 0)

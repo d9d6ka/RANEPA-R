@@ -6,7 +6,10 @@
 #' @param trend Whether the trend term should be included.
 #' @param trim Trimming value for a possible break date bounds.
 #'
-#' @importFrom zeallot %<-%
+#' @return A list of sublists each containing
+#' * The value of statistic: \eqn{MDF-GLS}, \eqn{MDF-OLS},
+#' * The asymptotic critical values.
+#' \eqn{UR} values are included as well.
 #'
 #' @export
 MDF.single <- function(y,
@@ -16,7 +19,7 @@ MDF.single <- function(y,
 
     result <- list(
         const = const,
-        trend = trend,
+        trend = trend
     )
 
     ## Critical values
@@ -24,10 +27,10 @@ MDF.single <- function(y,
     cv.DF.OLS.m <- -2.85706
 
     cv.DF.GLS.t <- -2.84317
-	cv.MDF.GLS <- -3.84632
-	cv.DF.OLS.t <- -3.39735
-	cv.MDF.OLS <- -4.23
-	cv.MDF.t <- -4.25
+    cv.MDF.GLS <- -3.84632
+    cv.DF.OLS.t <- -3.39735
+    cv.MDF.OLS <- -4.23
+    cv.MDF.t <- -4.25
 
     if (const && trend) {
         cv.MDF.OLS <- -4.21172
@@ -39,16 +42,16 @@ MDF.single <- function(y,
     else
         cv.HLT <- 3.162
 
-	sap.ur <- 1.1009;
-	sap.ur1 <- 1.0514;
-	sap.ur2 <- 1.0317;
-	sap.ur3 <- 1.0364;
+    sap.ur <- 1.1009;
+    sap.ur1 <- 1.0514;
+    sap.ur2 <- 1.0317;
+    sap.ur3 <- 1.0364;
 
-	sap.cv.ur.HLT.k0 <- 1.0154
-	sap.cv.A.HLT.k0 <- 1.00
+    sap.cv.ur.HLT.k0 <- 1.0154
+    sap.cv.A.HLT.k0 <- 1.00
 
-	sap.cv.ur.PY.k0 <- 1.0159
-	sap.cv.A.PY.k0 <- 1.00
+    sap.cv.ur.PY.k0 <- 1.0159
+    sap.cv.A.PY.k0 <- 1.00
 
     ## Start ##
     N <- nrow(y)
@@ -69,9 +72,9 @@ MDF.single <- function(y,
     tb <- drop(tb)
     result$break.time <- tb
 
-    tau <- tb / N
-    cv.MDF.GLS.lib = cv.MDF.GLS ## CV(tau, cv_MDF_GLS_lib_1,trm);
-    cv.MDF.OLS.lib = cv.MDF.OLS ## CV(tau, cv_MDF_OLS_lib_1,trm);
+    ## tau <- tb / N
+    cv.MDF.GLS.lib <- cv.MDF.GLS ## CV(tau, cv_MDF_GLS_lib_1,trm);
+    cv.MDF.OLS.lib <- cv.MDF.OLS ## CV(tau, cv_MDF_OLS_lib_1,trm);
 
     DU <- as.numeric(x.trend > tb)
     DT <- DU * (x.trend - tb)
@@ -85,7 +88,7 @@ MDF.single <- function(y,
 
     ## OLS/GLS ##
     ## Mean case
-    c(beta.OLS.m, resid.OLS.m, ., .) %<-% OLS(y, x[, 1, drop = FALSE])
+    resid.OLS.m <- OLS(y, x[, 1, drop = FALSE])$residuals
     DF.OLS.m <- ADF.test(resid.OLS.m,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
@@ -98,15 +101,15 @@ MDF.single <- function(y,
                          max.lag = k.m,
                          criterion = NULL)
 
-    c(., resid.GLS.m, ., .) %<-% GLS(y, x[, 1, drop = FALSE], -7)
+    resid.GLS.m <- GLS(y, x[, 1, drop = FALSE], -7)$residuals
     DF.GLS.m <- ADF.test(resid.GLS.m,
                          const = FALSE, trend = FALSE,
                          max.lag = k.m,
                          criterion = NULL)
-    denom.m <- 1 - sum(DF.GLS.m$beta) + DF.GLS.m$alpha
+    ## denom.m <- 1 - sum(DF.GLS.m$beta) + DF.GLS.m$alpha
 
     ## Trend case
-    c(beta.OLS.t, resid.OLS.t, ., .) %<-% OLS(y, x[, 1:2])
+    resid.OLS.t <- OLS(y, x[, 1:2])$residuals
     DF.OLS.t <- ADF.test(resid.OLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
@@ -119,7 +122,7 @@ MDF.single <- function(y,
                          max.lag = k.t,
                          criterion = NULL)
 
-    c(., resid.GLS.t, ., .) %<-% GLS(y, x[, 1:2], -13.5)
+    resid.GLS.t <- GLS(y, x[, 1:2], -13.5)$residuals
     DF.GLS.t <- ADF.test(resid.GLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = k.t,
@@ -127,7 +130,7 @@ MDF.single <- function(y,
     denom.t <- 1 - sum(DF.GLS.t$beta) + DF.GLS.t$alpha
 
     ## ADF-OLS (lambda) ##
-    c(beta.OLS, resid.OLS, ., .) %<-% OLS(y, x)
+    resid.OLS <- OLS(y, x)$residuals
     DF1 <- ADF.test(resid.OLS,
                     const = FALSE, trend = FALSE,
                     max.lag = max.lag,
@@ -154,7 +157,7 @@ MDF.single <- function(y,
             if (trend) DT1 else NULL
         )
 
-        c(beta.OLS, resid.OLS, ., .) %<-% OLS(y, z)
+        resid.OLS <- OLS(y, z)$residuals
         DF1.tb <- ADF.test(resid.OLS,
                            const = FALSE, trend = FALSE,
                            max.lag = max.lag,
@@ -162,7 +165,7 @@ MDF.single <- function(y,
                            modified.criterion = TRUE)
         k.tb <- max(1, DF1.tb$lag)
 
-        c(., resid.GLS, ., .) %<-% GLS(y, z, -17.6)
+        resid.GLS <- GLS(y, z, -17.6)$residuals
         DF1.tb <- ADF.test(resid.GLS,
                            const = FALSE, trend = FALSE,
                            max.lag = k.tb,
@@ -182,7 +185,7 @@ MDF.single <- function(y,
             DT1
         )
 
-        c(beta.OLS, resid.OLS, ., .) %<-% OLS(y, z)
+        resid.OLS <- OLS(y, z)$residuals
         DF2 <- ADF.test(resid.OLS,
                         const = FALSE, trend = FALSE,
                         max.lag = max.lag,
@@ -201,13 +204,18 @@ MDF.single <- function(y,
 
 
     t.HLT <- KPSS.HLT(y, const, trim)
-    c(t.PY, cv.PY) %<-% PY.single(y, const, trend, "aic", trim, max.lag)
+    tmp.PY <- PY.single(y, const, trend, "aic", trim, max.lag)
+    t.PY <- tmp.PY$wald
+    cv.PY <- tmp.PY$critical.value
+    rm(tmp.PY)
 
-    t.alpha <- beta.OLS[1] / sqrt(drop(t(resid.OLS) %*% resid.OLS) / N)
+    tmp.OLS <- OLS(y, x)
+    t.alpha <- tmp.OLS$beta[1] /
+        sqrt(drop(t(tmp.OLS$residuals) %*% tmp.OLS$residuals) / N)
     t.alpha.id = as.numeric(abs(t.alpha) > 1)
 
     ## UR-HLT
-    t.lambda.id = as.numeric(t.HLT > cv.HLT)
+    t.lambda.id <- as.numeric(t.HLT > cv.HLT)
     ur.id.sa <- as.numeric(
     (DF.GLS.t$t.alpha < (sap.ur * sap.cv.ur.HLT.k0 * cv.DF.OLS.t)) ||
     (MDF.GLS < (sap.ur * sap.cv.ur.HLT.k0 * cv.MDF.GLS)) ||
@@ -230,7 +238,7 @@ MDF.single <- function(y,
         t.lambda.id * t.alpha.id * ur3.id.sa
 
     ## UR-PY
-    t.lambda.id = as.numeric(t.PY > cv.PY[2])
+    t.lambda.id <- as.numeric(t.PY > cv.PY[2])
     ur.id.sa <- as.numeric(
     (DF.GLS.t$t.alpha < (sap.ur * sap.cv.ur.PY.k0 * cv.DF.GLS.t)) ||
     (MDF.GLS < (sap.ur * sap.cv.ur.PY.k0 * cv.MDF.GLS)) ||

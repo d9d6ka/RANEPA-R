@@ -24,6 +24,9 @@ PY.single(
 
 \item{max.lag}{The maximum possible lag in the model.}
 }
+\value{
+A list of the estimated Wald statistic as well as its c.v.
+}
 \description{
 Perron-Yabu (2009) statistic for break at unknown date.
 }

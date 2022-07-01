@@ -1,11 +1,12 @@
 #' @title
 #' Detrending bootstrap test by Smeekes (2013)
 #'
-#' @details
+#' @description
 #' This bootstrap test is based on the recursive detrending procedure of Taylor
 #' (2002). The main idea is to apply the standard ADF test to the series
 #' with nuissanse parameters eliminated.
 #'
+#' @details
 #' Critical values are calculated via a bootstrapping using MacKinnon-like
 #' regressions. For each number of observations and each number of variables
 #' obtained were 1999 values of test statistics. After that 1st, 2.5-th, 5-th,
@@ -47,7 +48,8 @@
 #' @import doSNOW
 #' @import foreach
 #' @import parallel
-#' @importFrom zeallot %<-%
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
 #'
 #' @export
 ADF.test.S <- function(y,
@@ -70,11 +72,10 @@ ADF.test.S <- function(y,
 
     yd <- recursive.detrend(y, x, c, gamma, trim)
 
-    res.ADF %<-%
-        ADF.test(
-            yd, const, trend, max.lag,
-            criterion, modified.criterion
-        )
+    res.ADF <- ADF.test(
+        yd, const, trend, max.lag,
+        criterion, modified.criterion
+    )
 
     res.lag <- res.ADF$lag
     res.stat <- res.ADF$t.alpha
@@ -91,7 +92,7 @@ ADF.test.S <- function(y,
 
     tmp.stats <- foreach(
         i = 1:iter,
-        .combine = 'c',
+        .combine = c,
         .inorder = FALSE,
         .errorhandling = "remove",
         .packages = c("breaktest"),
@@ -179,37 +180,35 @@ ADF.test.S <- function(y,
 #' Seasonal and Nonseasonal Time Series.”
 #' Journal of Business & Economic Statistics 20, no. 2 (April 2002): 269–81.
 #' https://doi.org/10.1198/073500102317352001.
-#'
-#' @importFrom zeallot %<-%
 recursive.detrend <- function(y, x, c, gamma, trim) {
-        if (is.null(x)) {
-            return(y)
-        }
-
-        N <- nrow(y)
-        beg <- trunc(trim * N)
-        ct <- (c / N)^gamma
-
-        yt <- y - (1 + ct) * lagn(y, 1, na = 0)
-        xt <- x - (1 + ct) * lagn(x, 1, na = 0)
-
-        c(., yd, ., .) %<-% OLS(
-            yt[1:beg, , drop = FALSE],
-            xt[1:beg, , drop = FALSE]
-        )
-
-        yd <- rbind(
-            yd,
-            as.matrix(rep(0, N - beg))
-        )
-
-        for (lstar in (beg + 1):N) {
-            c(., ystar, ., .) %<-% OLS(
-                yt[1:lstar, , drop = FALSE],
-                xt[1:lstar, , drop = FALSE]
-            )
-            yd[lstar, ] <- ystar[lstar, ]
-        }
-
-        return(yd)
+    if (is.null(x)) {
+        return(y)
     }
+
+    N <- nrow(y)
+    beg <- trunc(trim * N)
+    ct <- (c / N)^gamma
+
+    yt <- y - (1 + ct) * lagn(y, 1, na = 0)
+    xt <- x - (1 + ct) * lagn(x, 1, na = 0)
+
+    yd <- OLS(
+        yt[1:beg, , drop = FALSE],
+        xt[1:beg, , drop = FALSE]
+    )$residuals
+
+    yd <- rbind(
+        yd,
+        as.matrix(rep(0, N - beg))
+    )
+
+    for (lstar in (beg + 1):N) {
+        ystar <- OLS(
+            yt[1:lstar, , drop = FALSE],
+            xt[1:lstar, , drop = FALSE]
+        )$residuals
+        yd[lstar, ] <- ystar[lstar, ]
+    }
+
+    return(yd)
+}

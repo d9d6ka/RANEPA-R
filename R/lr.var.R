@@ -18,7 +18,7 @@ lr.var.bartlett <- function(y, l = NULL) {
 
     # lrv <- drop(t(e) %*% e) / N
     acf.y <- ACF(y)
-    lrv <- acf.e[y]
+    lrv <- acf.y[y]
     for (i in 1:l) {
         W <- (1 - i / (l + 1))
         lrv <- lrv + 2 * W * acf.y[1 + i]
@@ -41,14 +41,12 @@ lr.var.bartlett <- function(y, l = NULL) {
 #' Covariance Matrix Estimation.”
 #' Econometrica 59, no. 3 (1991): 817–58.
 #' https://doi.org/10.2307/2938229.
-#'
-#' @importFrom zeallot %<-%
 lr.var.quadratic <- function(y) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
 
-    c(a, ., ., .) %<-% OLS(y[2:N, ], y[1:(N-1), ])
+    a <- OLS(y[2:N, ], y[1:(N-1), ])$beta
     a <- drop(a)
 
     acf.y <- ACF(y)
@@ -81,7 +79,7 @@ lr.var.quadratic <- function(y) {
 #' Procedure ALRVR to estimate the long-run variance
 #' as in Andrews (1991) and Kurozumi (2002).
 #'
-#' @param e (Tx1) vector or residuals.
+#' @param y (Tx1) vector or residuals.
 #'
 #' @references
 #' Andrews, Donald W. K.
@@ -101,11 +99,10 @@ lr.var.bartlett.AK <- function(y) {
 
     N <- nrow(y)
     k <- 0.8
-    c(rho, ., ., .) %<-%
-        OLS(
-            y[2:N, , drop = FALSE],
-            y[1:(N - 1), , drop = FALSE]
-        )
+    rho <- OLS(
+        y[2:N, , drop = FALSE],
+        y[1:(N - 1), , drop = FALSE]
+    )$beta
     a <- drop(rho)
     l <- min(
         1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3),
@@ -169,8 +166,11 @@ lr.var.SPC <- function(y,
 
     info.crit.min <- log(drop(t(y) %*% y) / (N - max.lag))
 
-    c(rho, res, ., ., k) %<-%
-        AR(y, NULL, max.lag, criterion)
+    tmp.AR <- AR(y, NULL, max.lag, criterion)
+    rho <- tmp.AR$beta
+    res <- tmp.AR$residuals
+    k <- tmp.AR$lag
+    rm(tmp.AR)
     info.crit <- info.criterion(res, k)[[criterion]]
 
     if (info.crit.min < info.crit) {
@@ -187,11 +187,10 @@ lr.var.SPC <- function(y,
         temp <- cbind(res, lagn(res, 1))
         temp <- temp[2:nrow(res), , drop = FALSE]
 
-        c(a, ., ., .) %<-%
-            OLS(
-                temp[, 1, drop = FALSE],
-                temp[, 2, drop = FALSE]
-            )
+        a <- OLS(
+            temp[, 1, drop = FALSE],
+            temp[, 2, drop = FALSE]
+        )$beta
         a <- drop(a)
 
         if (kernel == "bartlett") {

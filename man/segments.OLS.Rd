@@ -18,10 +18,17 @@ segments.OLS(y, x, m = 1, width = 2, SSR.data = NULL)
 \item{SSR.data}{Optional matrix of recursive SSR's.}
 }
 \value{
-List of 2 elements: optimal SSR and the vector of break points.
+A list of:
+\itemize{
+\item optimal SSR,
+\item the vector of break points.
+}
 }
 \description{
 Find \eqn{m + 1} optimal partitions
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }
 \references{
 Bai, Jushan, and Pierre Perron.

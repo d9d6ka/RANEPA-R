@@ -2,7 +2,7 @@
 #' Procedure to minimize the SSR for 1 break point
 #'
 #' @details
-#' See Carrion-i-Silvestre and Sansó (2006) for further details.
+#' The function is not intended to be used directly so it's not exported.
 #'
 #' @param beg Sample begin.
 #' @param end Sample end.
@@ -11,11 +11,9 @@
 #' @param len Total number of observations.
 #' @param SSR.data The matrix of recursive SSR values.
 #'
-#' @return List containing
-#' \describe{
-#' \item{SSR}{Optimal SSR value.}
-#' \item{break_point}{The point of possible break.}
-#' }
+#' @return A list of:
+#' * `SSR`: Optimal SSR value,
+#' * `break.point`: The point of possible break.
 #'
 #' @references
 #' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.

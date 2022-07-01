@@ -1,5 +1,5 @@
 #' @title
-#' Kejrival-Perron procedure of breaks number detection.
+#' Kejrival-Perron procedure of breaks number detection
 #'
 #' @param y An input series of interest.
 #' @param const Whether the break in constant is allowed.
@@ -15,7 +15,7 @@
 #' Journal of Time Series Analysis 31, no. 5 (September 2010): 305–28.
 #' https://doi.org/10.1111/j.1467-9892.2010.00666.x.
 #'
-#' @importFrom zeallot %<-%
+#' @return The estimated optimal break point.
 #'
 #' @export
 KP <- function(y,

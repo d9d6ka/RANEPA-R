@@ -7,11 +7,12 @@
 determinants.KPSS.1.break(model, N, break.point)
 }
 \arguments{
-\item{model}{\describe{
-\item{1}{Model with trend, break in const.}
-\item{2}{Model with const and trend, break in const.}
-\item{3}{Model with const and trend, break in trend.}
-\item{4}{Model with const and trend, break in const and trend.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: Model with trend, break in const,
+\item 2: Model with const and trend, break in const,
+\item 3: Model with const and trend, break in trend,
+\item 4: Model with const and trend, break in const and trend.
 }}
 
 \item{N}{Number of observations.}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/KP.R
 \name{KP}
 \alias{KP}
-\title{Kejrival-Perron procedure of breaks number detection.}
+\title{Kejrival-Perron procedure of breaks number detection}
 \usage{
 KP(y, const = FALSE, breaks = 1, criterion = "aic", trim = 0.15)
 }
@@ -17,8 +17,11 @@ KP(y, const = FALSE, breaks = 1, criterion = "aic", trim = 0.15)
 
 \item{trim}{A trimming value for a possible break date bounds.}
 }
+\value{
+The estimated optimal break point.
+}
 \description{
-Kejrival-Perron procedure of breaks number detection.
+Kejrival-Perron procedure of breaks number detection
 }
 \references{
 Kejriwal, Mohitosh, and Pierre Perron.

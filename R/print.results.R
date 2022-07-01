@@ -2,9 +2,10 @@
 #' Custom functions for printing results in a nice way.
 #'
 #' @param x Object containing results.
+#' @param ... Any additional arguments for [print] function.
 #'
 #' @export
-print.sadf <- function(x) {
+print.sadf <- function(x, ...) {
     test_name <- NULL
 
     if ("SADF.value" %in% names(x)) {
@@ -46,7 +47,7 @@ print.sadf <- function(x) {
 #' @rdname print.sadf
 #' @importFrom stringr str_split
 #' @export
-print.mdfHLT <- function(x) {
+print.mdfHLT <- function(x, ...) {
     if (x$const && !x$trend) {
         cat("Model 0: Structural change in intercept\n")
         cat("Y{t}=a0+a1*DU+b0*t+e{t}\n",
@@ -106,7 +107,7 @@ print.mdfHLT <- function(x) {
 #' @rdname print.sadf
 #' @importFrom stringr str_split
 #' @export
-print.mdfHLTN <- function(x) {
+print.mdfHLTN <- function(x, ...) {
     cat("\t\tstat\tc.v.\n\n")
 
     for (v in c(
@@ -143,7 +144,7 @@ print.mdfHLTN <- function(x) {
 
 #' @rdname print.sadf
 #' @export
-print.mdfHHLT <- function(x) {
+print.mdfCHLT <- function(x, ...) {
     cat("\t\tstat\tc.v.\t wild c.v.\n\n")
     for (v in c("MZa", "MSB", "MZt", "ADF")) {
         cat(
@@ -161,7 +162,7 @@ print.mdfHHLT <- function(x) {
 
 #' @rdname print.sadf
 #' @export
-print.cointGH <- function(x) {
+print.cointGH <- function(x, ...) {
     cat("Gregory-Hansen tests\n")
     for (v in c("Za", "Zt", "ADF")) {
         cat(

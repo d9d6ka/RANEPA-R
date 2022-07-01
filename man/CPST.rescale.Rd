@@ -2,7 +2,7 @@
 % Please edit documentation in R/ADF.test.R
 \name{CPST.rescale}
 \alias{CPST.rescale}
-\title{Generating rescaled series as in Cavaliere et al. (2015).}
+\title{Generating rescaled series as in Cavaliere et al. (2015)}
 \usage{
 CPST.rescale(d.y, x, deter, k, max.lag)
 }

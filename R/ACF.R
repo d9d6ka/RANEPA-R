@@ -1,5 +1,5 @@
 #' @title
-#' Calculating ACF values.
+#' Calculating ACF values
 #'
 #' @description
 #' A simple auxiliary function providing the estimates of autocorrelations.

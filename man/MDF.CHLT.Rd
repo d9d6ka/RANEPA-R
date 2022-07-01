@@ -15,6 +15,15 @@ MDF.CHLT(y, max.lag = 10, trim = 0.15, iter = 499)
 
 \item{iter}{Number of bootstrap iterations.}
 }
+\value{
+An object of type \code{mdfCHLT}. It's a list of four sublists
+each containing:
+\itemize{
+\item The value of \eqn{MZ_\alpha}, \eqn{MSB}, \eqn{MZ_t}, or \eqn{ADF},
+\item The asymptotic c.v.,
+\item The bootstrapped c.v.
+}
+}
 \description{
 MDF test for a single break and possible heterscedasticity
 }

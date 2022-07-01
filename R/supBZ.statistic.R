@@ -1,10 +1,22 @@
 #' @title
 #' Calculate supBZ statistic
 #'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
 #' @param y The series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
 #' @param sigma.sq Local non-parametric estimates of variance. If `NULL` they
 #' will be estimated via Nadaraya-Watson procedure.
+#' @param generalized Whether to calculate generalized statistic value.
+#'
+#' @return A list of:
+#' * `y`,
+#' * `trim`,
+#' * `sigma.sq`,
+#' * `BZ.values`: a series of BZ-statistic,
+#' * `supBZ.value`: the maximum of `supBZ.values`,
+#' * `h.est`: the estimated value of bandwidth if `sigma.sq` is `NULL`.
 #'
 #' @references
 #' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
@@ -71,11 +83,6 @@ supBZ.statistic <- function(y,
             ),
             if (exists("h.est")) {
                 list(h.est = h.est)
-            } else {
-                NULL
-            },
-            if (exists("u.hat")) {
-                list(u.hat = u.hat)
             } else {
                 NULL
             }

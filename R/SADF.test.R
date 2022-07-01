@@ -1,5 +1,13 @@
 #' @title
-#' Supremum ADF tests.
+#' Supremum ADF tests
+#' @order 1
+#'
+#' @description
+#' `SADF.test` is a test statistic equal to the minimum value of [ADF.test] for
+#' subsamples starting at \eqn{t = 1}.
+#'
+#' `GSADF.test` is a generalized version of `SADF.test`. Subsamples are allowed
+#' to start at any point between 1 and \eqn{T (1 - trim)}.
 #'
 #' @param y The input time series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
@@ -7,6 +15,14 @@
 #' @param add.p.value Whether the p-value is to be returned. This argument is
 #' needed to suppress the calculation of p-values during the precalculation of
 #' tables needed for the p-values estimating.
+#'
+#' @return An object of type `sadf`. It's a list of:
+#' * `y`,
+#' * `trim`,
+#' * `const`,
+#' * vector of \eqn{t}-values,
+#' * the value of the corresponding test statistic,
+#' * \eqn{p}-value if it was asked for.
 #'
 #' @references
 #' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.

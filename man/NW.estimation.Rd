@@ -2,7 +2,7 @@
 % Please edit documentation in R/NW.estimation.R
 \name{NW.estimation}
 \alias{NW.estimation}
-\title{NW.estimation - Nadaraya–Watson kernel regression.}
+\title{Nadaraya–Watson kernel regression.}
 \usage{
 NW.estimation(y, x, h, kernel = "unif")
 }
@@ -13,14 +13,14 @@ NW.estimation(y, x, h, kernel = "unif")
 
 \item{h}{Bandwidth.}
 
-\item{kernel}{Needed kernel, currently only `unif` and `gauss`.}
+\item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}.}
 }
 \value{
 A list of arguments as well as the estimated coefficient vector and
 residuals.
 }
 \description{
-NW.estimation - Nadaraya–Watson kernel regression.
+Nadaraya–Watson kernel regression.
 }
 \details{
 The function is not intended to be used directly so it's not exported.

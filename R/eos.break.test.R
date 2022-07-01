@@ -13,13 +13,11 @@
 #' @param m Post-break period length.
 #' @param dataset Source of the data.
 #'
-#' @return The list, containing
-#' \itemize{
-#' \item `m`
-#' \item estimated values of P- and R-tests.
-#' \item sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j}.
-#' \item the corresponding p-values.
-#' }
+#' @return A list of
+#' * `m`,
+#' * estimated values of P- and R-tests,
+#' * sequences of auxiliary statistics \eqn{P_j} and \eqn{R_j},
+#' * the corresponding p-values.
 #'
 #' @references
 #' Andrews, D. W. K.
@@ -31,6 +29,9 @@
 #' “Tests for Cointegration Breakdown Over a Short Time Period.”
 #' Journal of Business & Economic Statistics 24, no. 4 (2006): 379–94.
 #' https://doi.org/10.1198/073500106000000297.
+#'
+#' @importFrom stats lm
+#' @importFrom stats predict
 #'
 #' @export
 eos.break.test <- function(eq, m, dataset) {

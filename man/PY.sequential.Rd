@@ -26,6 +26,9 @@ PY.sequential(
 
 \item{max.lag}{The maximum possible lag in the model.}
 }
+\value{
+The estimated Wald statistic.
+}
 \description{
 Sequential Perron-Yabu (2009) statistic for breaks at unknown date.
 }

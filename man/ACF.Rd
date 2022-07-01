@@ -2,7 +2,7 @@
 % Please edit documentation in R/ACF.R
 \name{ACF}
 \alias{ACF}
-\title{Calculating ACF values.}
+\title{Calculating ACF values}
 \usage{
 ACF(y)
 }

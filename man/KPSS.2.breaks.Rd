@@ -9,33 +9,37 @@ KPSS.2.breaks(y, model, break.point, max.lag, kernel)
 \arguments{
 \item{y}{An input (LHS) time series of interest.}
 
-\item{model}{\describe{
-\item{1}{for the AA (without trend) model.}
-\item{2}{for the AA (with trend) model.}
-\item{3}{for the BB model.}
-\item{4}{for the CC model.}
-\item{5}{for the AC-CA model.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: for the AA (without trend) model,
+\item 2: for the AA (with trend) model,
+\item 3: for the BB model,
+\item 4: for the CC model,
+\item 5: for the AC-CA model.
 }}
+
+\item{break.point}{Positions for the first and second structural breaks
+(respective to the origin which is 1).}
 
 \item{max.lag}{scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected using the
 BIC information criterion.}
 
 \item{kernel}{Kernel for calculating long-run variance
-\describe{
-\item{bartlett}{for Bartlett kernel.}
-\item{quadratic}{for Quadratic Spectral kernel.}
-\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+\itemize{
+\item \code{bartlett}: for Bartlett kernel,
+\item \code{quadratic}: for Quadratic Spectral kernel,
+\item \code{NULL} for the Kurozumi's proposal, using Bartlett kernel.
 }}
-
-\item{tb1, tb2}{The first and the second break points.}
 }
 \value{
-\describe{
-\item{beta}{DOLS estimates of the coefficients regressors.}
-\item{tests}{SC test (coinKPSS-test).}
-\item{resid}{Residuals of the model.}
-\item{break_point}{Break points.}
+A list of:
+\itemize{
+\item \code{beta}: DOLS estimates of the coefficients regressors,
+\item \code{tests}: SC test (coinKPSS-test),
+\item \code{resid}: Residuals of the model,
+\item \code{t.beta}: \eqn{t}-statistics for \code{beta},
+\item \code{break_point}: Break points.
 }
 }
 \description{

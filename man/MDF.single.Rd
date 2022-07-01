@@ -15,6 +15,14 @@ MDF.single(y, const = FALSE, trend = FALSE, trim = 0.15)
 
 \item{trim}{Trimming value for a possible break date bounds.}
 }
+\value{
+A list of sublists each containing
+\itemize{
+\item The value of statistic: \eqn{MDF-GLS}, \eqn{MDF-OLS},
+\item The asymptotic critical values.
+\eqn{UR} values are included as well.
+}
+}
 \description{
 MDF procedure for a single unknown break.
 }

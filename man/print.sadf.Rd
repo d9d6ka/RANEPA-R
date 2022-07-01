@@ -4,22 +4,24 @@
 \alias{print.sadf}
 \alias{print.mdfHLT}
 \alias{print.mdfHLTN}
-\alias{print.mdfHHLT}
+\alias{print.mdfCHLT}
 \alias{print.cointGH}
 \title{Custom functions for printing results in a nice way.}
 \usage{
-\method{print}{sadf}(x)
+\method{print}{sadf}(x, ...)
 
-\method{print}{mdfHLT}(x)
+\method{print}{mdfHLT}(x, ...)
 
-\method{print}{mdfHLTN}(x)
+\method{print}{mdfHLTN}(x, ...)
 
-\method{print}{mdfHHLT}(x)
+\method{print}{mdfCHLT}(x, ...)
 
-\method{print}{cointGH}(x)
+\method{print}{cointGH}(x, ...)
 }
 \arguments{
 \item{x}{Object containing results.}
+
+\item{...}{Any additional arguments for \link{print} function.}
 }
 \description{
 Custom functions for printing results in a nice way.

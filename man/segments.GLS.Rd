@@ -27,7 +27,7 @@ segments.GLS(
 
 \item{last.break}{Last possible break point.}
 
-\item{trim}{Trim value to calculate `first.break` and `last.break`
+\item{trim}{Trim value to calculate \code{first.break} and \code{last.break}
 if not provided.}
 }
 \value{
@@ -35,6 +35,9 @@ The point of possible break.
 }
 \description{
 Procedure to minimize the GLS-SSR for 1 break point
+}
+\details{
+The function is not intended to be used directly so it's not exported.
 }
 \references{
 Skrobotov, Anton.
