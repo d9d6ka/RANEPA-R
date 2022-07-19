@@ -13,11 +13,11 @@ DOLS(y, x, model, break.point, k.lags, k.leads)
 
 \item{model}{See Carrion-i-Silvestre and Sansó (2006)
 \itemize{
-\item 1: for model An.
-\item 2: for model A.
-\item 3: for model B.
-\item 4: for model C.
-\item 5: for model D.
+\item 1: for model An,
+\item 2: for model A,
+\item 3: for model B,
+\item 4: for model C,
+\item 5: for model D,
 \item 6: for model E.
 }}
 

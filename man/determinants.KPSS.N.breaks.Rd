@@ -2,7 +2,7 @@
 % Please edit documentation in R/determinants.R
 \name{determinants.KPSS.N.breaks}
 \alias{determinants.KPSS.N.breaks}
-\title{Deterministic terms for multi-break KPSS}
+\title{Deterministic terms for \link{KPSS.N.breaks}}
 \usage{
 determinants.KPSS.N.breaks(model, N, break.point, const = FALSE, trend = FALSE)
 }
@@ -24,8 +24,8 @@ determinants.KPSS.N.breaks(model, N, break.point, const = FALSE, trend = FALSE)
 Matrix of deterministic terms.
 }
 \description{
-Procedure to compute deterministic terms
-for KPSS with \eqn{m} structural breaks.
+Procedure to compute deterministic terms for KPSS with \eqn{m}
+structural breaks.
 }
 \details{
 \strong{model} should be either a scalar or a vector of the same size as the

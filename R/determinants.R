@@ -1,5 +1,5 @@
 #' @title
-#' Construct determinant variables.
+#' Construct determinant variables for [KPSS.1.break]
 #'
 #' @details
 #' Procedure to compute deterministic terms
@@ -16,7 +16,6 @@
 #' @param break.point Break point.
 #'
 #' @return Matrix of determinant variables.
-#'
 determinants.KPSS.1.break <- function(model, N, break.point) {
     du <- rbind(
         matrix(data = 0, nrow = break.point, ncol = 1),
@@ -62,7 +61,7 @@ determinants.KPSS.1.break <- function(model, N, break.point) {
 
 
 #' @title
-#' Construct determinant variables.
+#' Construct determinant variables for [KPSS.2.breaks]
 #'
 #' @details
 #' Procedure to compute deterministic terms
@@ -206,11 +205,11 @@ determinants.KPSS.2.breaks <- function(model, N, break.point) {
 
 
 #' @title
-#' Deterministic terms for multi-break KPSS
+#' Deterministic terms for [KPSS.N.breaks]
 #'
 #' @description
-#' Procedure to compute deterministic terms
-#' for KPSS with \eqn{m} structural breaks.
+#' Procedure to compute deterministic terms for KPSS with \eqn{m}
+#' structural breaks.
 #'
 #' @details
 #' **model** should be either a scalar or a vector of the same size as the
@@ -315,15 +314,14 @@ determinants.KPSS.N.breaks <- function(model, N, break.point,
 
 
 #' @title
-#' Generating monthly seasonal dummy variables.
+#' Generating monthly seasonal dummy variables
 #'
 #' @details
 #' The function is not intended to be used directly so it's not exported.
 #'
 #' @param N number of observations.
 #'
-#' @return
-#' The matrix of values od seasonal dummies.
+#' @return The matrix of values od seasonal dummies.
 seasonal.dummies <- function(N) {
     s1 <- c(1 - 1 / 12, rep(-1 / 12, 11))
 

@@ -19,16 +19,16 @@
 #' @param rescale.criterion Whether the rescaling informational criterion
 #' is needed. Designed to cope with heteroscedasticity in residuals.
 #'
-#' @returns List containing:
-#' * y
-#' * const
-#' * trend
-#' * residuals
-#' * coefficient estimates
-#' * t-statistic value
-#' * critical value
-#' * Number of lags
-#' * indicator of stationarity
+#' @return List containing:
+#' * y,
+#' * const,
+#' * trend,
+#' * residuals,
+#' * coefficient estimates,
+#' * t-statistic value,
+#' * critical value,
+#' * Number of lags,
+#' * indicator of stationarity.
 #'
 #' @references
 #' Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
@@ -48,14 +48,13 @@ ADF.test <- function(y,
                      max.lag = 0,
                      criterion = NULL, modified.criterion = FALSE,
                      rescale.criterion = FALSE) {
-    if (!is.matrix(y)) y <- as.matrix(y)
-
     if (!is.null(criterion)) {
         if (!criterion %in% c("bic", "aic", "lwz", "hq")) {
-            warning("WARNING! Unknown criterion, none is used")
-            criterion <- NULL
+            stop("ERROR! Unknown criterion, none is used")
         }
     }
+
+    if (!is.matrix(y)) y <- as.matrix(y)
 
     N <- nrow(y)
 

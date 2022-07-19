@@ -2,7 +2,7 @@
 % Please edit documentation in R/determinants.R
 \name{seasonal.dummies}
 \alias{seasonal.dummies}
-\title{Generating monthly seasonal dummy variables.}
+\title{Generating monthly seasonal dummy variables}
 \usage{
 seasonal.dummies(N)
 }
@@ -13,7 +13,7 @@ seasonal.dummies(N)
 The matrix of values od seasonal dummies.
 }
 \description{
-Generating monthly seasonal dummy variables.
+Generating monthly seasonal dummy variables
 }
 \details{
 The function is not intended to be used directly so it's not exported.

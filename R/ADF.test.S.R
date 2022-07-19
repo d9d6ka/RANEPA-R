@@ -143,7 +143,7 @@ ADF.test.S <- function(y,
 }
 
 #' @title
-#' Detrend the data recursively
+#' Detrending the data recursively
 #'
 #' @description
 #' This procedure is aimed to provide a recursively detrended series. More or

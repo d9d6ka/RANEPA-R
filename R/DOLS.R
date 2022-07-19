@@ -7,11 +7,11 @@
 #' @param y A dependent (LHS) variable.
 #' @param x A matrix of explanatory (RHS) variables.
 #' @param model See Carrion-i-Silvestre and Sansó (2006)
-#' * 1: for model An.
-#' * 2: for model A.
-#' * 3: for model B.
-#' * 4: for model C.
-#' * 5: for model D.
+#' * 1: for model An,
+#' * 2: for model A,
+#' * 3: for model B,
+#' * 4: for model C,
+#' * 5: for model D,
 #' * 6: for model E.
 #' @param break.point A position of the break point.
 #' @param k.lags,k.leads A number of lags and leads in DOLS regression.
@@ -28,10 +28,10 @@
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 DOLS <- function(y, x, model, break.point, k.lags, k.leads) {
-    if (!is.matrix(y)) y <- as.matrix(y)
     if (is.null(x)) {
         stop("ERROR! Explanatory variables needed for DOLS")
     }
+    if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y)

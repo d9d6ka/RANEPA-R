@@ -19,7 +19,7 @@
 #' * 4: for the CC model,
 #' * 5: for the AC-CA model.
 #' @param break.point Positions for the first and second structural breaks
-#'            (respective to the origin which is 1).
+#' (respective to the origin which is 1).
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using the
 #' BIC information criterion.
@@ -89,22 +89,19 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
 #' See Carrion-i-Silvestre and Sansó (2007) for further details.
 #'
 #' @param y (Tx1)-vector of time series.
-#' @param model \describe{
-#' \item{1}{for the AA (without trend) model.}
-#' \item{2}{for the AA (with trend) model.}
-#' \item{3}{for the BB model.}
-#' \item{4}{for the CC model.}
-#' \item{5}{for the AC-CA model.}
-#' }
+#' @param model A scalar equal to
+#' * 1: for the AA (without trend) model,
+#' * 2: for the AA (with trend) model,
+#' * 3: for the BB model,
+#' * 4: for the CC model,
+#' * 5: for the AC-CA model.
 #' @param max.lag scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using
 #' the BIC information criterion.
 #' @param kernel Kernel for calculating long-run variance
-#' \describe{
-#' \item{bartlett}{for Bartlett kernel.}
-#' \item{quadratic}{for Quadratic Spectral kernel.}
-#' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
-#' }
+#' * `bartlett`: for Bartlett kernel,
+#' * `quadratic`: for Quadratic Spectral kernel,
+#' * `NULL` for the Kurozumi's proposal, using Bartlett kernel.
 #'
 #' @return Value of test statistic.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/determinants.R
 \name{determinants.KPSS.2.breaks}
 \alias{determinants.KPSS.2.breaks}
-\title{Construct determinant variables.}
+\title{Construct determinant variables for \link{KPSS.2.breaks}}
 \usage{
 determinants.KPSS.2.breaks(model, N, break.point)
 }
@@ -27,7 +27,7 @@ determinants.KPSS.2.breaks(model, N, break.point)
 Matrix of deterministic terms.
 }
 \description{
-Construct determinant variables.
+Construct determinant variables for \link{KPSS.2.breaks}
 }
 \details{
 Procedure to compute deterministic terms

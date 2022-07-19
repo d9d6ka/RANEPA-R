@@ -9,12 +9,13 @@ KPSS.2.breaks.unknown(y, model, max.lag = 0, kernel = "bartlett")
 \arguments{
 \item{y}{(Tx1)-vector of time series.}
 
-\item{model}{\describe{
-\item{1}{for the AA (without trend) model.}
-\item{2}{for the AA (with trend) model.}
-\item{3}{for the BB model.}
-\item{4}{for the CC model.}
-\item{5}{for the AC-CA model.}
+\item{model}{A scalar equal to
+\itemize{
+\item 1: for the AA (without trend) model,
+\item 2: for the AA (with trend) model,
+\item 3: for the BB model,
+\item 4: for the CC model,
+\item 5: for the AC-CA model.
 }}
 
 \item{max.lag}{scalar, with the maximum order of the parametric correction.
@@ -22,10 +23,10 @@ The final order of the parametric correction is selected using
 the BIC information criterion.}
 
 \item{kernel}{Kernel for calculating long-run variance
-\describe{
-\item{bartlett}{for Bartlett kernel.}
-\item{quadratic}{for Quadratic Spectral kernel.}
-\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+\itemize{
+\item \code{bartlett}: for Bartlett kernel,
+\item \code{quadratic}: for Quadratic Spectral kernel,
+\item \code{NULL} for the Kurozumi's proposal, using Bartlett kernel.
 }}
 }
 \value{

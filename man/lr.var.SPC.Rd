@@ -13,10 +13,10 @@ lr.var.SPC(y, max.lag = 0, kernel = "bartlett", criterion = "bic")
 The exact number is selected by information criterions.}
 
 \item{kernel}{Kernel for calculating long-run variance
-\describe{
-\item{bartlett}{for Bartlett kernel.}
-\item{quadratic}{for Quadratic Spectral kernel.}
-\item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
+\itemize{
+\item \verb{"bartlett""}: for Bartlett kernel,
+\item \code{"quadratic"}: for Quadratic Spectral kernel,
+\item \code{"NULL"}: for the Kurozumi's proposal, using Bartlett kernel.
 }}
 
 \item{criterion}{The information crietreion: bic, aic or lwz.}

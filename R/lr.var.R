@@ -81,6 +81,8 @@ lr.var.quadratic <- function(y) {
 #'
 #' @param y (Tx1) vector or residuals.
 #'
+#' @return Long-run variance.
+#'
 #' @references
 #' Andrews, Donald W. K.
 #' “Heteroskedasticity and Autocorrelation Consistent
@@ -92,8 +94,6 @@ lr.var.quadratic <- function(y) {
 #' “Testing for Stationarity with a Break.”
 #' Journal of Econometrics 108, no. 1 (May 1, 2002): 63–99.
 #' https://doi.org/10.1016/S0304-4076(01)00106-3.
-#'
-#' @return Long-run variance.
 lr.var.bartlett.AK <- function(y) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
@@ -133,11 +133,9 @@ lr.var.bartlett.AK <- function(y) {
 #' @param max.lag Maximum number of lags.
 #' The exact number is selected by information criterions.
 #' @param kernel Kernel for calculating long-run variance
-#' \describe{
-#' \item{bartlett}{for Bartlett kernel.}
-#' \item{quadratic}{for Quadratic Spectral kernel.}
-#' \item{NULL}{for the Kurozumi's proposal, using Bartlett kernel.}
-#' }
+#' * `"bartlett""`: for Bartlett kernel,
+#' * `"quadratic"`: for Quadratic Spectral kernel,
+#' * `"NULL"`: for the Kurozumi's proposal, using Bartlett kernel.
 #' @param criterion The information crietreion: bic, aic or lwz.
 #'
 #' @return Long-run variance.

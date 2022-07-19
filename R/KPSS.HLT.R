@@ -6,6 +6,8 @@
 #' @param trim The trimming parameter to find the lower and upper bounds of
 #' possible break dates.
 #'
+#' @return The value of test statistic.
+#'
 #' @references
 #' Harvey, David I., Stephen J. Leybourne, and A. M. Robert Taylor.
 #' “Unit Root Testing under a Local Break in Trend.”
@@ -58,7 +60,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
         lr.var.y <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
         inv.xx <- qr.solve(t(x) %*% x)
 
-        t0.stat <- abs(tmp.OLS$beta[ncol(x)] / 
+        t0.stat <- abs(tmp.OLS$beta[ncol(x)] /
                        sqrt(lr.var.y * inv.xx[ncol(x), ncol(x)]))
 
         x <- cbind(
@@ -72,7 +74,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
         lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
         inv.xx <- qr.solve(t(x) %*% x)
 
-        t1.stat <- abs(tmp.OLS$beta[ncol(x)] / 
+        t1.stat <- abs(tmp.OLS$beta[ncol(x)] /
                        sqrt(lr.var.dy * inv.xx[ncol(x), ncol(x)]))
 
         if (t0.stat > t0) {

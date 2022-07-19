@@ -2,7 +2,7 @@
 % Please edit documentation in R/ADF.test.S.R
 \name{recursive.detrend}
 \alias{recursive.detrend}
-\title{Detrend the data recursively}
+\title{Detrending the data recursively}
 \usage{
 recursive.detrend(y, x, c, gamma, trim)
 }

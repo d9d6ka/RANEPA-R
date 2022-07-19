@@ -9,14 +9,14 @@
 #' @param h Bandwidth.
 #' @param kernel Needed kernel, currently only `unif` and `gauss`.
 #'
+#' @return A list of arguments as well as the estimated coefficient vector and
+#' residuals.
+#'
 #' @references
 #' Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
 #' “Nonparametric Estimation of the Variance Function
 #' in an Explosive Autoregression Model.”
 #' School of Economics. University of Nottingham, 2022.
-#'
-#' @return A list of arguments as well as the estimated coefficient vector and
-#' residuals.
 NW.estimation <- function(y, x, h, kernel = "unif") {
     if (!kernel %in% c("unif", "gauss")) {
         warning("WARNING! Unknown kernel, unif is used instead")
@@ -54,6 +54,8 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
 #' @param h Bandwidth.
 #' @param kernel Needed kernel, currently only `unif` and `gauss`.
 #'
+#' @return A list of arguments as well as the estimated omega and s.e.
+#'
 #' @references
 #' Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
 #' and A. M. Robert Taylor.
@@ -61,8 +63,6 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
 #' of Nonstationary Volatility.”
 #' Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
 #' https://doi.org/10.1080/07474938.2013.808065.
-#'
-#' @return A list of arguments as well as the estimated omega and s.e.
 NW.volatility <- function(e, h, kernel = "unif") {
     if (!kernel %in% c("unif", "gauss")) {
         warning("WARNING! Unknown kernel, unif is used instead")

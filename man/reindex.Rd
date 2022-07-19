@@ -2,7 +2,7 @@
 % Please edit documentation in R/reindex.R
 \name{reindex}
 \alias{reindex}
-\title{reindex - function that makes reindexing.}
+\title{A function that makes reindexing}
 \usage{
 reindex(u)
 }
@@ -10,7 +10,8 @@ reindex(u)
 \item{u}{The residuals series for reindexing.}
 }
 \description{
-reindex - function that makes reindexing.
+The function is aimed to calculate the sequence of indices providing a new
+"time transformed" time series as in Cavaliere and Taylor (2008).
 }
 \details{
 The function is not intended to be used directly so it's not exported.

@@ -1,5 +1,5 @@
 #' @title
-#' A wrapping function around [MDF.single()].
+#' A wrapping function around [MDF.single].
 #'
 #' @param y A series of interest.
 #' @param const Whether the constant term should be included.
@@ -41,7 +41,7 @@ robust.tests.single <- function(y,
 
 
 #' @title
-#' A wrapping function around [KP()] and [MDF.multiple()].
+#' A wrapping function around [KP] and [MDF.multiple].
 #'
 #' @param y A series of interest.
 #' @param const Whether the constant term should be included.

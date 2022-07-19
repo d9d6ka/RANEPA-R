@@ -32,15 +32,15 @@ is needed. Designed to cope with heteroscedasticity in residuals.}
 \value{
 List containing:
 \itemize{
-\item y
-\item const
-\item trend
-\item residuals
-\item coefficient estimates
-\item t-statistic value
-\item critical value
-\item Number of lags
-\item indicator of stationarity
+\item y,
+\item const,
+\item trend,
+\item residuals,
+\item coefficient estimates,
+\item t-statistic value,
+\item critical value,
+\item Number of lags,
+\item indicator of stationarity.
 }
 }
 \description{

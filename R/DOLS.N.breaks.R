@@ -19,8 +19,6 @@
 #' * Estimates of residuals,
 #' * A set of informational criterions values,
 #' * \eqn{t}-statistics for the estimates of coefficients.
-#'
-#'
 DOLS.N.breaks <- function(y,
                           x,
                           model,
@@ -83,8 +81,10 @@ DOLS.vars.N.breaks <- function(y, x,
                                model, break.point,
                                const = FALSE, trend = FALSE,
                                k.lags, k.leads) {
+    if (is.null(x)) {
+        stop("ERROR! Explanatory variables needed for DOLS")
+    }
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (is.null(x)) stop("ERROR! Explanatory variables needed for DOLS")
     if (!is.matrix(x)) x <- as.matrix(x)
 
     N <- nrow(y)

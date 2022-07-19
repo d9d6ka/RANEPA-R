@@ -2,7 +2,7 @@
 % Please edit documentation in R/robust.tests.R
 \name{robust.tests.single}
 \alias{robust.tests.single}
-\title{A wrapping function around \code{\link[=MDF.single]{MDF.single()}}.}
+\title{A wrapping function around \link{MDF.single}.}
 \usage{
 robust.tests.single(
   y,
@@ -24,5 +24,5 @@ robust.tests.single(
 \item{trim}{Trimming value for a possible break date bounds.}
 }
 \description{
-A wrapping function around \code{\link[=MDF.single]{MDF.single()}}.
+A wrapping function around \link{MDF.single}.
 }

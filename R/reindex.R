@@ -1,5 +1,9 @@
 #' @title
-#' reindex - function that makes reindexing.
+#' A function that makes reindexing
+#'
+#' @description
+#' The function is aimed to calculate the sequence of indices providing a new
+#' "time transformed" time series as in Cavaliere and Taylor (2008).
 #'
 #' @details
 #' The function is not intended to be used directly so it's not exported.

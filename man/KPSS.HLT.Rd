@@ -14,6 +14,9 @@ KPSS.HLT(y, const = FALSE, trim = 0.15)
 \item{trim}{The trimming parameter to find the lower and upper bounds of
 possible break dates.}
 }
+\value{
+The value of test statistic.
+}
 \description{
 Unit root testing procedure under a single structural break.
 }

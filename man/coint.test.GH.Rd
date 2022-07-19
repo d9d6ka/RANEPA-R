@@ -46,7 +46,8 @@ the presence of a possible regime shift. Three type of shifts are allowed:
 \itemize{
 \item a shift in the constant,
 \item a shift in the constand with the trend included,
-\item and a shift in the constant and the cointegrating vector.}
+\item and a shift in the constant and the cointegrating vector.
+}
 
 Critical values are calculated via the adopted MacKinnon procedure of
 estimating the model for the response surface.
