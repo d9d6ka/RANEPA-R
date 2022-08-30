@@ -13,12 +13,13 @@ lr.var.bartlett <- function(y, l = NULL) {
 
     N <- nrow(y)
 
-    if (is.null(l))
+    if (is.null(l)) {
         l <- trunc(4 * ((N / 100)^(1 / 4)))
+    }
 
     # lrv <- drop(t(e) %*% e) / N
     acf.y <- ACF(y)
-    lrv <- acf.y[y]
+    lrv <- acf.y[1]
     for (i in 1:l) {
         W <- (1 - i / (l + 1))
         lrv <- lrv + 2 * W * acf.y[1 + i]
