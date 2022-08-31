@@ -1,88 +1,171 @@
-#' @title
-#' Calculating long-run variance with Bartlett kernel
-#'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
-#' @param y A series of interest.
-#' @param l Number of lags/leads. If `NULL` then it's estimated.
-#'
-#' @return Long-run variance.
-lr.var.bartlett <- function(y, l = NULL) {
-    if (!is.matrix(y)) y <- as.matrix(y)
-
-    N <- nrow(y)
-
-    if (is.null(l)) {
-        l <- trunc(4 * ((N / 100)^(1 / 4)))
-    }
-
-    # lrv <- drop(t(e) %*% e) / N
-    acf.y <- ACF(y)
-    lrv <- acf.y[1]
-    for (i in 1:l) {
-        W <- (1 - i / (l + 1))
-        lrv <- lrv + 2 * W * acf.y[1 + i]
-    }
-    return(lrv)
-}
-
-
-#' @title
-#' Calculating long-run variance with quadratic kernel
-#'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
-#' @param y A series of interest.
-#'
-#' @references
-#' Andrews, Donald W. K.
-#' “Heteroskedasticity and Autocorrelation Consistent
-#' Covariance Matrix Estimation.”
-#' Econometrica 59, no. 3 (1991): 817–58.
-#' https://doi.org/10.2307/2938229.
-lr.var.quadratic <- function(y) {
-    if (!is.matrix(y)) y <- as.matrix(y)
-
-    N <- nrow(y)
-
-    a <- OLS(y[2:N, ], y[1:(N-1), ])$beta
-    a <- drop(a)
-
-    acf.y <- ACF(y)
-
-    lambda <- matrix(0, nrow = N - 1, ncol = 1)
-    s <- as.matrix(1:(N - 1))
-
-    m <- 1.3221 * (4 * a^2 * N / ((1 - a)^4))^(1 / 5)
-
-    delta <- (6 * pi * s) / (5 * m)
-
-    for (i in 1:(N - 1)) {
-        lambda[i] <- (3 / delta[i]^2) *
-            (sin(delta[i]) / delta[i] - cos(delta[i]))
+.lr.var.kernel <- function(kernel, alpha, N) {
+    if (kernel == "truncated") {
+        f.limit <- function(y, l) {
+            return(0.6611 * (N * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            if (abs(i / (l + 1)) <= 1) {
+                return(1)
+            }
+            return(0)
+        }
+    } else if (kernel == "bartlett") {
+        f.limit <- function(y, l) {
+            return(1.1447 * (N * alpha(y, l)$q1)^(1 / 3))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            if (abs(x) <= 1) {
+                return(1 - abs(x))
+            }
+            return(0)
+        }
+    } else if (kernel == "parzen") {
+        f.limit <- function(y, l) {
+            return(2.6614 * (N * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            if (abs(x) <= 0.5) {
+                return(1 - 6 * x^2 + 6 * abs(x)^3)
+            } else if (abs(x) <= 1) {
+                return(2 * (1 - abs(x))^3)
+            }
+            return(0)
+        }
+    } else if (kernel == "tukey-hanning") {
+        f.limit <- function(y, l) {
+            return(1.7462 * (N * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            if (abs(x) <= 1) {
+                return((1 + cos(pi * x)) / 2)
+            }
+            return(0)
+        }
+    } else if (kernel == "quadratic") {
+        f.limit <- function(y, l) {
+            return(1.3221 * (N * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            delta <- 6 * pi * x / 5
+            return((3 / delta^2) * (sin(delta) / delta - cos(delta)))
+        }
     }
 
     return(
         list(
-            lrv = drop(acf.y[1] + 2 * t(lambda) %*% acf.y[2:N]),
-            m = m
+            limit = f.limit,
+            weight = f.weight
         )
     )
 }
 
+.lr.var.alpha.single <- function(y, upper.rho.limit) {
+    N <- nrow(y)
 
+    if (!is.null(N) && N > 1) {
+        r <- drop(
+            (t(y[1:(N - 1), 1]) %*% y[2:N, 1]) /
+            (t(y[1:(N - 1), 1]) %*% y[1:(N - 1), 1])
+        )
+
+        if (r > upper.rho.limit) {
+            r <- upper.rho.limit
+        } else if (r < -upper.rho.limit) {
+            r <- -upper.rho.limit
+        }
+    } else {
+        r <- y
+    }
+
+    return(
+        list(
+            q1 = 4 * r^2 / (1 + r)^2 / (1 - r)^2,
+            q2 = 4 * r^2 / (1 - r)^4
+        )
+    )
+}
+
+.lr.var.alpha.multi <- function(y, upper.rho.limit) {
+    N <- nrow(y)
+    P <- ncol(y)
+
+    nominator_1 <- 0
+    nominator_2 <- 0
+    denominator <- 0
+
+    for (i in 1:P) {
+        r <- (t(y[1:(N - 1), i]) %*% y[2:N, i]) /
+            (t(y[1:(N - 1), i]) %*% y[1:(N - 1), i])
+        r <- drop(r)
+
+        if (r > upper.rho.limit) {
+            r <- upper.rho.limit
+        } else if (r < -upper.rho.limit) {
+            r <- -upper.rho.limit
+        }
+
+        resids <- y[2:N, i] - y[1:(N - 1), i] * r
+        s2 <- mean(resids^2)
+
+        nominator_1 <- nominator_1 + 4 * r^2 * s2^2 / (1 - r)^6 / (1 + r)^2
+        nominator_2 <- nominator_2 + 4 * r^2 * s2^2 / (1 - r)^8
+        denominator <- denominator + s2^2 / (1 - r)^4
+    }
+
+    return(
+        list(
+            q1 = nominator_1 / denominator,
+            q2 = nominator_2 / denominator
+        )
+    )
+}
+
+#' @order 1
 #' @title
-#' Calculating long-run variance
+#' Calculating long-run variance or covariance matrix
 #'
-#' @description
-#' Procedure ALRVR to estimate the long-run variance
-#' as in Andrews (1991) and Kurozumi (2002).
-#'
-#' @param y (Tx1) vector or residuals.
-#'
-#' @return Long-run variance.
+#' @param y A series of interest.
+#' @param demean Whether the demeaning is needed.
+#' @param kernel A kernel to be used:
+#' * `truncated`: \eqn{\left\{\begin{array}{ll}
+#' 1 & |x| \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `bartlett`: \eqn{\left\{\begin{array}{ll}
+#' 1 - |x| & |x| \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `parzen`: \eqn{\left\{\begin{array}{ll}
+#' 1 - 6 x^2 + 6 {|x|}^3 & |x| \leq 1/2 \\
+#' 2 (1 - |x|)^3 & 1/2 \leq |x| \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `tukey-hanning`: \eqn{\left\{\begin{array}{ll}
+#' (1 + \cos(\pi x))/2 & |x| \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `quadratic`: \eqn{
+#' \frac{25}{12 \pi^2 x^2}
+#' \left(\frac{\sin(6 \pi x / 5)}{6 \pi x / 5} - \cos(6 \pi x / 5)\right)}
+#' @param limit.lags Whether all lags shoult be used in formulae.
+#' @param limit.selector Way of limit selection:
+#' * `kpss-q`: \eqn{4 (T / 100)^{1 / 4}}.
+#' * `kpss-m`: \eqn{12 (T / 100)^{1 / 4}}.
+#' * `Andrews`: kernel-specific formula from Andrews (1991).
+#' * `Kurozumi`: kernel-specific formula from Andrews (1991)
+#' with Kurozumi (2002) proposal.
+#' @param upper.rho.limit The upper limit for the value or AR-coefficient.
+#' @param upper.lag.limit The value used to calculate the upper limit
+#' for Kurozumi (2002) proposal.
+#' @param recolor Whether the correction by Sul et al. (2005) should be used.
+#' This option resets `limit.lags` to `TRUE`, and `limit.selector` to `Andrews`.
+#' @param max.lag Maximum number of lags used in AR regresion during
+#' recolorization. Otherwize ignored.
+#' @param criterion The information crietreion: bic, aic or lwz.
 #'
 #' @references
 #' Andrews, Donald W. K.
@@ -95,129 +178,181 @@ lr.var.quadratic <- function(y) {
 #' “Testing for Stationarity with a Break.”
 #' Journal of Econometrics 108, no. 1 (May 1, 2002): 63–99.
 #' https://doi.org/10.1016/S0304-4076(01)00106-3.
-lr.var.bartlett.AK <- function(y) {
-    if (!is.matrix(y)) y <- as.matrix(y)
-
-    N <- nrow(y)
-    k <- 0.8
-    rho <- OLS(
-        y[2:N, , drop = FALSE],
-        y[1:(N - 1), , drop = FALSE]
-    )$beta
-    a <- drop(rho)
-    l <- min(
-        1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3),
-        1.1447 * (4 * k^2 * N / ((1 + k)^2 * (1 - k)^2))^(1 / 3)
-    )
-    l <- trunc(l)
-    # lrv <- drop(t(e) %*% e) / N
-    acf.y <- ACF(y)
-    lrv <- acf.y[1]
-    for (i in 1:l) {
-        W <- (1 - i / (l + 1))
-        lrv <- lrv + 2 * W * acf.y[1 + i]
-    }
-    return(lrv)
-}
-
-
-#' @title
-#' Calculating long-run variance
 #'
-#' @description
-#' Procedure ALRVR to estimate the long-run variance as
-#' in Sul, Phillips and Choi (2003).
-#'
-#' @details Used are Quadratic Spectral and Bartlett kernels.
-#'
-#' @param y (Tx1) vector or residuals.
-#' @param max.lag Maximum number of lags.
-#' The exact number is selected by information criterions.
-#' @param kernel Kernel for calculating long-run variance
-#' * `"bartlett""`: for Bartlett kernel,
-#' * `"quadratic"`: for Quadratic Spectral kernel,
-#' * `"NULL"`: for the Kurozumi's proposal, using Bartlett kernel.
-#' @param criterion The information crietreion: bic, aic or lwz.
-#'
-#' @return Long-run variance.
-#'
-#' @references
 #' Sul, Donggyu, Peter C. B. Phillips, and Chi-Young Choi.
 #' “Prewhitening Bias in HAC Estimation.”
 #' Oxford Bulletin of Economics and Statistics 67, no. 4 (August 2005): 517–46.
 #' https://doi.org/10.1111/j.1468-0084.2005.00130.x.
-lr.var.SPC <- function(y,
-                       max.lag = 0,
-                       kernel = "bartlett",
-                       criterion = "bic") {
+#'
+#' @importFrom stats na.omit
+#'
+#' @export
+lr.var <- function(y,
+                   demean = TRUE,
+                   kernel = "bartlett",
+                   limit.lags = FALSE,
+                   limit.selector = "kpss-q",
+                   upper.rho.limit = 0.97,
+                   upper.lag.limit = 0.8,
+                   recolor = FALSE,
+                   max.lag = 0,
+                   criterion = "bic") {
     if (!is.matrix(y)) y <- as.matrix(y)
-    if (max.lag < 0) max.lag <- 0
-    if (!kernel %in% c("bartlett", "quadratic")) {
-        warning("WARNING! Unknown kernel, Barlett is used")
-        kernel <- "bartlett"
+
+    P <- ncol(y)
+
+    if (!kernel %in% c("truncated",
+                       "bartlett",
+                       "parzen",
+                       "tukey-hanning",
+                       "quadratic")) {
+        stop("ERROR! Unknown kernel")
+    }
+    if (!limit.selector %in% c("kpss-q", "kpss-m", "Andrews", "Kurozumi")) {
+        stop("ERROR! Unknown limit selector")
+    }
+    if (limit.selector == "Kurozumi" && is.null(upper.lag.limit)) {
+        stop("ERROR! Upper limit is needed for Kurozumi proposal")
+    }
+    if (limit.selector == "Kurozumi" && P > 1) {
+        stop("ERROR! Kurozumi proposal is for a single variable case")
+    }
+    if (recolor && P > 1) {
+        stop("ERROR! Recolorization is for a single variable case")
     }
     if (!criterion %in% c("bic", "aic", "lwz")) {
-        warning("WARNING! Unknown criterion, BIC is used")
-        criterion <- "bic"
+        stop("ERROR! Unknown criterion")
+    }
+    if (recolor) {
+        limit.lags <- TRUE
+        limit.selector <- "Andrews"
     }
 
     N <- nrow(y)
 
-    info.crit.min <- log(drop(t(y) %*% y) / (N - max.lag))
-
-    tmp.AR <- AR(y, NULL, max.lag, criterion)
-    rho <- tmp.AR$beta
-    res <- tmp.AR$residuals
-    k <- tmp.AR$lag
-    rm(tmp.AR)
-    info.crit <- info.criterion(res, k)[[criterion]]
-
-    if (info.crit.min < info.crit) {
-        k <- 0
-        rho <- 0
-        res <- y
-    }
-
-    acf.res <- ACF(res)
-    if (k == 0) {
-        lrv <- acf.res[1]
-        #lrv <- drop(t(res) %*% res) / N
+    if (P == 1) {
+        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.single, N)
     } else {
-        temp <- cbind(res, lagn(res, 1))
-        temp <- temp[2:nrow(res), , drop = FALSE]
+        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.multi, N)
+    }
 
-        a <- OLS(
-            temp[, 1, drop = FALSE],
-            temp[, 2, drop = FALSE]
-        )$beta
-        a <- drop(a)
+    if (recolor) {
+        info.crit.min <- log(drop(t(y) %*% y) / (N - max.lag))
 
-        if (kernel == "bartlett") {
-            l <- 1.1447 * (4 * a^2 * N / ((1 + a)^2 * (1 - a)^2))^(1 / 3)
-        } else if (kernel == "quadratic") {
-            l <- 1.3221 * (4 * a^2 * N / ((1 - a)^4))^(1 / 5)
+        tmp.AR <- AR(y, NULL, max.lag, criterion)
+        info.crit <- info.criterion(tmp.AR$residuals, tmp.AR$lag)[[criterion]]
+
+        if (info.crit.min < info.crit) {
+            rho <- 0
+            k <- 0
+        } else {
+            rho <- tmp.AR$beta
+            k <- tmp.AR$lag
+            y <- na.omit(tmp.AR$residuals)
+            N <- nrow(y)
         }
-        l <- trunc(l)
+    } else {
+        k <- 1
+    }
 
-        lrv <- acf.res[1]
-        for (i in 1:l) {
-            if (l == 0) break
-
-            if (kernel == "bartlett") {
-                ## Bartlett kernel
-                W <- (1 - i / (l + 1))
-            } else if (kernel == "quadratic") {
-                ## Quadratic spectral kernel
-                delta <- 6 * pi * (i / l) / 5
-                W <- (3 / delta^2) * (sin(delta) / delta - cos(delta))
-            }
-            lrv <- lrv + 2 * W * acf.res[1 + i]
+    if (demean) {
+        for (i in 1:P) {
+            mean.y <- mean(y[, i])
+            y[, i] <- y[, i] - mean.y
         }
     }
 
-    lrv.recolored <- lrv / (1 - sum(rho))^2
+    if (!limit.lags) {
+        limit <- N - 1
+    } else if (limit.selector == "kpss-q") {
+        limit <- 4 * ((N / 100)^(1 / 4))
+    } else if (limit.selector == "kpss-m") {
+        limit <- 12 * ((N / 100)^(1 / 4))
+    } else {
+        if (k > 0) {
+            limit <- funcs$limit(y, upper.rho.limit)
 
-    lrv <- min(lrv.recolored, N * 0.15 * lrv)
+            if (limit.selector == "Kurozumi") {
+                upper.lag.limit <- funcs$limit(upper.lag.limit, upper.rho.limit)
+                limit <- min(limit, upper.lag.limit)
+            }
+        } else {
+            limit <- 0
+        }
+    }
+    limit <- trunc(limit)
+    limit <- min(limit, N - 1)
 
-    return(lrv)
+    lrv <- (t(y) %*% y) / N
+    if (k > 0) {
+        for (i in 1:limit) {
+            if (i == 0) break
+            if (i < N - 1) {
+                lrv <- lrv + funcs$weight(i, limit) * (
+                    (t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N +
+                    t(t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N
+                )
+            } else {
+                lrv <- lrv + funcs$weight(i, limit) * as.vector(
+                    (t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N +
+                    t(t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N
+                )
+            }
+        }
+    }
+
+    if (recolor) {
+        print(rho)
+        lrv.recolored <- lrv / (1 - sum(rho))^2
+        lrv <- min(lrv.recolored, N * 0.15 * lrv)
+    }
+
+    return(drop(lrv))
+}
+
+#' @rdname lr.var
+#' @order 2
+lr.var.bartlett <- function(y) {
+    return(lr.var(
+        y,
+        limit.lags = TRUE,
+        limit.selector = "kpss-q"
+    ))
+}
+
+#' @rdname lr.var
+#' @order 3
+lr.var.quadratic <- function(y) {
+    return(lr.var(
+        y,
+        kernel = "quadratic",
+        limit.lags = TRUE,
+        limit.selector = "Andrews"
+    ))
+}
+
+#' @rdname lr.var
+#' @order 4
+lr.var.bartlett.AK <- function(y) {
+    return(lr.var(
+        y,
+        kernel = "bartlett",
+        limit.lags = TRUE,
+        limit.selector = "Kurozumi"
+    ))
+}
+
+#' @rdname lr.var
+#' @order 5
+lr.var.SPC <- function(y,
+                       max.lag = 0,
+                       kernel = "bartlett",
+                       criterion = "bic") {
+    return(lr.var(
+        y,
+        max.lag = max.lag,
+        kernel = kernel,
+        criterion = criterion,
+        recolor = TRUE
+    ))
 }

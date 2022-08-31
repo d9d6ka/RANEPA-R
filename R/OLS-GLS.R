@@ -117,10 +117,12 @@ AR <- function(y, x, max.lag, criterion = "aic") {
     }
 
     for (l in 1:max.lag) {
-        tmp.x <- cbind(
-            tmp.x,
-            lagn(y, l)[(1 + max.lag):N, , drop = FALSE]
-        )
+        if (l <= max.lag) {
+            tmp.x <- cbind(
+                tmp.x,
+                lagn(y, l)[(1 + max.lag):N, , drop = FALSE]
+            )
+        }
     }
 
     if (is.null(criterion)) {
@@ -147,21 +149,23 @@ AR <- function(y, x, max.lag, criterion = "aic") {
         }
 
         for (l in 1:max.lag) {
-            tmp.OLS <- OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
-            tmp.beta <- tmp.OLS$beta
-            tmp.resid <- tmp.OLS$residuals
-            tmp.predict <- tmp.OLS$predict
-            tmp.t.beta <- tmp.OLS$t.beta
-            rm(tmp.OLS)
-            temp.IC <- info.criterion(tmp.resid, l)[[criterion]]
+            if (l <= max.lag) {
+                tmp.OLS <- OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
+                tmp.beta <- tmp.OLS$beta
+                tmp.resid <- tmp.OLS$residuals
+                tmp.predict <- tmp.OLS$predict
+                tmp.t.beta <- tmp.OLS$t.beta
+                rm(tmp.OLS)
+                temp.IC <- info.criterion(tmp.resid, l)[[criterion]]
 
-            if (temp.IC < res.IC) {
-                res.IC <- temp.IC
-                res.beta <- tmp.beta
-                res.resid <- tmp.resid
-                res.predict <- tmp.predict
-                res.t.beta <- tmp.t.beta
-                res.lag <- l
+                if (temp.IC < res.IC) {
+                    res.IC <- temp.IC
+                    res.beta <- tmp.beta
+                    res.resid <- tmp.resid
+                    res.predict <- tmp.predict
+                    res.t.beta <- tmp.t.beta
+                    res.lag <- l
+                }
             }
         }
     }
@@ -172,7 +176,8 @@ AR <- function(y, x, max.lag, criterion = "aic") {
             residuals = res.resid,
             predict = res.predict,
             t.beta = res.t.beta,
-            lag = res.lag
+            lag = res.lag,
+            criterion = res.IC
         )
     )
 }

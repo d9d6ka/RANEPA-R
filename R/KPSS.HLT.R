@@ -25,8 +25,6 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
         m.ksi <- 1.052
     }
 
-    bartlett.lag <- trunc(4 * ((N / 100)^(1 / 4)))
-
     d.y <- diff(y)
 
     first.lag <- trunc(trim * N)
@@ -57,7 +55,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
         tmp.OLS <- OLS(y, x)
 
-        lr.var.y <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
+        lr.var.y <- lr.var.bartlett(tmp.OLS$residuals)
         inv.xx <- qr.solve(t(x) %*% x)
 
         t0.stat <- abs(tmp.OLS$beta[ncol(x)] /
@@ -71,7 +69,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
         tmp.OLS <- OLS(d.y, x)
 
-        lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
+        lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals)
         inv.xx <- qr.solve(t(x) %*% x)
 
         t1.stat <- abs(tmp.OLS$beta[ncol(x)] /
@@ -99,7 +97,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
     tmp.OLS <- OLS(y, x)
 
-    lr.var.y <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
+    lr.var.y <- lr.var.bartlett(tmp.OLS$residuals)
     kpss.y <- KPSS(tmp.OLS$residuals, lr.var.y)
 
     DU1 <- c(rep(0, tb1), rep(1, N - tb1))
@@ -112,7 +110,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
     ctmp.OLS <- OLS(d.y, x)
 
-    lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals, bartlett.lag)
+    lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals)
     kpss.dy <- KPSS(tmp.OLS$residuals, lr.var.dy)
 
     lambda.kpss <- exp(-((500 * kpss.y * kpss.dy)^2))
