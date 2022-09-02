@@ -95,8 +95,7 @@ break.date.cset <- function(y,
     cset.bls <- rep(0, N2)
 
     w <- cbind(wb, wf)
-    b.hat <- solve(t(w) %*% w) %*% t(w) %*% y
-    u.hat <- y - w %*% b.hat
+    u.hat <- OLS(y, w)$residuals
     ssr.0 <- c(t(u.hat) %*% u.hat)
     est.date <- N2
 
@@ -106,8 +105,7 @@ break.date.cset <- function(y,
             as.matrix(wb[(tb + 1):N2, ])
         )
         w <- cbind(wb, wb1, wf)
-        b.hat <- solve(t(w) %*% w) %*% t(w) %*% y
-        u.hat <- y - w %*% b.hat
+        u.hat <- OLS(y, w)$residuals
         ssr.1 <- c(t(u.hat) %*% u.hat)
         if (ssr.1 < ssr.0) {
             ssr.0 <- ssr.1
@@ -161,9 +159,8 @@ break.date.cset <- function(y,
         )
 
         w <- cbind(wb, wb1, wf)
-        inv_ww <- solve(t(w) %*% w)
-        b.hat <- inv_ww %*% t(w) %*% y
-        y.hat <- y - w %*% b.hat
+
+        y.hat <- OLS(y, w)$residuals
 
         if (abs(tb - est.date) > ncol(wb)) {
             we <- cbind(w, wb1e)
@@ -199,18 +196,16 @@ break.date.cset <- function(y,
                 )
 
                 r <- wb2 - wb1
-
-                br.hat <- inv_ww %*% t(w) %*% r
-                r.hat <- r - w %*% br.hat
+                r.hat <- OLS(r, w)$residuals
 
                 g <- t(r.hat) %*% y.hat
-
                 h <- t(r.hat) %*% r.hat
                 ghg <- c(t(g) %*% solve(h) %*% g) / lrv.u2
 
                 if (sup.stat < ghg) {
                     sup.stat <- ghg
                 }
+                
                 avg.stat <- avg.stat + ghg
                 exp.stat <- exp.stat + exp(ghg / 2)
 

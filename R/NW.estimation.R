@@ -27,7 +27,7 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
 
     rho <- rep(0, N)
     for (k in 1:N) {
-        W <- NW.kernel(k, (1:N) / N, h, kernel)
+        W <- .NW.kernel(k, (1:N) / N, h, kernel)
         rho[k] <- sum(x * W * y) / sum(x * W * x)
     }
 
@@ -63,6 +63,11 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
 #' of Nonstationary Volatility.”
 #' Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
 #' https://doi.org/10.1080/07474938.2013.808065.
+#'
+#' Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
+#' “Nonparametric Estimation of the Variance Function
+#' in an Explosive Autoregression Model.”
+#' School of Economics. University of Nottingham, 2022.
 NW.volatility <- function(e, h, kernel = "unif") {
     if (!kernel %in% c("unif", "gauss")) {
         warning("WARNING! Unknown kernel, unif is used instead")
@@ -73,7 +78,7 @@ NW.volatility <- function(e, h, kernel = "unif") {
 
     omega.sq <- rep(0, N)
     for (k in 1:N) {
-        W <- NW.kernel(k, (1:N) / N, h, kernel)
+        W <- .NW.kernel(k, (1:N) / N, h, kernel)
         omega.sq[k] <- sum(W * e^2) / sum(W)
     }
 
@@ -120,7 +125,7 @@ NW.loocv <- function(y, x, kernel = "unif") {
     for (hi in HT) {
         rho <- rep(0, N)
         for (k in 1:N) {
-            W <- NW.kernel(k, (1:N) / N, hi, kernel)
+            W <- .NW.kernel(k, (1:N) / N, hi, kernel)
             W[k] <- 0
             rho[k] <- sum(x * W * y) / sum(x * W * x)
         }
@@ -142,28 +147,8 @@ NW.loocv <- function(y, x, kernel = "unif") {
     )
 }
 
-
-#' @title
-#' Nadaraya–Watson kernel series
-#'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
-#' @param i Current index.
-#' @param x Kernel variable.
-#' @param h Bandwidth.
-#' @param kernel Needed kernel, currently only `unif` and `gauss`.
-#'
-#' @references
-#' Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
-#' “Nonparametric Estimation of the Variance Function
-#' in an Explosive Autoregression Model.”
-#' School of Economics. University of Nottingham, 2022.
-#'
-#' @return A series of kernel function values.
-#'
 #' @importFrom stats pnorm
-NW.kernel <- function(i, x, h, kernel = "unif") {
+.NW.kernel <- function(i, x, h, kernel = "unif") {
     if (kernel == "unif") {
         W <- ifelse(abs((x - x[i]) / h) <= 1, 1, 0)
     } else if (kernel == "gauss") {

@@ -29,4 +29,9 @@ and A. M. Robert Taylor.
 of Nonstationary Volatility.”
 Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
 https://doi.org/10.1080/07474938.2013.808065.
+
+Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
+“Nonparametric Estimation of the Variance Function
+in an Explosive Autoregression Model.”
+School of Economics. University of Nottingham, 2022.
 }

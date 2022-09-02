@@ -94,7 +94,7 @@ DOLS.vars.N.breaks <- function(y, x,
     d.x.lead <- d.x.step
 
     for (i in 1:k.lags) {
-        d_x <- cbind(
+        d.x.lag <- cbind(
             d.x.lag,
             lagn(d.x.step, i)
         )

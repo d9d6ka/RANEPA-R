@@ -1,3 +1,24 @@
+#' @title
+#' Estimating optimal number of leads and lags
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y LHS dependent variable.
+#' @param trend Whether the trend is to be included.
+#' @param zb I(1) regressors with break.
+#' @param zf I(1) regressors without break.
+#' @param trim The trimming parameter to find the lower and upper bounds of
+#' possible break date.
+#' @param criterion A criterion for lead and lag number estimation.
+#'
+#' @return A list of estimated values of leads and lags.
+#'
+#' @references
+#' Kurozumi, Eiji, and Anton Skrobotov.
+#' “Confidence Sets for the Break Date in Cointegrating Regressions.”
+#' Oxford Bulletin of Economics and Statistics 80, no. 3 (2018): 514–35.
+#' https://doi.org/10.1111/obes.12223.
 select.lead.lag <- function(y,
                             trend = TRUE,
                             zb = NULL,
@@ -22,11 +43,9 @@ select.lead.lag <- function(y,
     )
 
     z <- cbind(zb, zf)
-
     w <- cbind(wb, zf)
 
-    b.hat <- solve(t(w) %*% t) %*% t(w) %*% y
-    u.hat <- y - w %*% b.hat
+    u.hat <- OLS(y, w)$residuals
     ssr.0 <- drop(t(u.hat) %*% u.hat)
     est.date <- N
 
@@ -36,8 +55,7 @@ select.lead.lag <- function(y,
             as.matrix(wb[(t + 1):N, ])
         )
         w <- cbind(wb, wb1, zf)
-        b.hat <- solve(t(w) %*% t) %*% t(w) %*% y
-        u.hat <- y - w %*% b.hat
+        u.hat <- OLS(y, w)$residuals
         ssr.1 <- drop(t(u.hat) %*% u.hat)
 
         if (ssr.1 < ssr.0) {
@@ -76,36 +94,34 @@ select.lead.lag <- function(y,
         as.matrix(wf[(max.lead.lag + 1):(N - max.lead.lag), ])
     )
 
-    b.hat <- solve(t(w.0) %*% w.0) %*% t(w.0) %*% y.0
-    u.hat <- y.0 - w.0 %*% b.hat
+    u.hat <- OLS(y.0, w.0)$residuals
     min.ic <- info.criterion(u.hat, ncol(w.0))[[criterion]]
     est.lead <- 0
     est.lag <- 0
 
     for (cur.lead in 1:max.lead.lag) {
         for (cur.lag in 1:max.lead.lag) {
-            w_1 <- w.0
+            w.1 <- w.0
             for (k in 1:cur.lead) {
-                w_1 <- cbind(
-                    w_1,
+                w.1 <- cbind(
+                    w.1,
                     as.matrix(
                         d.z[(max.lead.lag + 1 - k):(N - max.lead.lag - k), ]
                     )
                 )
             }
             for (k in 1:cur.lag) {
-                w_1 <- cbind(
-                    w_1,
+                w.1 <- cbind(
+                    w.1,
                     as.matrix(
                         d.z[(max.lead.lag + 1 + k):(N - max.lead.lag + k), ]
                     )
                 )
             }
 
-            b.hat <- solve(t(w_1) %*% w_1) %*% t(w_1) %*% y.0
-            u.hat <- y.0 - w_1 %*% b.hat
+            u.hat <- OLS(y.0, w.1)$residuals
 
-            cur.ic <- info.criterion(u.hat, ncol(w_1))[[criterion]]
+            cur.ic <- info.criterion(u.hat, ncol(w.1))[[criterion]]
             if (cur.ic < min.ic) {
                 est.lead <- cur.lead
                 est.lag <- cur.lag
