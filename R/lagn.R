@@ -11,19 +11,19 @@
 #' @return Lagged or leaded vector.
 lagn <- function(x, i, na = NA) {
     if (!is.matrix(x)) x <- as.matrix(x)
-    N <- nrow(x)
+    n.obs <- nrow(x)
     k <- ncol(x)
     if (i > 0) {
         return(
             rbind(
                 matrix(data = na, nrow = i, ncol = k),
-                x[1:(N - i), , drop = FALSE]
+                x[1:(n.obs - i), , drop = FALSE]
             )
         )
     } else {
         return(
             rbind(
-                x[(1 + abs(i)):N, , drop = FALSE],
+                x[(1 + abs(i)):n.obs, , drop = FALSE],
                 matrix(data = na, nrow = abs(i), ncol = k)
             )
         )

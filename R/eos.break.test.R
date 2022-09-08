@@ -39,24 +39,25 @@ eos.break.test <- function(eq, m, dataset) {
 
     dep.var <- eq[[2]]
 
-    N <- dim(dataset)[1] - m
+    n.obs <- dim(dataset)[1] - m
 
     A <- matrix(NA, m, m)
     for (i in 1:m) for (j in 1:m) A[i, j] <- min(i, j)
 
     tmp.model <- lm(formula = eq, data = dataset)
-    tmp.resid <- as.matrix(tmp.model$residuals[(N + 1):(N + m)])
+    tmp.resid <- as.matrix(tmp.model$residuals[(n.obs + 1):(n.obs + m)])
 
     result$P <- drop(t(tmp.resid) %*% tmp.resid)
     result$R <- drop(t(tmp.resid) %*% A %*% tmp.resid)
 
-    result$Pj <- seq(0, 0, length.out = N - m + 1)
-    result$Rj <- seq(0, 0, length.out = N - m + 1)
+    result$Pj <- seq(0, 0, length.out = n.obs - m + 1)
+    result$Rj <- seq(0, 0, length.out = n.obs - m + 1)
 
-    for (j in seq_len(N - m + 1)) {
+    for (j in seq_len(n.obs - m + 1)) {
         low <- j
         high <- j + ceiling(m / 2) - 1
-        tmp.data <- dataset[1:N, , drop = FALSE][-(low:high), , drop = FALSE]
+        tmp.data <-
+            dataset[1:n.obs, , drop = FALSE][-(low:high), , drop = FALSE]
 
         tmp.model <- lm(formula = eq, data = tmp.data)
 
@@ -68,8 +69,8 @@ eos.break.test <- function(eq, m, dataset) {
         result$Rj[j] <- drop(t(tmp.resid) %*% A %*% tmp.resid)
     }
 
-    result$p.value <- (1 / (N - m + 1)) * sum(I(result$P <= result$Pj))
-    result$r.value <- (1 / (N - m + 1)) * sum(I(result$R <= result$Rj))
+    result$p.value <- (1 / (n.obs - m + 1)) * sum(I(result$P <= result$Pj))
+    result$r.value <- (1 / (n.obs - m + 1)) * sum(I(result$R <= result$Rj))
 
     return(result)
 }

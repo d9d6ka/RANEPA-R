@@ -47,24 +47,24 @@ KPSS.1.break <- function(y, x,
         if (!is.matrix(x)) x <- as.matrix(x)
     }
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    if (model < 0 & model > 6) {
+    if (model < 0 && model > 6) {
         stop("ERROR: Try to specify the deterministic component again")
     }
 
     if (weakly.exog) {
         if (model == 0) {
             xt <- x
-        } else if (1 <= model & model <= 4) {
-            deter <- determinants.KPSS.1.break(model, N, break.point)
+        } else if (1 <= model && model <= 4) {
+            deter <- determinants.KPSS.1.break(model, n.obs, break.point)
             xt <- cbind(deter, x)
         } else if (model == 5) {
-            deter <- determinants.KPSS.1.break(1, N, break.point)
+            deter <- determinants.KPSS.1.break(1, n.obs, break.point)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         } else if (model == 6) {
-            deter <- determinants.KPSS.1.break(4, N, break.point)
+            deter <- determinants.KPSS.1.break(4, n.obs, break.point)
             xdu <- sweep(x, 1, deter[, 2, drop = FALSE], `*`)
             xt <- cbind(deter, x, xdu)
         }
@@ -158,12 +158,12 @@ KPSS.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    temp.result <- matrix(data = 0, nrow = N - 5, ncol = 2)
+    temp.result <- matrix(data = 0, nrow = n.obs - 5, ncol = 2)
 
-    for (i in 3:(N - 3)) {
-        if (ll.init + 2 < i & i < N - 5 - ll.init) {
+    for (i in 3:(n.obs - 3)) {
+        if (ll.init + 2 < i && i < n.obs - 5 - ll.init) {
             tmp.kpss <- KPSS.1.break(y, x, model, i, weakly.exog, ll.init)
             temp.result[i - 2, 1] <- tmp.kpss$test
             temp.result[i - 2, 2] <-

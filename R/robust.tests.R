@@ -13,15 +13,14 @@ robust.tests.single <- function(y,
                                 trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    x.const <- rep(1, n.obs)
 
     if (season) {
         SEAS <- cbind(
             x.const,
-            seasonal.dummies(N)
+            seasonal.dummies(n.obs)
         )
         y <- OLS(y, SEAS)$residuals
     }
@@ -57,15 +56,14 @@ robust.tests.multiple <- function(y,
     if (!is.matrix(y)) y <- as.matrix(y)
 
      ## Start ##
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    x.const <- rep(1, n.obs)
 
     if (season) {
         SEAS <- cbind(
             x.const,
-            seasonal.dummies(N)
+            seasonal.dummies(n.obs)
         )
         y <- OLS(y, SEAS)$residuals
     }

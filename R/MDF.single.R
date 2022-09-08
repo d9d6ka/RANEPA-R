@@ -54,15 +54,15 @@ MDF.single <- function(y,
     sap.cv.A.PY.k0 <- 1.00
 
     ## Start ##
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    x.const <- rep(1, n.obs)
+    x.trend <- 1:n.obs
 
-    max.lag <- trunc(12 * (N / 100)^(1 / 4))
+    max.lag <- trunc(12 * (n.obs / 100)^(1 / 4))
 
-    first.break <- trunc(trim * N) + 1
-    last.break <- trunc((1 - trim) * N) + 1
+    first.break <- trunc(trim * n.obs) + 1
+    last.break <- trunc((1 - trim) * n.obs) + 1
 
     tb <- segments.GLS(
         y, const, trend, 1,
@@ -72,7 +72,6 @@ MDF.single <- function(y,
     tb <- drop(tb)
     result$break.time <- tb
 
-    ## tau <- tb / N
     cv.MDF.GLS.lib <- cv.MDF.GLS ## CV(tau, cv_MDF_GLS_lib_1,trm);
     cv.MDF.OLS.lib <- cv.MDF.OLS ## CV(tau, cv_MDF_OLS_lib_1,trm);
 
@@ -196,12 +195,11 @@ MDF.single <- function(y,
                         const = FALSE, trend = FALSE,
                         max.lag = k.tb,
                         criterion = NULL)
-        DF2.tb <- N * DF2$alpha / (1 - sum(DF2$beta) + DF2$alpha)
+        DF2.tb <- n.obs * DF2$alpha / (1 - sum(DF2$beta) + DF2$alpha)
 
 #########TODO: Проверить!!!
         if (DF2$t.alpha < MDF.t) MDF.t <- DF2$t.alpha
     }
-
 
     t.HLT <- KPSS.HLT(y, const, trim)
     tmp.PY <- PY.single(y, const, trend, "aic", trim, max.lag)
@@ -211,7 +209,7 @@ MDF.single <- function(y,
 
     tmp.OLS <- OLS(y, x)
     t.alpha <- tmp.OLS$beta[1] /
-        sqrt(drop(t(tmp.OLS$residuals) %*% tmp.OLS$residuals) / N)
+        sqrt(drop(t(tmp.OLS$residuals) %*% tmp.OLS$residuals) / n.obs)
     t.alpha.id = as.numeric(abs(t.alpha) > 1)
 
     ## UR-HLT

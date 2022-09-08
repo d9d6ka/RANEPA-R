@@ -1,7 +1,7 @@
-.lr.var.kernel <- function(kernel, alpha, N) {
+.lr.var.kernel <- function(kernel, alpha, n.obs) {
     if (kernel == "truncated") {
         f.limit <- function(y, l) {
-            return(0.6611 * (N * alpha(y, l)$q2)^(1 / 5))
+            return(0.6611 * (n.obs * alpha(y, l)$q2)^(1 / 5))
         }
         f.weight <- function(i, l) {
             if (abs(i / (l + 1)) <= 1) {
@@ -11,7 +11,7 @@
         }
     } else if (kernel == "bartlett") {
         f.limit <- function(y, l) {
-            return(1.1447 * (N * alpha(y, l)$q1)^(1 / 3))
+            return(1.1447 * (n.obs * alpha(y, l)$q1)^(1 / 3))
         }
         f.weight <- function(i, l) {
             x <- i / (l + 1)
@@ -22,7 +22,7 @@
         }
     } else if (kernel == "parzen") {
         f.limit <- function(y, l) {
-            return(2.6614 * (N * alpha(y, l)$q2)^(1 / 5))
+            return(2.6614 * (n.obs * alpha(y, l)$q2)^(1 / 5))
         }
         f.weight <- function(i, l) {
             x <- i / (l + 1)
@@ -35,7 +35,7 @@
         }
     } else if (kernel == "tukey-hanning") {
         f.limit <- function(y, l) {
-            return(1.7462 * (N * alpha(y, l)$q2)^(1 / 5))
+            return(1.7462 * (n.obs * alpha(y, l)$q2)^(1 / 5))
         }
         f.weight <- function(i, l) {
             x <- i / (l + 1)
@@ -46,7 +46,7 @@
         }
     } else if (kernel == "quadratic") {
         f.limit <- function(y, l) {
-            return(1.3221 * (N * alpha(y, l)$q2)^(1 / 5))
+            return(1.3221 * (n.obs * alpha(y, l)$q2)^(1 / 5))
         }
         f.weight <- function(i, l) {
             x <- i / (l + 1)
@@ -64,12 +64,12 @@
 }
 
 .lr.var.alpha.single <- function(y, upper.rho.limit) {
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    if (!is.null(N) && N > 1) {
+    if (!is.null(n.obs) && n.obs > 1) {
         r <- drop(
-            (t(y[1:(N - 1), 1]) %*% y[2:N, 1]) /
-            (t(y[1:(N - 1), 1]) %*% y[1:(N - 1), 1])
+            (t(y[1:(n.obs - 1), 1]) %*% y[2:n.obs, 1]) /
+            (t(y[1:(n.obs - 1), 1]) %*% y[1:(n.obs - 1), 1])
         )
 
         if (r > upper.rho.limit) {
@@ -90,16 +90,16 @@
 }
 
 .lr.var.alpha.multi <- function(y, upper.rho.limit) {
-    N <- nrow(y)
-    P <- ncol(y)
+    n.obs <- nrow(y)
+    n.var <- ncol(y)
 
     nominator_1 <- 0
     nominator_2 <- 0
     denominator <- 0
 
-    for (i in 1:P) {
-        r <- (t(y[1:(N - 1), i]) %*% y[2:N, i]) /
-            (t(y[1:(N - 1), i]) %*% y[1:(N - 1), i])
+    for (i in 1:n.var) {
+        r <- (t(y[1:(n.obs - 1), i]) %*% y[2:n.obs, i]) /
+            (t(y[1:(n.obs - 1), i]) %*% y[1:(n.obs - 1), i])
         r <- drop(r)
 
         if (r > upper.rho.limit) {
@@ -108,7 +108,7 @@
             r <- -upper.rho.limit
         }
 
-        resids <- y[2:N, i] - y[1:(N - 1), i] * r
+        resids <- y[2:n.obs, i] - y[1:(n.obs - 1), i] * r
         s2 <- mean(resids^2)
 
         nominator_1 <- nominator_1 + 4 * r^2 * s2^2 / (1 - r)^6 / (1 + r)^2
@@ -199,7 +199,7 @@ lr.var <- function(y,
                    criterion = "bic") {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    P <- ncol(y)
+    n.var <- ncol(y)
 
     if (!kernel %in% c("truncated",
                        "bartlett",
@@ -214,10 +214,10 @@ lr.var <- function(y,
     if (limit.selector == "Kurozumi" && is.null(upper.lag.limit)) {
         stop("ERROR! Upper limit is needed for Kurozumi proposal")
     }
-    if (limit.selector == "Kurozumi" && P > 1) {
+    if (limit.selector == "Kurozumi" && n.var > 1) {
         stop("ERROR! Kurozumi proposal is for a single variable case")
     }
-    if (recolor && P > 1) {
+    if (recolor && n.var > 1) {
         stop("ERROR! Recolorization is for a single variable case")
     }
     if (!criterion %in% c("bic", "aic", "lwz")) {
@@ -228,16 +228,16 @@ lr.var <- function(y,
         limit.selector <- "Andrews"
     }
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    if (P == 1) {
-        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.single, N)
+    if (n.var == 1) {
+        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.single, n.obs)
     } else {
-        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.multi, N)
+        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.multi, n.obs)
     }
 
     if (recolor) {
-        info.crit.min <- log(drop(t(y) %*% y) / (N - max.lag))
+        info.crit.min <- log(drop(t(y) %*% y) / (n.obs - max.lag))
 
         tmp.AR <- AR(y, NULL, max.lag, criterion)
         info.crit <- info.criterion(tmp.AR$residuals, tmp.AR$lag)[[criterion]]
@@ -256,18 +256,18 @@ lr.var <- function(y,
     }
 
     if (demean) {
-        for (i in 1:P) {
+        for (i in 1:n.var) {
             mean.y <- mean(y[, i])
             y[, i] <- y[, i] - mean.y
         }
     }
 
     if (!limit.lags) {
-        limit <- N - 1
+        limit <- n.obs - 1
     } else if (limit.selector == "kpss-q") {
-        limit <- 4 * ((N / 100)^(1 / 4))
+        limit <- 4 * ((n.obs / 100)^(1 / 4))
     } else if (limit.selector == "kpss-m") {
-        limit <- 12 * ((N / 100)^(1 / 4))
+        limit <- 12 * ((n.obs / 100)^(1 / 4))
     } else {
         if (k > 0) {
             limit <- funcs$limit(y, upper.rho.limit)
@@ -281,21 +281,21 @@ lr.var <- function(y,
         }
     }
     limit <- trunc(limit)
-    limit <- min(limit, N - 1)
+    limit <- min(limit, n.obs - 1)
 
-    lrv <- (t(y) %*% y) / N
+    lrv <- (t(y) %*% y) / n.obs
     if (k > 0) {
         for (i in 1:limit) {
             if (i == 0) break
-            if (i < N - 1) {
+            if (i < n.obs - 1) {
                 lrv <- lrv + funcs$weight(i, limit) * (
-                    (t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N +
-                    t(t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N
+                    (t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs +
+                    t(t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs
                 )
             } else {
                 lrv <- lrv + funcs$weight(i, limit) * as.vector(
-                    (t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N +
-                    t(t(y[1:(N - i), ]) %*% y[(1 + i):N, ]) / N
+                    (t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs +
+                    t(t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs
                 )
             }
         }
@@ -304,7 +304,7 @@ lr.var <- function(y,
     if (recolor) {
         print(rho)
         lrv.recolored <- lrv / (1 - sum(rho))^2
-        lrv <- min(lrv.recolored, N * 0.15 * lrv)
+        lrv <- min(lrv.recolored, n.obs * 0.15 * lrv)
     }
 
     return(drop(lrv))

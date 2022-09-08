@@ -61,12 +61,12 @@ KPSS.N.breaks <- function(y, x,
         if (!is.matrix(x)) x <- as.matrix(x)
     }
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     if (weakly.exog) {
         xt <- cbind(
             x,
-            determinants.KPSS.N.breaks(model, N, break.point, const, trend)
+            determinants.KPSS.N.breaks(model, n.obs, break.point, const, trend)
         )
 
         tmp.OLS <- OLS(y, xt)

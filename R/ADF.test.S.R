@@ -60,14 +60,14 @@ ADF.test.S <- function(y,
                        iter = 999) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     x <- NULL
     if (const) {
-        x <- cbind(x, rep(1, N))
+        x <- cbind(x, rep(1, n.obs))
     }
     if (trend) {
-        x <- cbind(x, 1:N)
+        x <- cbind(x, 1:n.obs)
     }
 
     yd <- recursive.detrend(y, x, c, gamma, trim)
@@ -98,25 +98,25 @@ ADF.test.S <- function(y,
         .packages = c("breaktest"),
         .options.snow = list(progress = progress)
     ) %dopar% {
-        u <- rep(0, res.lag + N)
-        eps <- sample(e, N, replace = TRUE)
+        u <- rep(0, res.lag + n.obs)
+        eps <- sample(e, n.obs, replace = TRUE)
 
         if (res.lag > 0) {
-            for (s in 1:N) {
+            for (s in 1:n.obs) {
                 u[res.lag + s] <-
                     u[(res.lag + s - 1):s] %*% res.beta + eps[s]
             }
             u <- u[-(1:res.lag)]
         } else {
-            for (s in 1:N) {
+            for (s in 1:n.obs) {
                 u[s] <- eps[s]
             }
         }
 
-        tmp.y <- as.matrix(rep(0, N))
+        tmp.y <- as.matrix(rep(0, n.obs))
 
         tmp.y[1] <- u[1]
-        for (s in 2:N) {
+        for (s in 2:n.obs) {
             tmp.y[s] <- tmp.y[s - 1] + u[s]
         }
 
@@ -185,9 +185,9 @@ recursive.detrend <- function(y, x, c, gamma, trim) {
         return(y)
     }
 
-    N <- nrow(y)
-    beg <- trunc(trim * N)
-    ct <- (c / N)^gamma
+    n.obs <- nrow(y)
+    beg <- trunc(trim * n.obs)
+    ct <- (c / n.obs)^gamma
 
     yt <- y - (1 + ct) * lagn(y, 1, na = 0)
     xt <- x - (1 + ct) * lagn(x, 1, na = 0)
@@ -199,10 +199,10 @@ recursive.detrend <- function(y, x, c, gamma, trim) {
 
     yd <- rbind(
         yd,
-        as.matrix(rep(0, N - beg))
+        as.matrix(rep(0, n.obs - beg))
     )
 
-    for (lstar in (beg + 1):N) {
+    for (lstar in (beg + 1):n.obs) {
         ystar <- OLS(
             yt[1:lstar, , drop = FALSE],
             xt[1:lstar, , drop = FALSE]

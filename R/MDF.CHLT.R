@@ -87,13 +87,13 @@ MDF.CHLT <- function(y,
     )
 
     ## Start
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    x.const <- rep(1, n.obs)
+    x.trend <- 1:n.obs
 
-    first.break <- trunc(trim * N)
-    last.break <- trunc((1 - trim) * N)
+    first.break <- trunc(trim * n.obs)
+    last.break <- trunc((1 - trim) * n.obs)
 
     d.y <- as.matrix(diff(y))
 
@@ -103,16 +103,16 @@ MDF.CHLT <- function(y,
 
     for (tb in first.break:last.break) {
         b1 <- (y[tb] - y[1]) / (tb - 1)
-        b2 <- (y[N] - y[tb]) / (N - tb) - b1
-        tmp.ssr <- (N - 1) * b1^2 + (N - tb) * b2^2 -
-            2 * b1 * (y[N] - y[1]) - 2 * b2 * (y[N] - y[tb]) +
-            2 * b1 * b2 * (N - tb)
+        b2 <- (y[n.obs] - y[tb]) / (n.obs - tb) - b1
+        tmp.ssr <- (n.obs - 1) * b1^2 + (n.obs - tb) * b2^2 -
+            2 * b1 * (y[n.obs] - y[1]) - 2 * b2 * (y[n.obs] - y[tb]) +
+            2 * b1 * b2 * (n.obs - tb)
         if (tmp.ssr < res.ssr)
             res.ssr <- tmp.ssr
             tb.dy <- tb
     }
 
-    tau.dy <- tb.dy / N
+    tau.dy <- tb.dy / n.obs
 
     DU.tb.dy <- as.numeric(x.trend > tb.dy)
     DT.tb.dy <- DU.tb.dy * (x.trend - tb.dy)
@@ -132,10 +132,10 @@ MDF.CHLT <- function(y,
     W.stat.dy <- drop(t(r.resid) %*% r.resid) /
         drop(t(u.resid) %*% u.resid) - 1
 
-    lam.MZ.brk.tau.dy <- exp(-g.brk.MZ * W.stat.dy / sqrt(N))
+    lam.MZ.brk.tau.dy <- exp(-g.brk.MZ * W.stat.dy / sqrt(n.obs))
     tau.lam.MZ <- (1 - lam.MZ.brk.tau.dy) * tau.dy
 
-    lam.ADF.brk.tau.dy <- exp(-g.brk.ADF * W.stat.dy / sqrt(N))
+    lam.ADF.brk.tau.dy <- exp(-g.brk.ADF * W.stat.dy / sqrt(n.obs))
     tau.lam.ADF <- (1 - lam.ADF.brk.tau.dy) * tau.dy
 
     ## Unit root test
@@ -221,7 +221,7 @@ MDF.CHLT <- function(y,
 
         resid.GLS.bt <- GLS.bt(y, tau.lam.MZ, cbar.tau.lam.MZ)$residuals
 
-        tb.lam.MZ <- trunc(tau.lam.MZ * N)
+        tb.lam.MZ <- trunc(tau.lam.MZ * n.obs)
         DTr <- as.numeric(x.trend > tb.lam.MZ) *
             (x.trend - tb.lam.MZ)
 
@@ -297,7 +297,7 @@ MDF.CHLT <- function(y,
 
         resid.GLS.bt <- GLS.bt(y, tau.lam.ADF, cbar.tau.lam.ADF)$residuals
 
-        tb.lam.ADF <- trunc(tau.lam.ADF * N)
+        tb.lam.ADF <- trunc(tau.lam.ADF * n.obs)
         DTr <- as.numeric(x.trend > tb.lam.ADF) *
             (x.trend - tb.lam.ADF)
 
@@ -341,7 +341,7 @@ MDF.CHLT <- function(y,
         cbind(
             x.const,
             DU.tb.dy
-        )[2:N, ]
+        )[2:n.obs, ]
     )$residuals
     eps <- as.matrix(c(0, eps))
 
@@ -358,7 +358,7 @@ MDF.CHLT <- function(y,
         .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
-        z <- rnorm(N)
+        z <- rnorm(n.obs)
         y.wb <- cumsum(eps * z)
 
 
@@ -459,16 +459,15 @@ MDF.CHLT <- function(y,
 #' @param trim Trimming parameter.
 #' @param c Filtering parameter.
 GLS.bt <- function(y, trim, c) {
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    rho <- 1 + c / N
-    tb <- trunc(trim * N)
+    tb <- trunc(trim * n.obs)
 
     x <- cbind(
-        rep(1, N),
+        rep(1, n.obs),
         c(
             rep(0, tb),
-            1:(N - tb)
+            1:(n.obs - tb)
         )
     )
 

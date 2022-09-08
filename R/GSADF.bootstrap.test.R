@@ -17,7 +17,7 @@ GSADF.bootstrap.test <- function(y,
                                  alpha = 0.05,
                                  iter = 4 * 200,
                                  seed = round(10^4 * sd(y))) {
-    N <- length(y)
+    n.obs <- length(y)
 
     ## Find SADF.value.
     model <- GSADF.test(y, trim, const)
@@ -39,7 +39,7 @@ GSADF.bootstrap.test <- function(y,
         .combine = c,
         .options.snow = list(progress = progress)
     ) %dopar% {
-        y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
+        y.star <- cumsum(c(0, rnorm(n.obs - 1) * diff(y)))
         model <- GSADF.test(y.star, trim, const)
         model$GSADF.value
     }

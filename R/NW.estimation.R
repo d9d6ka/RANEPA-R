@@ -23,11 +23,11 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
         kernel <- "unif"
     }
 
-    N <- length(y)
+    n.obs <- length(y)
 
-    rho <- rep(0, N)
-    for (k in 1:N) {
-        W <- .NW.kernel(k, (1:N) / N, h, kernel)
+    rho <- rep(0, n.obs)
+    for (k in 1:n.obs) {
+        W <- .NW.kernel(k, (1:n.obs) / n.obs, h, kernel)
         rho[k] <- sum(x * W * y) / sum(x * W * x)
     }
 
@@ -74,11 +74,11 @@ NW.volatility <- function(e, h, kernel = "unif") {
         kernel <- "unif"
     }
 
-    N <- length(e)
+    n.obs <- length(e)
 
-    omega.sq <- rep(0, N)
-    for (k in 1:N) {
-        W <- .NW.kernel(k, (1:N) / N, h, kernel)
+    omega.sq <- rep(0, n.obs)
+    for (k in 1:n.obs) {
+        W <- .NW.kernel(k, (1:n.obs) / n.obs, h, kernel)
         omega.sq[k] <- sum(W * e^2) / sum(W)
     }
 
@@ -117,15 +117,15 @@ NW.loocv <- function(y, x, kernel = "unif") {
         kernel <- "unif"
     }
 
-    N <- length(y)
+    n.obs <- length(y)
 
-    HT <- seq(N^(-0.5), N^(-0.3), by = 0.01)
+    HT <- seq(n.obs^(-0.5), n.obs^(-0.3), by = 0.01)
     cv0 <- Inf
 
     for (hi in HT) {
-        rho <- rep(0, N)
-        for (k in 1:N) {
-            W <- .NW.kernel(k, (1:N) / N, hi, kernel)
+        rho <- rep(0, n.obs)
+        for (k in 1:n.obs) {
+            W <- .NW.kernel(k, (1:n.obs) / n.obs, hi, kernel)
             W[k] <- 0
             rho[k] <- sum(x * W * y) / sum(x * W * x)
         }

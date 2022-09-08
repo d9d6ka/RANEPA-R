@@ -72,13 +72,13 @@ STADF.test <- function(y,
                        hc = 1,
                        pc = 1,
                        add.p.value = TRUE) {
-    N <- length(y)
+    n.obs <- length(y)
 
     ## Part 4.1. NW estimation.
     ## Estimate kernel regression either on the basis of CV or for a fixed h.
     y.0 <- y - y[1]
     my <- diff(y.0)
-    mx <- y.0[1:(N - 1)]
+    mx <- y.0[1:(n.obs - 1)]
     nw.model.cv <- NW.loocv(my, mx)
     nw.model <- NW.estimation(my, mx, h = nw.model.cv$h)
 
@@ -90,14 +90,14 @@ STADF.test <- function(y,
         if (ksi.input == "auto") {
             ## Calculate sigma.
             sigma <- 0
-            bd <- round(0.1 * (N - 1))
-            for (s in bd:(N - 1)) {
+            bd <- round(0.1 * (n.obs - 1))
+            for (s in bd:(n.obs - 1)) {
                 sigma1 <- sd(u.hat[(s - bd + 1):s])
                 if (sigma1 > sigma) {
                     sigma <- sigma1
                 }
             }
-            ksi <- pc * sigma * (N - 1)^(1 / 7)
+            ksi <- pc * sigma * (n.obs - 1)^(1 / 7)
         } else {
             ksi <- ksi.input
         }
@@ -121,7 +121,7 @@ STADF.test <- function(y,
         new.index <- tmp.reindex$new.index
         rm(tmp.reindex)
     } else {
-        new.index <- c(0:(N - 1))
+        new.index <- c(0:(n.obs - 1))
     }
     y.tt <- y[new.index + 1]
 
@@ -129,7 +129,7 @@ STADF.test <- function(y,
     t.values <- c()
     m <- 1
 
-    for (j in (floor(trim * N)):N) {
+    for (j in (floor(trim * n.obs)):n.obs) {
         ## If we consider a model with a constant,
         ## we subtract the moving average.
         if (const) {
@@ -153,13 +153,13 @@ STADF.test <- function(y,
             cr.values <- .cval_SADF_without_const
         }
 
-        p.value <- p.values.SADF(STADF.value, N, cr.values)
+        p.value <- p.values.SADF(STADF.value, n.obs, cr.values)
     }
 
     result <- c(
         list(
             y = y,
-            N = N,
+            N = n.obs,
             trim = trim,
             const = const,
             omega.est = omega.est,

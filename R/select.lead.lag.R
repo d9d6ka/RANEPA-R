@@ -31,14 +31,14 @@ select.lead.lag <- function(y,
 
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    first.break <- trunc(2 * trim * N)
-    last.break <- trunc((1 - 2 * trim) * N)
+    first.break <- trunc(2 * trim * n.obs)
+    last.break <- trunc((1 - 2 * trim) * n.obs)
 
     wb <- cbind(
-        rep(1, N),
-        if (trend) (1:N) / N else NULL,
+        rep(1, n.obs),
+        if (trend) (1:n.obs) / n.obs else NULL,
         zb
     )
 
@@ -47,12 +47,12 @@ select.lead.lag <- function(y,
 
     u.hat <- OLS(y, w)$residuals
     ssr.0 <- drop(t(u.hat) %*% u.hat)
-    est.date <- N
+    est.date <- n.obs
 
     for (t in first.break:last.break) {
         wb1 <- rbind(
             matrix(data = 0, nrow = t, ncol = 1),
-            as.matrix(wb[(t + 1):N, ])
+            as.matrix(wb[(t + 1):n.obs, ])
         )
         w <- cbind(wb, wb1, zf)
         u.hat <- OLS(y, w)$residuals
@@ -66,15 +66,15 @@ select.lead.lag <- function(y,
 
     est.dt <- rbind(
         matrix(data = 0, nrow = est.date, ncol = ncol(wb)),
-        as.matrix(wb[(est.date + 1):N, ])
+        as.matrix(wb[(est.date + 1):n.obs, ])
     )
-    y <- as.matrix(y[2:N, ])
-    wb <- as.matrix(wb[2:N, ])
-    est.dt <- as.matrix(est.dt[2:N, ])
-    d.z <- as.matrix(z[2:N, ]) - as.matrix(z[1:(N - 1), ])
+    y <- as.matrix(y[2:n.obs, ])
+    wb <- as.matrix(wb[2:n.obs, ])
+    est.dt <- as.matrix(est.dt[2:n.obs, ])
+    d.z <- as.matrix(z[2:n.obs, ]) - as.matrix(z[1:(n.obs - 1), ])
 
     wf <- cbind(
-        if (!is.null(zf)) as.matrix(zf[2:N, ]) else NULL,
+        if (!is.null(zf)) as.matrix(zf[2:n.obs, ]) else NULL,
         d.z
     )
 

@@ -63,7 +63,7 @@ KPSS.N.breaks.bootstrap <- function(y, x,
         if (!is.matrix(x)) x <- as.matrix(x)
     }
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     tmp.kpss <- KPSS.N.breaks(
         y, x,
@@ -83,7 +83,7 @@ KPSS.N.breaks.bootstrap <- function(y, x,
     if (weakly.exog) {
         xreg <- cbind(
             x,
-            determinants.KPSS.N.breaks(model, N, break.point, const, trend)
+            determinants.KPSS.N.breaks(model, n.obs, break.point, const, trend)
         )
     } else {
         xreg <- DOLS.vars.N.breaks(

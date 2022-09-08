@@ -16,15 +16,15 @@
 ACF <- function(y) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     mean.y <- mean(y)
 
-    result <- rep(0, N)
+    result <- rep(0, n.obs)
 
-    for (i in 0:(N - 1)) {
+    for (i in 0:(n.obs - 1)) {
         result[i + 1] <-
-            t(y[1:(N - i)] - mean.y) %*% (y[(1 + i):N] - mean.y) / N
+            t(y[1:(n.obs - i)] - mean.y) %*% (y[(1 + i):n.obs] - mean.y) / n.obs
     }
 
     return(result)

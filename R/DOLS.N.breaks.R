@@ -33,8 +33,6 @@ DOLS.N.breaks <- function(y,
     }
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
-
     dols.vars <- DOLS.vars.N.breaks(
         y, x,
         model, break.point,
@@ -43,9 +41,6 @@ DOLS.N.breaks <- function(y,
     )
 
     res.OLS <- OLS(dols.vars$yreg, dols.vars$xreg)
-
-    s2 <- drop(t(res.OLS$residuals) %*% res.OLS$residuals) /
-        nrow(dols.vars$xreg)
 
     criterions <- info.criterion(res.OLS$residuals, ncol(dols.vars$xreg))
 
@@ -87,9 +82,9 @@ DOLS.vars.N.breaks <- function(y, x,
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    d.x.step <- x[2:N, , drop = FALSE] - x[1:(N - 1), , drop = FALSE]
+    d.x.step <- x[2:n.obs, , drop = FALSE] - x[1:(n.obs - 1), , drop = FALSE]
     d.x.lag <- d.x.step
     d.x.lead <- d.x.step
 
@@ -107,31 +102,32 @@ DOLS.vars.N.breaks <- function(y, x,
         )
     }
 
-    if (k.lags != 0 & k.leads != 0) {
+    if (k.lags != 0 && k.leads != 0) {
         lags <- d.x.lag
         leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
         lags.leads <- cbind(lags, leads)
-        lags.leads <- lags.leads[(k.lags + 1):(N - 1 - k.leads), , drop = FALSE]
-    } else if (k.lags != 0 & k.leads == 0) {
+        lags.leads <-
+            lags.leads[(k.lags + 1):(n.obs - 1 - k.leads), , drop = FALSE]
+    } else if (k.lags != 0 && k.leads == 0) {
         lags <- d.x.lag
-        lags.leads <- lags[(k.lags + 1):(N - 1), , drop = FALSE]
-    } else if (k.lags == 0 & k.leads != 0) {
+        lags.leads <- lags[(k.lags + 1):(n.obs - 1), , drop = FALSE]
+    } else if (k.lags == 0 && k.leads != 0) {
         lags <- d.x.lag
         leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
         lags.leads <- cbind(lags, leads)
-        lags.leads <- lags.leads[1:(N - 1 - k.leads), , drop = FALSE]
-    } else if (k.lags == 0 & k.leads == 0) {
+        lags.leads <- lags.leads[1:(n.obs - 1 - k.leads), , drop = FALSE]
+    } else if (k.lags == 0 && k.leads == 0) {
         lags.leads <- d.x.lag
     }
-    deter <- determinants.KPSS.N.breaks(model, N, break.point, const, trend)
+    deter <- determinants.KPSS.N.breaks(model, n.obs, break.point, const, trend)
 
     xreg <- cbind(
-        deter[(k.lags + 2):(N - k.leads), , drop = FALSE],
-        x[(k.lags + 2):(N - k.leads), , drop = FALSE],
+        deter[(k.lags + 2):(n.obs - k.leads), , drop = FALSE],
+        x[(k.lags + 2):(n.obs - k.leads), , drop = FALSE],
         lags.leads
     )
 
-    yreg <- y[(k.lags + 2):(N - k.leads), 1, drop = FALSE]
+    yreg <- y[(k.lags + 2):(n.obs - k.leads), 1, drop = FALSE]
 
     return(
         list(

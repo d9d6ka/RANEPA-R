@@ -45,9 +45,9 @@
 KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    z <- determinants.KPSS.2.breaks(model, N, break.point)
+    z <- determinants.KPSS.2.breaks(model, n.obs, break.point)
 
     res.OLS <- OLS(y, z)
 
@@ -114,8 +114,6 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
 #' @export
 KPSS.2.breaks.unknown <- function(y, model, max.lag = 0, kernel = "bartlett") {
     if (!is.matrix(y)) y <- as.matrix(y)
-
-    N <- nrow(y)
 
     res.segs <- segments.OLS.double(y, model)
 

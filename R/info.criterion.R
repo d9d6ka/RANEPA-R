@@ -34,23 +34,23 @@ info.criterion <- function(resids, extra,
                            alpha = 0, y = NULL) {
     if (!is.matrix(resids)) resids <- as.matrix(resids)
 
-    N <- nrow(resids)
+    n.obs <- nrow(resids)
 
     if (modification) {
-        s2 <- drop(t(resids) %*% resids) / N
+        s2 <- drop(t(resids) %*% resids) / n.obs
         tau <- (alpha ^ 2) * drop(t(y) %*% y) / s2
     } else {
         tau <- 0
     }
 
-    log.RSS <- log(drop(t(resids) %*% resids) / N)
+    log.RSS <- log(drop(t(resids) %*% resids) / n.obs)
 
     return(
         list(
-            aic = log.RSS + 2 * (tau + extra) / N,
-            bic = log.RSS + (tau + extra) * log(N) / N,
-            hq = log.RSS + 2 * (tau + extra) * log(log(N)) / N,
-            lwz = log.RSS + 0.299 * (tau + extra) * (log(N))^2.1
+            aic = log.RSS + 2 * (tau + extra) / n.obs,
+            bic = log.RSS + (tau + extra) * log(n.obs) / n.obs,
+            hq = log.RSS + 2 * (tau + extra) * log(log(n.obs)) / n.obs,
+            lwz = log.RSS + 0.299 * (tau + extra) * (log(n.obs))^2.1
         )
     )
 }

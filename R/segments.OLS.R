@@ -23,7 +23,7 @@ segments.OLS <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     if (is.null(SSR.data)) {
         SSR.data <- SSR.matrix(y, x, width)
@@ -31,14 +31,14 @@ segments.OLS <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
 
     if (m == 1) {
         tmp.result <- segments.OLS.single(
-            1, N,
-            width, N - width,
-            N, SSR.data
+            1, n.obs,
+            width, n.obs - width,
+            n.obs, SSR.data
         )
         res.ssr <- tmp.result$SSR
         res.break <- tmp.result$break.point
     } else {
-        variants <- N - (m + 1) * width + 1
+        variants <- n.obs - (m + 1) * width + 1
         cur.ssr <- matrix(
             data = Inf,
             nrow = variants,
@@ -71,7 +71,7 @@ segments.OLS <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
             } else if (step == m) {
                 for (v in 1:variants) {
                     tmp.ssr[v, 1] <- cur.ssr[v, 1] +
-                        SSR.data[step * width + v, N]
+                        SSR.data[step * width + v, n.obs]
                 }
                 res.ssr <- min(tmp.ssr)
                 res.index <- which.min(tmp.ssr)
@@ -88,7 +88,7 @@ segments.OLS <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
                     nrow = variants,
                     ncol = m
                 )
-                for (step.end in ((step + 1) * width):(N - (m - step) * width)) {
+                for (step.end in ((step + 1) * width):(n.obs - (m - step) * width)) { # nolint
                     new.v <- step.end - (step + 1) * width + 1
                     for (v in 1:variants) {
                         tmp.ssr[v, 1] <- cur.ssr[v, 1] +

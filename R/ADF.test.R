@@ -56,14 +56,14 @@ ADF.test <- function(y,
 
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     deter <- NULL
     if (const) {
-        deter <- cbind(deter, rep(1, N))
+        deter <- cbind(deter, rep(1, n.obs))
     }
     if (trend) {
-        deter <- cbind(deter, 1:N)
+        deter <- cbind(deter, 1:n.obs)
     }
 
     ## Detrending
@@ -96,8 +96,8 @@ ADF.test <- function(y,
         }
 
         tmp.ols <- OLS(
-            d.yr[(2 + max.lag):N, , drop = FALSE],
-            xr[(2 + max.lag):N, 1, drop = FALSE]
+            d.yr[(2 + max.lag):n.obs, , drop = FALSE],
+            xr[(2 + max.lag):n.obs, 1, drop = FALSE]
         )
         b <- tmp.ols$beta
         e <- tmp.ols$residuals
@@ -106,7 +106,7 @@ ADF.test <- function(y,
         res.ic <- info.criterion(
             e, 0,
             modification = modified.criterion,
-            alpha = b[1], y = xr[(2 + max.lag):N, 1, drop = FALSE]
+            alpha = b[1], y = xr[(2 + max.lag):n.obs, 1, drop = FALSE]
         )[[criterion]]
         res.lag <- 0
 
@@ -124,8 +124,8 @@ ADF.test <- function(y,
             }
 
             tmp.ols <- OLS(
-                d.yr[(2 + max.lag):N, , drop = FALSE],
-                xr[(2 + max.lag):N, 1:(1 + l), drop = FALSE]
+                d.yr[(2 + max.lag):n.obs, , drop = FALSE],
+                xr[(2 + max.lag):n.obs, 1:(1 + l), drop = FALSE]
             )
             b <- tmp.ols$beta
             e <- tmp.ols$residuals
@@ -134,7 +134,7 @@ ADF.test <- function(y,
             tmp.ic <- info.criterion(
                 e, l,
                 modification = modified.criterion,
-                alpha = b[1], y = xr[(2 + max.lag):N, 1, drop = FALSE]
+                alpha = b[1], y = xr[(2 + max.lag):n.obs, 1, drop = FALSE]
             )[[criterion]]
 
             if (tmp.ic < res.ic) {
@@ -145,11 +145,11 @@ ADF.test <- function(y,
     }
 
     res.OLS <- OLS(
-        d.y[(2 + res.lag):N, , drop = FALSE],
-        x[(2 + res.lag):N, 1:(1 + res.lag), drop = FALSE]
+        d.y[(2 + res.lag):n.obs, , drop = FALSE],
+        x[(2 + res.lag):n.obs, 1:(1 + res.lag), drop = FALSE]
     )
 
-    Z.stat <- (N - res.lag - 1) * drop(res.OLS$beta[1] - 1)
+    Z.stat <- (n.obs - res.lag - 1) * drop(res.OLS$beta[1] - 1)
 
     return(
         list(

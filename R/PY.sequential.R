@@ -44,29 +44,29 @@ PY.sequential <- function(y,
         ))
     }
 
-    N <- nrow(y)
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    n.obs <- nrow(y)
+    x.const <- rep(1, n.obs)
+    x.trend <- 1:n.obs
 
-    h <- trunc(trim * N)
+    h <- trunc(trim * n.obs)
 
     if (breaks == 0) {
-        date.vec <- c(1, N + 1)
+        date.vec <- c(1, n.obs + 1)
     } else {
         SSR.data <- SSR.matrix(y, cbind(x.const, x.trend), h)
         dates <- segments.OLS(y, cbind(x.const, x.trend), breaks, h, SSR.data)
-        date.vec <- c(1, drop(dates$break.point) + 1, N + 1)
+        date.vec <- c(1, drop(dates$break.point) + 1, n.obs + 1)
     }
 
     wald <- rep(0, breaks + 1)
 
     for (i in 1:(breaks + 1)) {
-        N.i <- date.vec[i + 1] - date.vec[i]
+        n.obs.i <- date.vec[i + 1] - date.vec[i]
 
-        vect1 <- rep(0, N)
+        vect1 <- rep(0, n.obs)
 
-        t.low <- max(trunc(date.vec[i] + N.i * trim - 1), max.lag + 2)
-        t.high <- trunc(date.vec[i + 1] - N.i * trim - 1)
+        t.low <- max(trunc(date.vec[i] + n.obs.i * trim - 1), max.lag + 2)
+        t.high <- trunc(date.vec[i + 1] - n.obs.i * trim - 1)
 
         if (t.low < t.high - 1) {
             for (tb in t.low:t.high) {
@@ -119,16 +119,16 @@ PY.sequential <- function(y,
                 k <- 10
                 k.x <- ncol(x)
 
-                c1 <- sqrt((1 + k.x) * N.i)
-                c2 <- ((1 + k.x) * N.i - tau05^2 * (IP + N.i)) /
-                    (tau05 * (tau05 + k) * (IP + N.i))
+                c1 <- sqrt((1 + k.x) * n.obs.i)
+                c2 <- ((1 + k.x) * n.obs.i - tau05^2 * (IP + n.obs.i)) /
+                    (tau05 * (tau05 + k) * (IP + n.obs.i))
 
                 if (tau > tau05)
                     c.tau <- -tau
                 if (tau <= tau05 && tau > -k)
-                    c.tau <- IP * tau / N - (k.x + 1) / (tau + c2 * (tau + k))
+                    c.tau <- IP * tau / n.obs - (k.x + 1) / (tau + c2 * (tau + k))
                 if (tau <= -k && tau > -c1)
-                    c.tau <- IP * tau / N - (k.x + 1) / tau
+                    c.tau <- IP * tau / n.obs - (k.x + 1) / tau
                 if (tau <= -c1)
                     c.tau <- 0
 
@@ -140,7 +140,7 @@ PY.sequential <- function(y,
                 else
                     a.hat.M <- -0.99
 
-                CR <- sqrt(N) * abs(a.hat.M - 1)
+                CR <- sqrt(n.obs) * abs(a.hat.M - 1)
                 if (CR <= 1) a.hat.M <- 1
 
                 y.g <- rbind(
@@ -176,7 +176,7 @@ PY.sequential <- function(y,
                         rm(tmp.OLS)
 
                         if (!const) {
-                            h0 <- (drop(t(v.resid) %*% v.resid) / (N.i - k.hat)) /
+                            h0 <- (drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat)) /
                                 ((1 - sum(beta.v))^2)
                         }
                         if (const) {
@@ -197,7 +197,7 @@ PY.sequential <- function(y,
                                 )
                                 beta.ki <- OLS(y.g, x.g.ki)$beta
                                 BETAS[k.i, ] <- drop(beta.ki)
-                                sig.e <- drop(t(v.resid) %*% v.resid) / (N.i - k.hat)
+                                sig.e <- drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat)
                                 h0 <- sig.e / ((1 - sum(beta.v))^2)
                                 beta.g[2] <- (sqrt(h0) / sqrt(sig.e)) *
                                     (beta.g[2] - drop(t(BETAS[, 2]) %*% beta.v))

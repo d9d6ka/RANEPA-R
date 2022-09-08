@@ -23,7 +23,7 @@
 #' Kennedy School of Government, Harvard University, 1990.
 MZ.statistic <- function(y, l,
                          const = FALSE, trend = FALSE) {
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     tmp.ADF <- ADF.test(y, const, trend, l, criterion = NULL)
 
@@ -31,10 +31,10 @@ MZ.statistic <- function(y, l,
     S.2 <- drop(t(tmp.ADF$residuals) %*% tmp.ADF$residuals) /
         (nrow(tmp.ADF$residuals) - (1 + l)) / denom^2
 
-    sum.y2 <- sum(tmp.ADF$yd[1:(N - 1)]^2)
+    sum.y2 <- sum(tmp.ADF$yd[1:(n.obs - 1)]^2)
 
-    mza <- (y[N]^2 / N - S.2) / (2 * sum.y2 / N^2)
-    msb <- sqrt(sum.y2 / S.2 / N^2)
+    mza <- (y[n.obs]^2 / n.obs - S.2) / (2 * sum.y2 / n.obs^2)
+    msb <- sqrt(sum.y2 / S.2 / n.obs^2)
     mzt <- mza * msb
 
     return(

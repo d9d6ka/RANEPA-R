@@ -15,13 +15,13 @@ SSR.matrix <- function(y, x, width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    result <- matrix(data = Inf, nrow = N, ncol = N)
+    result <- matrix(data = Inf, nrow = n.obs, ncol = n.obs)
 
-    for (i in 1:(N - width + 1)) {
-        result[i, 1:N] <- SSR.recursive(
-            y, x, i, N, width
+    for (i in 1:(n.obs - width + 1)) {
+        result[i, 1:n.obs] <- SSR.recursive(
+            y, x, i, n.obs, width
         )
     }
 
@@ -54,9 +54,9 @@ SSR.recursive <- function(y, x, beg, end, width = 2) {
     if (beg < 1) beg <- 1
     if (nrow(y) < end) end <- nrow(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    result <- matrix(data = Inf, nrow = N, ncol = 1)
+    result <- matrix(data = Inf, nrow = n.obs, ncol = 1)
 
     y.0 <- y[beg:(beg + width - 1), , drop = FALSE]
     x.0 <- x[beg:(beg + width - 1), , drop = FALSE]

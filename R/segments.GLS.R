@@ -36,13 +36,13 @@ segments.GLS <- function(y,
         breaks <- 3
     }
 
-    N <- nrow(y)
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    n.obs <- nrow(y)
+    x.const <- rep(1, n.obs)
+    x.trend <- 1:n.obs
 
     if (is.null(first.break) || is.null(last.break)) {
-        first.break <- floor(trim * N) + 1
-        last.break <- floor((1 - trim) * N) + 1
+        first.break <- floor(trim * n.obs) + 1
+        last.break <- floor((1 - trim) * n.obs) + 1
     }
     width <- first.break - 1
 
@@ -64,7 +64,7 @@ segments.GLS <- function(y,
                     if (trend) DT1 else NULL
                 )
 
-                c_bar <- N * (alpha - 1)
+                c_bar <- n.obs * (alpha - 1)
                 resids <- GLS(y, x, c_bar)$residuals
 
                 tmp.SSR <- drop(t(resids) %*% resids)
@@ -91,7 +91,7 @@ segments.GLS <- function(y,
                         if (trend) DT2 else NULL
                     )
 
-                    c_bar <- N * (alpha - 1)
+                    c_bar <- n.obs * (alpha - 1)
                     resids <- GLS(y, x, c_bar)$residuals
 
                     tmp.SSR <- drop(t(resids) %*% resids)
@@ -124,7 +124,7 @@ segments.GLS <- function(y,
                             if (trend) DT3 else NULL
                         )
 
-                        c_bar <- N * (alpha - 1)
+                        c_bar <- n.obs * (alpha - 1)
                         resids <- GLS(y, x, c_bar)$residuals
 
                         tmp.SSR <- drop(t(resids) %*% resids)

@@ -53,9 +53,9 @@ GLS <- function(y, z, c) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(z)) z <- as.matrix(z)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    rho <- 1 + c / N
+    rho <- 1 + c / n.obs
 
     y.hat <- y - rho * lagn(y, 1)
     y.hat[1, ] <- y[1, ]
@@ -104,13 +104,13 @@ AR <- function(y, x, max.lag, criterion = "aic") {
     }
 
     if (!is.matrix(y)) y <- as.matrix(y)
-    N <- nrow(y)
-    tmp.y <- y[(1 + max.lag):N, , drop = FALSE]
+    n.obs <- nrow(y)
+    tmp.y <- y[(1 + max.lag):n.obs, , drop = FALSE]
 
     if (!is.null(x)) {
         if (!is.null(x) && !is.matrix(x)) x <- as.matrix(x)
         k <- ncol(x)
-        tmp.x <- x[(1 + max.lag):N, , drop = FALSE]
+        tmp.x <- x[(1 + max.lag):n.obs, , drop = FALSE]
     } else {
         k <- 0
         tmp.x <- NULL
@@ -120,7 +120,7 @@ AR <- function(y, x, max.lag, criterion = "aic") {
         if (l <= max.lag) {
             tmp.x <- cbind(
                 tmp.x,
-                lagn(y, l)[(1 + max.lag):N, , drop = FALSE]
+                lagn(y, l)[(1 + max.lag):n.obs, , drop = FALSE]
             )
         }
     }
@@ -143,7 +143,7 @@ AR <- function(y, x, max.lag, criterion = "aic") {
             res.predict <- tmp.OLS$predict
             res.t.beta <- tmp.OLS$t.beta
             rm(tmp.OLS)
-            res.IC <- log(drop(t(res.resid) %*% res.resid) / (N - max.lag))
+            res.IC <- log(drop(t(res.resid) %*% res.resid) / (n.obs - max.lag))
         } else {
             res.IC <- Inf
         }

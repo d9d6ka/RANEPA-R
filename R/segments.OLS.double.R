@@ -25,17 +25,17 @@
 segments.OLS.double <- function(y, model) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     res.r <- 0
     cur.ssr <- Inf
     res.tb1 <- 0
     res.tb2 <- 0
 
-    if (1 <= model & model <= 4) {
-        for (i in 2:(N - 4)) {
-            for (j in (i + 2):(N - 2)) {
-                z <- determinants.KPSS.2.breaks(model, N, c(i, j))
+    if (1 <= model && model <= 4) {
+        for (i in 2:(n.obs - 4)) {
+            for (j in (i + 2):(n.obs - 2)) {
+                z <- determinants.KPSS.2.breaks(model, n.obs, c(i, j))
                 resids <- OLS(y, z)$residuals
                 ssr <- drop(t(resids) %*% resids)
                 if (ssr < cur.ssr) {
@@ -46,10 +46,10 @@ segments.OLS.double <- function(y, model) {
                 }
             }
         }
-    } else if (5 <= model & model <= 7) {
-        for (i in 2:(N - 4)) {
-            for (j in (i + 2):(N - 2)) {
-                z <- determinants.KPSS.2.breaks(model, N, c(i, j))
+    } else if (5 <= model && model <= 7) {
+        for (i in 2:(n.obs - 4)) {
+            for (j in (i + 2):(n.obs - 2)) {
+                z <- determinants.KPSS.2.breaks(model, n.obs, c(i, j))
                 resids <- OLS(y, z)$residuals
                 ssr <- drop(t(resids) %*% resids)
                 if (ssr < cur.ssr) {
@@ -60,9 +60,9 @@ segments.OLS.double <- function(y, model) {
                 }
             }
         }
-        for (j in 2:(N - 4)) {
-            for (i in (j + 2):(N - 2)) {
-                z <- determinants.KPSS.2.breaks(model, N, c(i, j))
+        for (j in 2:(n.obs - 4)) {
+            for (i in (j + 2):(n.obs - 2)) {
+                z <- determinants.KPSS.2.breaks(model, n.obs, c(i, j))
                 resids <- OLS(y, z)$residuals
                 ssr <- drop(t(resids) %*% resids)
                 if (ssr < cur.ssr) {

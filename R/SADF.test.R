@@ -35,7 +35,7 @@ SADF.test <- function(y,
                       trim = 0.01 + 1.8 / sqrt(length(y)),
                       const = TRUE,
                       add.p.value = TRUE) {
-    N <- length(y)
+    n.obs <- length(y)
 
     if (const == FALSE) {
         y <- y - y[1]
@@ -43,7 +43,7 @@ SADF.test <- function(y,
 
     t.values <- c()
     m <- 1
-    for (j in (floor(trim * N)):N) {
+    for (j in (floor(trim * n.obs)):n.obs) {
         model <- ADF.test(y[1:j], const = const)
         t.values[m] <- model$t.alpha
         m <- m + 1
@@ -59,7 +59,7 @@ SADF.test <- function(y,
             cr.values <- .cval_SADF_without_const
         }
 
-        p.value <- p.values.SADF(SADF.value, N, cr.values)
+        p.value <- p.values.SADF(SADF.value, n.obs, cr.values)
     }
 
     result <- c(

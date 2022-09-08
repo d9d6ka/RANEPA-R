@@ -25,7 +25,7 @@
 supSBADF.statistic <- function(y,
                                trim = 0.01 + 1.8 / sqrt(length(y)),
                                generalized = FALSE) {
-    N <- length(y)
+    n.obs <- length(y)
 
     ## Calculate C.t.
     C.t <- cumsum(sign(diff(y)))
@@ -34,14 +34,14 @@ supSBADF.statistic <- function(y,
     m <- 1
 
     if (!generalized) {
-        for (j in (floor(trim * N)):N) {
+        for (j in (floor(trim * n.obs)):n.obs) {
             t.beta <- OLS(diff(C.t)[1:j], C.t[1:j])$t.beta
             SBADF.values[m] <- drop(t.beta)
             m <- m + 1
         }
     } else {
-        for (i in 1:(N - floor(trim * N) + 1)) {
-            for (j in (i + floor(trim * N) - 1):N) {
+        for (i in 1:(n.obs - floor(trim * n.obs) + 1)) {
+            for (j in (i + floor(trim * n.obs) - 1):n.obs) {
                 t.beta <- OLS(diff(C.t)[i:j], C.t[i:j])$t.beta
                 SBADF.values[m] <- drop(t.beta)
                 m <- m + 1

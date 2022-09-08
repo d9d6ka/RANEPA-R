@@ -33,7 +33,7 @@ sb.GSADF.test <- function(y,
                           iter = 999,
                           urs = TRUE,
                           seed = round(10^4 * sd(y))) {
-    N <- length(y)
+    n.obs <- length(y)
 
     ## Find supSBADF_value.
     supSBADF.model <- supSBADF.statistic(y, trim)
@@ -59,7 +59,7 @@ sb.GSADF.test <- function(y,
         .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
-        y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
+        y.star <- cumsum(c(0, rnorm(n.obs - 1) * diff(y)))
         tmp.GSADF.value <- NA
         supSBADF.value <- NA
         if (urs == TRUE) {

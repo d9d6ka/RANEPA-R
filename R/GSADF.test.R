@@ -6,7 +6,7 @@ GSADF.test <- function(y,
                        trim = 0.01 + 1.8 / sqrt(length(y)),
                        const = TRUE,
                        add.p.value = TRUE) {
-    N <- length(y)
+    n.obs <- length(y)
 
     if (const == FALSE) {
         y <- y - y[1]
@@ -14,8 +14,8 @@ GSADF.test <- function(y,
 
     t.values <- c()
     m <- 1
-    for (i in 1:(N - floor(trim * N) + 1)) {
-        for (j in (i + floor(trim * N) - 1):N) {
+    for (i in 1:(n.obs - floor(trim * n.obs) + 1)) {
+        for (j in (i + floor(trim * n.obs) - 1):n.obs) {
             model <- ADF.test(y[i:j], const = const)
             t.values[m] <- model$t.alpha
             m <- m + 1
@@ -32,7 +32,7 @@ GSADF.test <- function(y,
             cr.values <- .cval_GSADF_without_const
         }
 
-        p.value <- p.values.SADF(GSADF.value, N, cr.values)
+        p.value <- p.values.SADF(GSADF.value, n.obs, cr.values)
     }
 
     result <- c(

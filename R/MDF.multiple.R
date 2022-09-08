@@ -106,16 +106,16 @@ MDF.multiple <- function(y,
         sap.cv.ur.3 <- 1.0098
     }
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
-    max.lag <- trunc(12 * (N / 100)^(1 / 4))
+    max.lag <- trunc(12 * (n.obs / 100)^(1 / 4))
 
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    x.const <- rep(1, n.obs)
+    x.trend <- 1:n.obs
 
-    first.break <- trunc(trim * N) + 1
+    first.break <- trunc(trim * n.obs) + 1
     width <- first.break - 1
-    last.break <- trunc((1 - trim) * N) + 1
+    last.break <- trunc((1 - trim) * n.obs) + 1
 
     x <- cbind(x.const, x.trend)
 
@@ -173,7 +173,7 @@ MDF.multiple <- function(y,
                            criterion = NULL)
         if (!ZA) {
             denom <- 1 - sum(DF1.tb$beta) + DF1.tb$alpha
-            stat.OLS <- N * DF1.tb$alpha / denom
+            stat.OLS <- n.obs * DF1.tb$alpha / denom
         } else {
             stat.OLS <- DF1.tb$t.alpha
         }
@@ -224,7 +224,7 @@ MDF.multiple <- function(y,
             )
             if (!ZA) {
                 denom <- 1 - sum(DF2.tb$beta) + DF2.tb$alpha
-                stat.OLS <- N * DF2.tb$alpha / denom
+                stat.OLS <- n.obs * DF2.tb$alpha / denom
             } else {
                 stat.OLS <- DF2.tb$t.alpha
             }
@@ -282,7 +282,7 @@ MDF.multiple <- function(y,
                  )
                  if (!ZA) {
                      denom <- 1 - sum(DF3.tb$beta) + DF3.tb$alpha
-                     stat.OLS <- N * DF3.tb$alpha / denom
+                     stat.OLS <- n.obs * DF3.tb$alpha / denom
                  } else {
                      stat.OLS <- DF3.tb$t.alpha
                  }
@@ -322,7 +322,7 @@ MDF.multiple <- function(y,
         bb <- tmp.OLS$beta
         rr <- tmp.OLS$residuals
         rm(tmp.OLS)
-        t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / N)
+        t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / n.obs)
         t.alpha.2.id <- as.numeric(t.alpha > 1)
     }
     if (breaks == 3) {
@@ -350,7 +350,7 @@ MDF.multiple <- function(y,
         bb <- tmp.OLS$beta
         rr <- tmp.OLS$residuals
         rm(tmp.OLS)
-        t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / N)
+        t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / n.obs)
         t.alpha.3.id <- as.numeric(t.alpha > 1)
     }
 

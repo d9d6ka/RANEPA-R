@@ -17,7 +17,7 @@
 KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
+    n.obs <- nrow(y)
 
     if (!const) {
         m.ksi <- 0.853
@@ -27,8 +27,8 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
 
     d.y <- diff(y)
 
-    first.lag <- trunc(trim * N)
-    last.lag <- trunc((1 - trim) * N)
+    first.lag <- trunc(trim * n.obs)
+    last.lag <- trunc((1 - trim) * n.obs)
 
     t0 <- -Inf
     t1 <- -Inf
@@ -37,14 +37,14 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
     tb1 <- NA
 
     for (tb in first.lag:last.lag) {
-        tau <- tb / N
+        tau <- tb / n.obs
 
-        DU <- c(rep(0, tb), rep(1, N - tb))
-        DT <- DU * (1:N - tb)
+        DU <- c(rep(0, tb), rep(1, n.obs - tb))
+        DT <- DU * (1:n.obs - tb)
 
         x <- cbind(
-            rep(1, N),
-            1:N,
+            rep(1, n.obs),
+            1:n.obs,
             if (const) {
                 DU
             } else {
@@ -62,9 +62,9 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
                        sqrt(lr.var.y * inv.xx[ncol(x), ncol(x)]))
 
         x <- cbind(
-            rep(1, N - 1),
+            rep(1, n.obs - 1),
             if (const) diff(DU) else NULL,
-            DU[2:N]
+            DU[2:n.obs]
         )
 
         tmp.OLS <- OLS(d.y, x)
@@ -85,12 +85,12 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
         }
     }
 
-    DU0 <- c(rep(0, tb0), rep(1, N - tb0))
-    DT0 <- DU0 * (1:N - tb0)
+    DU0 <- c(rep(0, tb0), rep(1, n.obs - tb0))
+    DT0 <- DU0 * (1:n.obs - tb0)
 
     x <- cbind(
-        rep(1, N),
-        1:N,
+        rep(1, n.obs),
+        1:n.obs,
         if (const) DU0 else NULL,
         DT0
     )
@@ -100,12 +100,12 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
     lr.var.y <- lr.var.bartlett(tmp.OLS$residuals)
     kpss.y <- KPSS(tmp.OLS$residuals, lr.var.y)
 
-    DU1 <- c(rep(0, tb1), rep(1, N - tb1))
+    DU1 <- c(rep(0, tb1), rep(1, n.obs - tb1))
 
     x <- cbind(
-        rep(1, N - 1),
+        rep(1, n.obs - 1),
         if (const) diff(DU1) else NULL,
-        DU1[2:N]
+        DU1[2:n.obs]
     )
 
     ctmp.OLS <- OLS(d.y, x)

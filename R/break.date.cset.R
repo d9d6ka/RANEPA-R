@@ -37,12 +37,12 @@ break.date.cset <- function(y,
         z.lag <- ll.est$lag
     }
 
-    N <- nrow(y)
-    td <- as.matrix(1:N)
+    n.obs <- nrow(y)
+    td <- as.matrix(1:n.obs)
 
     wb <- cbind(
-        rep(1, N),
-        if (trend) (1:N) / N else NULL,
+        rep(1, n.obs),
+        if (trend) (1:n.obs) / n.obs else NULL,
         zb
     )
     z <- cbind(zb, zf)
@@ -50,13 +50,13 @@ break.date.cset <- function(y,
     p.zb <- if (!is.null(zb)) ncol(zb) else 0
     p.zf <- if (!is.null(zf)) ncol(zf) else 0
 
-    td <- as.matrix(td[2:N, ])
-    y <- as.matrix(y[2:N, ])
-    wb <- as.matrix(wb[2:N, ])
-    d.z <- as.matrix(z[2:N, ] - z[1:(N - 1), ])
+    td <- as.matrix(td[2:n.obs, ])
+    y <- as.matrix(y[2:n.obs, ])
+    wb <- as.matrix(wb[2:n.obs, ])
+    d.z <- as.matrix(z[2:n.obs, ] - z[1:(n.obs - 1), ])
 
     wf <- cbind(
-        if (!is.null(zf)) as.matrix(zf[2:N, ]) else NULL,
+        if (!is.null(zf)) as.matrix(zf[2:n.obs, ]) else NULL,
         d.z
     )
 

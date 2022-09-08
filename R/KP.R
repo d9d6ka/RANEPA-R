@@ -25,8 +25,8 @@ KP <- function(y,
                trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    N <- nrow(y)
-    k.max <- trunc(12 * (N / 100)^(1 / 4))
+    n.obs <- nrow(y)
+    k.max <- trunc(12 * (n.obs / 100)^(1 / 4))
 
     model <- as.numeric(const) + 1
     trim.pos <- which(c(0.01, 0.05, 0.1, 0.15, 0.25) == trim)

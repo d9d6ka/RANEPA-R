@@ -65,12 +65,12 @@ coint.test.GH <- function(...,
         y2 <- cbind(y2, ...elt(i))
     }
 
-    N <- nrow(y1)
-    x.const <- rep(1, N)
-    x.trend <- 1:N
+    n.obs <- nrow(y1)
+    x.const <- rep(1, n.obs)
+    x.trend <- 1:n.obs
 
-    first.break <- trunc(trim * N)
-    last.break <- trunc((1 - trim) * N)
+    first.break <- trunc(trim * n.obs)
+    last.break <- trunc((1 - trim) * n.obs)
 
     res.Za <- Inf
     res.Zt <- Inf
@@ -103,23 +103,23 @@ coint.test.GH <- function(...,
 
         e <- OLS(y1, x)$residuals
 
-        rho <- sum(e[1:(N - 1), ] * e[2:N, ]) /
-            sum(e[1:(N - 1), ]^2)
+        rho <- sum(e[1:(n.obs - 1), ] * e[2:n.obs, ]) /
+            sum(e[1:(n.obs - 1), ]^2)
 
         nu <- e - rho * lagn(e, 1, na = 0)
 
         lrv <- lr.var.bartlett(nu)
-        lambda <- (lrv - drop(t(nu) %*% nu) / N) / 2
+        lambda <- (lrv - drop(t(nu) %*% nu) / n.obs) / 2
 
-        rho.star <- sum(e[1:(N - 1), ] * e[2:N, ] - lambda) /
-            sum(e[1:(N - 1), ]^2)
+        rho.star <- sum(e[1:(n.obs - 1), ] * e[2:n.obs, ] - lambda) /
+            sum(e[1:(n.obs - 1), ]^2)
 
         res.Za <- min(
-            N * (rho.star - 1),
+            n.obs * (rho.star - 1),
             res.Za
         )
         res.Zt <- min(
-            (rho.star - 1) * sqrt(sum(e[1:(N - 1), ]^2) / lrv),
+            (rho.star - 1) * sqrt(sum(e[1:(n.obs - 1), ]^2) / lrv),
             res.Zt
         )
 
@@ -141,15 +141,15 @@ coint.test.GH <- function(...,
 
         asy.Za <- .cval_coint_gh[[shift]]$Za$b0[m, 3]
         est.Za <- .cval_coint_gh[[shift]]$Za$b0[m, 3] +
-            .cval_coint_gh[[shift]]$Za$b1[m, 3] / N
+            .cval_coint_gh[[shift]]$Za$b1[m, 3] / n.obs
 
         asy.Zt <- .cval_coint_gh[[shift]]$Zt$b0[m, 3]
         est.Zt <- .cval_coint_gh[[shift]]$Zt$b0[m, 3] +
-            .cval_coint_gh[[shift]]$Zt$b1[m, 3] / N
+            .cval_coint_gh[[shift]]$Zt$b1[m, 3] / n.obs
 
         asy.ADF <- .cval_coint_gh[[shift]]$ADF$b0[m, 3]
         est.ADF <- .cval_coint_gh[[shift]]$ADF$b0[m, 3] +
-            .cval_coint_gh[[shift]]$ADF$b1[m, 3] / N
+            .cval_coint_gh[[shift]]$ADF$b1[m, 3] / n.obs
 
         result <- list(
             shift = shift,

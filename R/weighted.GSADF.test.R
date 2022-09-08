@@ -18,7 +18,7 @@ weighted.GSADF.test <- function(y,
                                 iter = 4 * 200,
                                 urs = TRUE,
                                 seed = round(10^4 * sd(y))) {
-    N <- length(y)
+    n.obs <- length(y)
 
     ## Find supBZ.value.
     supBZ.model <- supBZ.statistic(y, trim)
@@ -47,7 +47,7 @@ weighted.GSADF.test <- function(y,
         .combine = rbind,
         .options.snow = list(progress = progress)
     ) %dopar% {
-        y.star <- cumsum(c(0, rnorm(N - 1) * diff(y)))
+        y.star <- cumsum(c(0, rnorm(n.obs - 1) * diff(y)))
         tmp.GSADF.value <- NA
         if (urs == TRUE) {
             gsadf.model <- GSADF.test(y.star, trim, const)
