@@ -13,7 +13,7 @@ Author: Anton Skrobotov [aut, ctb],
 Maintainer: Vadim Zyamalov <zyamalov@ranepa.ru>
 Depends: R (>= 3.5.0)
 Encoding: UTF-8
-Imports: doSNOW, foreach, stringr
+Imports: doSNOW, foreach, stringr, Rfast
 Description: This package contains a set of different unit root and
     cointegration tests in the presence of structural breaks in the data.
 License: GPL (>= 2)
