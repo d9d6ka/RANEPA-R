@@ -77,7 +77,7 @@ KPSS.1.break <- function(y, x,
     } else {
         bic.min <- Inf
         for (i in ll.init:1) {
-            tmp.DOLS <- DOLS(y, x, model, break.point, i, i)
+            tmp.DOLS <- DOLS.1.break(y, x, model, break.point, i, i)
             beta <- tmp.DOLS$beta
             resids <- tmp.DOLS$residuals
             bic <- tmp.DOLS$bic

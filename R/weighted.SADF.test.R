@@ -191,3 +191,248 @@ weighted.SADF.test <- function(y,
 
     return(result)
 }
+
+
+#' @rdname weighted.SADF.test
+#' @order 2
+#'
+#' @import doSNOW
+#' @import foreach
+#' @import parallel
+#' @importFrom stats quantile
+#' @importFrom stats rnorm
+#' @importFrom stats sd
+#' @importFrom utils txtProgressBar
+#' @importFrom utils setTxtProgressBar
+#'
+#' @export
+weighted.GSADF.test <- function(y,
+                                trim = 0.01 + 1.8 / sqrt(length(y)),
+                                const = TRUE,
+                                alpha = 0.05,
+                                iter = 4 * 200,
+                                urs = TRUE,
+                                seed = round(10^4 * sd(y))) {
+    n.obs <- length(y)
+
+    ## Find supBZ.value.
+    supBZ.model <- supBZ.statistic(y, trim)
+    sigma.sq <- supBZ.model$sigma.sq
+    BZ.values <- supBZ.model$BZ.values
+    supBZ.value <- supBZ.model$supBZ.value
+
+    ## Do parallel.
+    cores <- detectCores()
+
+    progress.bar <- txtProgressBar(max = iter, style = 3)
+    progress <- function(n) setTxtProgressBar(progress.bar, n)
+
+    cluster <- makeCluster(max(cores - 1, 1))
+    clusterExport(cluster, c(
+        "ADF.test",
+        "GSADF.test",
+        "supBZ.statistic",
+        ".cval_GSADF_without_const",
+        ".cval_GSADF_with_const"
+    ))
+    registerDoSNOW(cluster)
+
+    SADF.supBZ.bootstrap.values <- foreach(
+        step = 1:iter,
+        .combine = rbind,
+        .options.snow = list(progress = progress)
+    ) %dopar% {
+        y.star <- cumsum(c(0, rnorm(n.obs - 1) * diff(y)))
+        tmp.GSADF.value <- NA
+        if (urs == TRUE) {
+            gsadf.model <- GSADF.test(y.star, trim, const)
+            tmp.GSADF.value <- gsadf.model$GSADF.value
+        }
+        supBZ.model <- supBZ.statistic(y.star, trim, sigma.sq)
+        tmp.supBZ.value <- supBZ.model$supBZ.value
+        c(tmp.GSADF.value, tmp.supBZ.value)
+    }
+
+    stopCluster(cluster)
+
+    ## Get sadf_supBZ.bootstsrap.values.
+    supBZ.bootstsrap.values <- SADF.supBZ.bootstrap.values[, 2]
+
+    ## Find critical value.
+    supBZ.cr.value <- as.numeric(quantile(
+        supBZ.bootstsrap.values,
+        1 - alpha
+    ))
+
+    ## A union of rejections strategy.
+    if (urs == TRUE) {
+        ## Find sadf.value.
+        gsadf.model <- GSADF.test(y, trim, const)
+        t.values <- gsadf.model$t.values
+        GSADF.value <- gsadf.model$GSADF.value
+
+        ## Get sadf_supBZ.bootstsrap.values.
+        GSADF.bootstsrap.values <- SADF.supBZ.bootstrap.values[, 1]
+
+        ## Find critical value.
+        GSADF.cr.value <- as.numeric(quantile(
+            GSADF.bootstsrap.values,
+            1 - alpha
+        ))
+
+        ## Calculate U value.
+        U.value <- max(
+            GSADF.value,
+            GSADF.cr.value / supBZ.cr.value * supBZ.value
+        )
+
+        ## Find U.bootstsrap.values.
+        U.bootstsrap.values <- c()
+        for (b in 1:iter) {
+            U.bootstsrap.values[b] <- max(
+                GSADF.bootstsrap.values[b],
+                GSADF.cr.value / supBZ.cr.value * supBZ.bootstsrap.values[b]
+            )
+        }
+
+        ## Find critical value.
+        U.cr.value <- as.numeric(quantile(U.bootstsrap.values, 1 - alpha))
+
+        p.value <- round(sum(U.bootstsrap.values > U.value) / iter, 4)
+
+        is.explosive <- ifelse(U.value > U.cr.value, 1, 0)
+    } else {
+        p.value <- round(sum(supBZ.bootstsrap.values > supBZ.value) / iter, 4)
+
+        is.explosive <- ifelse(supBZ.value > supBZ.cr.value, 1, 0)
+    }
+
+    result <- c(
+        list(
+            y = y,
+            trim = trim,
+            const = const,
+            alpha = alpha,
+            iter = iter,
+            urs = urs,
+            seed = seed,
+            sigma.sq = sigma.sq,
+            BZ.values = BZ.values,
+            supBZ.value = supBZ.value,
+            supBZ.bootstsrap.values = supBZ.bootstsrap.values,
+            supBZ.cr.value = supBZ.cr.value,
+            p.value = p.value,
+            is.explosive = is.explosive
+        ),
+        if (urs) {
+            list(
+                t.values = t.values,
+                GSADF.value = GSADF.value,
+                GSADF.bootstsrap.values = GSADF.bootstsrap.values,
+                GSADF.cr.value = GSADF.cr.value,
+                U.value = U.value,
+                U.bootstsrap.values = U.bootstsrap.values,
+                U.cr.value = U.cr.value
+            )
+        } else {
+            NULL
+        }
+    )
+
+    class(result) <- "sadf"
+
+    return(result)
+}
+
+
+#' @title
+#' Calculate supBZ statistic
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y The series of interest.
+#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param sigma.sq Local non-parametric estimates of variance. If `NULL` they
+#' will be estimated via Nadaraya-Watson procedure.
+#' @param generalized Whether to calculate generalized statistic value.
+#'
+#' @return A list of:
+#' * `y`,
+#' * `trim`,
+#' * `sigma.sq`,
+#' * `BZ.values`: a series of BZ-statistic,
+#' * `supBZ.value`: the maximum of `supBZ.values`,
+#' * `h.est`: the estimated value of bandwidth if `sigma.sq` is `NULL`.
+#'
+#' @references
+#' Harvey, David I., Stephen J. Leybourne, and Yang Zu.
+#' “Testing Explosive Bubbles with Time-Varying Volatility.”
+#' Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
+#' https://doi.org/10.1080/07474938.2018.1536099.
+#'
+#' @export
+supBZ.statistic <- function(y,
+                            trim = 0.01 + 1.8 / sqrt(length(y)),
+                            sigma.sq = NULL,
+                            generalized = FALSE) {
+    n.obs <- length(y)
+
+    if (is.null(sigma.sq)) {
+        ## NW estimation.
+        my <- (diff(y))^2
+        mx <- rep(1, n.obs - 1)
+        nw.loocv.model <- NW.loocv(my, mx, kernel = "gauss")
+        h.est <- nw.loocv.model$h
+        nw.model <- NW.volatility(
+            my,
+            kernel = "gauss",
+            h = nw.loocv.model$h
+        )
+        sigma.sq <- nw.model$omega.sq
+    }
+
+    y <- y - y[1]
+    d.y <- diff(y)
+    l.y <- y[1:(n.obs - 1)]
+
+    BZ.values <- c()
+    m <- 1
+
+    if (!generalized) {
+        for (j in (floor(trim * n.obs)):n.obs) {
+            BZ.values[m] <-
+                sum(d.y[1:(j - 1)] * l.y[1:(j - 1)] / sigma.sq[1:(j - 1)]) /
+                    (sum(l.y[1:(j - 1)]^2 / sigma.sq[1:(j - 1)]))^0.5
+            m <- m + 1
+        }
+    } else {
+        for (i in 1:(n.obs - floor(trim * n.obs) + 1)) {
+            for (j in (i + floor(trim * n.obs) - 1):n.obs) {
+                BZ.values[m] <-
+                    sum(d.y[i:(j - 1)] * l.y[i:(j - 1)] / sigma.sq[i:(j - 1)]) /
+                        (sum(l.y[i:(j - 1)]^2 / sigma.sq[i:(j - 1)]))^0.5
+                m <- m + 1
+            }
+        }
+    }
+
+    supBZ.value <- max(BZ.values)
+
+    return(
+        c(
+            list(
+                y = y,
+                trim = trim,
+                sigma.sq = sigma.sq,
+                BZ.values = BZ.values,
+                supBZ.value = supBZ.value
+            ),
+            if (exists("h.est")) {
+                list(h.est = h.est)
+            } else {
+                NULL
+            }
+        )
+    )
+}

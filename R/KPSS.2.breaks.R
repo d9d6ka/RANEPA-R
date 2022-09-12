@@ -115,7 +115,7 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
 KPSS.2.breaks.unknown <- function(y, model, max.lag = 0, kernel = "bartlett") {
     if (!is.matrix(y)) y <- as.matrix(y)
 
-    res.segs <- segments.OLS.double(y, model)
+    res.segs <- segments.OLS.2.breaks(y, model)
 
     if (!is.null(kernel)) {
         test <- KPSS(

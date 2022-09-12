@@ -54,7 +54,13 @@ PY.sequential <- function(y,
         date.vec <- c(1, n.obs + 1)
     } else {
         SSR.data <- SSR.matrix(y, cbind(x.const, x.trend), h)
-        dates <- segments.OLS(y, cbind(x.const, x.trend), breaks, h, SSR.data)
+        dates <- segments.OLS.N.breaks(
+            y,
+            cbind(x.const, x.trend),
+            breaks,
+            h,
+            SSR.data
+        )
         date.vec <- c(1, drop(dates$break.point) + 1, n.obs + 1)
     }
 

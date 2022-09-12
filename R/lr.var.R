@@ -1,129 +1,3 @@
-.lr.var.kernel <- function(kernel, alpha, n.obs) {
-    if (kernel == "truncated") {
-        f.limit <- function(y, l) {
-            return(0.6611 * (n.obs * alpha(y, l)$q2)^(1 / 5))
-        }
-        f.weight <- function(i, l) {
-            if (abs(i / (l + 1)) <= 1) {
-                return(1)
-            }
-            return(0)
-        }
-    } else if (kernel == "bartlett") {
-        f.limit <- function(y, l) {
-            return(1.1447 * (n.obs * alpha(y, l)$q1)^(1 / 3))
-        }
-        f.weight <- function(i, l) {
-            x <- i / (l + 1)
-            if (abs(x) <= 1) {
-                return(1 - abs(x))
-            }
-            return(0)
-        }
-    } else if (kernel == "parzen") {
-        f.limit <- function(y, l) {
-            return(2.6614 * (n.obs * alpha(y, l)$q2)^(1 / 5))
-        }
-        f.weight <- function(i, l) {
-            x <- i / (l + 1)
-            if (abs(x) <= 0.5) {
-                return(1 - 6 * x^2 + 6 * abs(x)^3)
-            } else if (abs(x) <= 1) {
-                return(2 * (1 - abs(x))^3)
-            }
-            return(0)
-        }
-    } else if (kernel == "tukey-hanning") {
-        f.limit <- function(y, l) {
-            return(1.7462 * (n.obs * alpha(y, l)$q2)^(1 / 5))
-        }
-        f.weight <- function(i, l) {
-            x <- i / (l + 1)
-            if (abs(x) <= 1) {
-                return((1 + cos(pi * x)) / 2)
-            }
-            return(0)
-        }
-    } else if (kernel == "quadratic") {
-        f.limit <- function(y, l) {
-            return(1.3221 * (n.obs * alpha(y, l)$q2)^(1 / 5))
-        }
-        f.weight <- function(i, l) {
-            x <- i / (l + 1)
-            delta <- 6 * pi * x / 5
-            return((3 / delta^2) * (sin(delta) / delta - cos(delta)))
-        }
-    }
-
-    return(
-        list(
-            limit = f.limit,
-            weight = f.weight
-        )
-    )
-}
-
-.lr.var.alpha.single <- function(y, upper.rho.limit) {
-    n.obs <- nrow(y)
-
-    if (!is.null(n.obs) && n.obs > 1) {
-        r <- drop(
-            (t(y[1:(n.obs - 1), 1]) %*% y[2:n.obs, 1]) /
-            (t(y[1:(n.obs - 1), 1]) %*% y[1:(n.obs - 1), 1])
-        )
-
-        if (r > upper.rho.limit) {
-            r <- upper.rho.limit
-        } else if (r < -upper.rho.limit) {
-            r <- -upper.rho.limit
-        }
-    } else {
-        r <- y
-    }
-
-    return(
-        list(
-            q1 = 4 * r^2 / (1 + r)^2 / (1 - r)^2,
-            q2 = 4 * r^2 / (1 - r)^4
-        )
-    )
-}
-
-.lr.var.alpha.multi <- function(y, upper.rho.limit) {
-    n.obs <- nrow(y)
-    n.var <- ncol(y)
-
-    nominator_1 <- 0
-    nominator_2 <- 0
-    denominator <- 0
-
-    for (i in 1:n.var) {
-        r <- (t(y[1:(n.obs - 1), i]) %*% y[2:n.obs, i]) /
-            (t(y[1:(n.obs - 1), i]) %*% y[1:(n.obs - 1), i])
-        r <- drop(r)
-
-        if (r > upper.rho.limit) {
-            r <- upper.rho.limit
-        } else if (r < -upper.rho.limit) {
-            r <- -upper.rho.limit
-        }
-
-        resids <- y[2:n.obs, i] - y[1:(n.obs - 1), i] * r
-        s2 <- mean(resids^2)
-
-        nominator_1 <- nominator_1 + 4 * r^2 * s2^2 / (1 - r)^6 / (1 + r)^2
-        nominator_2 <- nominator_2 + 4 * r^2 * s2^2 / (1 - r)^8
-        denominator <- denominator + s2^2 / (1 - r)^4
-    }
-
-    return(
-        list(
-            q1 = nominator_1 / denominator,
-            q2 = nominator_2 / denominator
-        )
-    )
-}
-
 #' @order 1
 #' @title
 #' Calculating long-run variance or covariance matrix
@@ -355,4 +229,131 @@ lr.var.SPC <- function(y,
         criterion = criterion,
         recolor = TRUE
     ))
+}
+
+
+.lr.var.kernel <- function(kernel, alpha, n.obs) {
+    if (kernel == "truncated") {
+        f.limit <- function(y, l) {
+            return(0.6611 * (n.obs * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            if (abs(i / (l + 1)) <= 1) {
+                return(1)
+            }
+            return(0)
+        }
+    } else if (kernel == "bartlett") {
+        f.limit <- function(y, l) {
+            return(1.1447 * (n.obs * alpha(y, l)$q1)^(1 / 3))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            if (abs(x) <= 1) {
+                return(1 - abs(x))
+            }
+            return(0)
+        }
+    } else if (kernel == "parzen") {
+        f.limit <- function(y, l) {
+            return(2.6614 * (n.obs * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            if (abs(x) <= 0.5) {
+                return(1 - 6 * x^2 + 6 * abs(x)^3)
+            } else if (abs(x) <= 1) {
+                return(2 * (1 - abs(x))^3)
+            }
+            return(0)
+        }
+    } else if (kernel == "tukey-hanning") {
+        f.limit <- function(y, l) {
+            return(1.7462 * (n.obs * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            if (abs(x) <= 1) {
+                return((1 + cos(pi * x)) / 2)
+            }
+            return(0)
+        }
+    } else if (kernel == "quadratic") {
+        f.limit <- function(y, l) {
+            return(1.3221 * (n.obs * alpha(y, l)$q2)^(1 / 5))
+        }
+        f.weight <- function(i, l) {
+            x <- i / (l + 1)
+            delta <- 6 * pi * x / 5
+            return((3 / delta^2) * (sin(delta) / delta - cos(delta)))
+        }
+    }
+
+    return(
+        list(
+            limit = f.limit,
+            weight = f.weight
+        )
+    )
+}
+
+.lr.var.alpha.single <- function(y, upper.rho.limit) {
+    n.obs <- nrow(y)
+
+    if (!is.null(n.obs) && n.obs > 1) {
+        r <- drop(
+            (t(y[1:(n.obs - 1), 1]) %*% y[2:n.obs, 1]) /
+            (t(y[1:(n.obs - 1), 1]) %*% y[1:(n.obs - 1), 1])
+        )
+
+        if (r > upper.rho.limit) {
+            r <- upper.rho.limit
+        } else if (r < -upper.rho.limit) {
+            r <- -upper.rho.limit
+        }
+    } else {
+        r <- y
+    }
+
+    return(
+        list(
+            q1 = 4 * r^2 / (1 + r)^2 / (1 - r)^2,
+            q2 = 4 * r^2 / (1 - r)^4
+        )
+    )
+}
+
+.lr.var.alpha.multi <- function(y, upper.rho.limit) {
+    n.obs <- nrow(y)
+    n.var <- ncol(y)
+
+    nominator_1 <- 0
+    nominator_2 <- 0
+    denominator <- 0
+
+    for (i in 1:n.var) {
+        r <- (t(y[1:(n.obs - 1), i]) %*% y[2:n.obs, i]) /
+            (t(y[1:(n.obs - 1), i]) %*% y[1:(n.obs - 1), i])
+        r <- drop(r)
+
+        if (r > upper.rho.limit) {
+            r <- upper.rho.limit
+        } else if (r < -upper.rho.limit) {
+            r <- -upper.rho.limit
+        }
+
+        resids <- y[2:n.obs, i] - y[1:(n.obs - 1), i] * r
+        s2 <- mean(resids^2)
+
+        nominator_1 <- nominator_1 + 4 * r^2 * s2^2 / (1 - r)^6 / (1 + r)^2
+        nominator_2 <- nominator_2 + 4 * r^2 * s2^2 / (1 - r)^8
+        denominator <- denominator + s2^2 / (1 - r)^4
+    }
+
+    return(
+        list(
+            q1 = nominator_1 / denominator,
+            q2 = nominator_2 / denominator
+        )
+    )
 }

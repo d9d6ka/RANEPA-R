@@ -81,3 +81,61 @@ SADF.test <- function(y,
 
     return(result)
 }
+
+
+#' @rdname SADF.test
+#' @order 2
+#'
+#' @export
+GSADF.test <- function(y,
+                       trim = 0.01 + 1.8 / sqrt(length(y)),
+                       const = TRUE,
+                       add.p.value = TRUE) {
+    n.obs <- length(y)
+
+    if (const == FALSE) {
+        y <- y - y[1]
+    }
+
+    t.values <- c()
+    m <- 1
+    for (i in 1:(n.obs - floor(trim * n.obs) + 1)) {
+        for (j in (i + floor(trim * n.obs) - 1):n.obs) {
+            model <- ADF.test(y[i:j], const = const)
+            t.values[m] <- model$t.alpha
+            m <- m + 1
+        }
+    }
+
+    ## Take the maximum of the calculated t-statistics.
+    GSADF.value <- max(t.values)
+
+    if (add.p.value) {
+        if (const == TRUE) {
+            cr.values <- .cval_GSADF_with_const
+        } else {
+            cr.values <- .cval_GSADF_without_const
+        }
+
+        p.value <- p.values.SADF(GSADF.value, n.obs, cr.values)
+    }
+
+    result <- c(
+        list(
+            y = y,
+            trim = trim,
+            const = const,
+            t.values = t.values,
+            GSADF.value = GSADF.value
+        ),
+        if (add.p.value) {
+            list(p.value = p.value)
+        } else {
+            NULL
+        }
+    )
+
+    class(result) <- "sadf"
+
+    return(result)
+}
