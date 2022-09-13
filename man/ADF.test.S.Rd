@@ -69,4 +69,9 @@ Smeekes, Stephan.
 “Detrending Bootstrap Unit Root Tests.”
 Econometric Reviews 32, no. 8 (July 2013): 869–91.
 https://doi.org/10.1080/07474938.2012.690693.
+
+Elliott, Graham, Thomas J. Rothenberg, and James H. Stock.
+“Efficient Tests for an Autoregressive Unit Root.”
+Econometrica 64, no. 4 (1996): 813–36.
+https://doi.org/10.2307/2171846.
 }

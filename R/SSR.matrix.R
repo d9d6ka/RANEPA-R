@@ -47,6 +47,8 @@ SSR.matrix <- function(y, x, width = 2) {
 #' “Techniques for Testing the Constancy of Regression Relationships over Time.”
 #' Journal of the Royal Statistical Society.
 #' Series B (Methodological) 37, no. 2 (1975): 149–92.
+#'
+#' @export
 SSR.recursive <- function(y, x, beg, end, width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
@@ -66,8 +68,6 @@ SSR.recursive <- function(y, x, beg, end, width = 2) {
     beta.0 <- tmp.OLS$beta
     resid.0 <- tmp.OLS$residuals
     rm(tmp.OLS)
-
-    ##for (step in beg:(beg + width - 2)) result[step, 1] <- 0
 
     result[beg + width - 1, 1] <- drop(t(resid.0) %*% resid.0)
 

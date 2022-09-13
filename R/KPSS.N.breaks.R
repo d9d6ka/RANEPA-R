@@ -265,3 +265,129 @@ KPSS.N.breaks.bootstrap <- function(y, x,
         )
     )
 }
+
+
+# Estimating DOLS regression for multiple known break points
+#
+# y: A dependent (LHS) variable.
+# x: A matrix of explanatory (RHS) variables.
+# model: A scalar or vector of break types:
+# * 1: for the break in const.
+# * 2: for the break in trend.
+# * 3: for the break in const and trend.
+# break.point: An array of moments of structural breaks.
+# const,trend: Whether a constant or trend are to be included.
+# k.lags,k.leads: A number of lags and leads in DOLS regression.
+DOLS.N.breaks <- function(y,
+                          x,
+                          model,
+                          break.point,
+                          const = FALSE,
+                          trend = FALSE,
+                          k.lags,
+                          k.leads) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (is.null(x)) {
+        stop("ERROR! Explanatory variables needed for DOLS")
+    }
+    if (!is.matrix(x)) x <- as.matrix(x)
+
+    dols.vars <- DOLS.vars.N.breaks(
+        y, x,
+        model, break.point,
+        const, trend,
+        k.lags, k.leads
+    )
+
+    res.OLS <- OLS(dols.vars$yreg, dols.vars$xreg)
+
+    criterions <- info.criterion(res.OLS$residuals, ncol(dols.vars$xreg))
+
+    return(
+        list(
+            beta = res.OLS$beta,
+            residuals = res.OLS$residuals,
+            criterions = criterions,
+            t.beta = res.OLS$t.beta
+        )
+    )
+}
+
+
+# Preparing variables for DOLS regression with multiple known break points
+#
+# The function is not intended to be used directly so it's not exported.
+#
+# y: A dependent (LHS) variable.
+# x: A matrix of explanatory (RHS) variables.
+# model: A scalar or vector of
+# * 1: for the break in const.
+# * 2: for the break in trend.
+# * 3: for the break in const and trend.
+# break.point: An array of moments of structural breaks.
+# const,trend: Whether a constant or trend are to be included.
+# k.lags,k.leads: A number of lags and leads in DOLS regression.
+DOLS.vars.N.breaks <- function(y, x,
+                               model, break.point,
+                               const = FALSE, trend = FALSE,
+                               k.lags, k.leads) {
+    if (is.null(x)) {
+        stop("ERROR! Explanatory variables needed for DOLS")
+    }
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.matrix(x)) x <- as.matrix(x)
+
+    n.obs <- nrow(y)
+
+    d.x.step <- x[2:n.obs, , drop = FALSE] - x[1:(n.obs - 1), , drop = FALSE]
+    d.x.lag <- d.x.step
+    d.x.lead <- d.x.step
+
+    for (i in 1:k.lags) {
+        d.x.lag <- cbind(
+            d.x.lag,
+            lagn(d.x.step, i)
+        )
+    }
+
+    for (i in 1:k.leads) {
+        d.x.lead <- cbind(
+            d.x.lead,
+            lagn(d.x.step, -i)
+        )
+    }
+
+    if (k.lags != 0 && k.leads != 0) {
+        lags <- d.x.lag
+        leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
+        lags.leads <- cbind(lags, leads)
+        lags.leads <-
+            lags.leads[(k.lags + 1):(n.obs - 1 - k.leads), , drop = FALSE]
+    } else if (k.lags != 0 && k.leads == 0) {
+        lags <- d.x.lag
+        lags.leads <- lags[(k.lags + 1):(n.obs - 1), , drop = FALSE]
+    } else if (k.lags == 0 && k.leads != 0) {
+        lags <- d.x.lag
+        leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
+        lags.leads <- cbind(lags, leads)
+        lags.leads <- lags.leads[1:(n.obs - 1 - k.leads), , drop = FALSE]
+    } else if (k.lags == 0 && k.leads == 0) {
+        lags.leads <- d.x.lag
+    }
+    deter <- determinants.KPSS.N.breaks(model, n.obs, break.point, const, trend)
+
+    xreg <- cbind(
+        deter[(k.lags + 2):(n.obs - k.leads), , drop = FALSE],
+        x[(k.lags + 2):(n.obs - k.leads), , drop = FALSE],
+        lags.leads
+    )
+
+    yreg <- y[(k.lags + 2):(n.obs - k.leads), 1, drop = FALSE]
+
+    return(
+        list(
+            yreg = yreg,
+            xreg = xreg
+        )
+    )
+}

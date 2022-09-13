@@ -42,10 +42,10 @@ MDF.single <- function(y,
     else
         cv.HLT <- 3.162
 
-    sap.ur <- 1.1009;
-    sap.ur1 <- 1.0514;
-    sap.ur2 <- 1.0317;
-    sap.ur3 <- 1.0364;
+    sap.ur <- 1.1009
+    sap.ur1 <- 1.0514
+    sap.ur2 <- 1.0317
+    sap.ur3 <- 1.0364
 
     sap.cv.ur.HLT.k0 <- 1.0154
     sap.cv.A.HLT.k0 <- 1.00
@@ -72,8 +72,8 @@ MDF.single <- function(y,
     tb <- drop(tb)
     result$break.time <- tb
 
-    cv.MDF.GLS.lib <- cv.MDF.GLS ## CV(tau, cv_MDF_GLS_lib_1,trm);
-    cv.MDF.OLS.lib <- cv.MDF.OLS ## CV(tau, cv_MDF_OLS_lib_1,trm);
+    cv.MDF.GLS.lib <- cv.MDF.GLS
+    cv.MDF.OLS.lib <- cv.MDF.OLS
 
     DU <- as.numeric(x.trend > tb)
     DT <- DU * (x.trend - tb)
@@ -85,7 +85,7 @@ MDF.single <- function(y,
         if (trend) DT else NULL
     )
 
-    ## OLS/GLS ##
+    ## OLS/GLS Part ##
     ## Mean case
     resid.OLS.m <- OLS(y, x[, 1, drop = FALSE])$residuals
     DF.OLS.m <- ADF.test(resid.OLS.m,
@@ -105,7 +105,6 @@ MDF.single <- function(y,
                          const = FALSE, trend = FALSE,
                          max.lag = k.m,
                          criterion = NULL)
-    ## denom.m <- 1 - sum(DF.GLS.m$beta) + DF.GLS.m$alpha
 
     ## Trend case
     resid.OLS.t <- OLS(y, x[, 1:2])$residuals
@@ -126,7 +125,6 @@ MDF.single <- function(y,
                          const = FALSE, trend = FALSE,
                          max.lag = k.t,
                          criterion = NULL)
-    denom.t <- 1 - sum(DF.GLS.t$beta) + DF.GLS.t$alpha
 
     ## ADF-OLS (lambda) ##
     resid.OLS <- OLS(y, x)$residuals
@@ -210,7 +208,7 @@ MDF.single <- function(y,
     tmp.OLS <- OLS(y, x)
     t.alpha <- tmp.OLS$beta[1] /
         sqrt(drop(t(tmp.OLS$residuals) %*% tmp.OLS$residuals) / n.obs)
-    t.alpha.id = as.numeric(abs(t.alpha) > 1)
+    t.alpha.id <- as.numeric(abs(t.alpha) > 1)
 
     ## UR-HLT
     t.lambda.id <- as.numeric(t.HLT > cv.HLT)

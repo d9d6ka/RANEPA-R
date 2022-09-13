@@ -105,9 +105,9 @@ lr.var <- function(y,
     n.obs <- nrow(y)
 
     if (n.var == 1) {
-        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.single, n.obs)
+        funcs <- lr.var.kernel(kernel, .lr.var.alpha.single, n.obs)
     } else {
-        funcs <- .lr.var.kernel(kernel, .lr.var.alpha.multi, n.obs)
+        funcs <- lr.var.kernel(kernel, .lr.var.alpha.multi, n.obs)
     }
 
     if (recolor) {
@@ -123,7 +123,7 @@ lr.var <- function(y,
             rho <- tmp.AR$beta
             k <- tmp.AR$lag
             y <- na.omit(tmp.AR$residuals)
-            N <- nrow(y)
+            n.obs <- nrow(y)
         }
     } else {
         k <- 1
@@ -232,7 +232,7 @@ lr.var.SPC <- function(y,
 }
 
 
-.lr.var.kernel <- function(kernel, alpha, n.obs) {
+lr.var.kernel <- function(kernel, alpha, n.obs) {
     if (kernel == "truncated") {
         f.limit <- function(y, l) {
             return(0.6611 * (n.obs * alpha(y, l)$q2)^(1 / 5))

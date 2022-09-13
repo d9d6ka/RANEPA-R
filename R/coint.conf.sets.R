@@ -1,5 +1,5 @@
 #' @title
-#' Confidence sets for the break date in dointegrating regressions
+#' Confidence sets for the break date in cointegrating regressions
 #'
 #' @param y A LHS variable of interest.
 #' @param trend Whether the trend is to be included.
@@ -20,7 +20,7 @@
 #' “Confidence Sets for the Break Date in Cointegrating Regressions.”
 #' Oxford Bulletin of Economics and Statistics 80, no. 3 (2018): 514–35.
 #' https://doi.org/10.1111/obes.12223.
-break.date.cset <- function(y,
+coint.conf.sets <- function(y,
                             trend = FALSE,
                             zb = NULL,
                             zf = NULL,
@@ -205,7 +205,7 @@ break.date.cset <- function(y,
                 if (sup.stat < ghg) {
                     sup.stat <- ghg
                 }
-                
+
                 avg.stat <- avg.stat + ghg
                 exp.stat <- exp.stat + exp(ghg / 2)
 
@@ -216,7 +216,7 @@ break.date.cset <- function(y,
         avg.stat <- avg.stat / (nbreak - dbreak)
         exp.stat <- log(exp.stat / (nbreak - dbreak))
 
-        cv <- critical.values.break.date.cset(
+        cv <- get.cv.coint.conf.sets(
             lambda.1,
             trend,
             conf.level,

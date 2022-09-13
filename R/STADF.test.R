@@ -116,7 +116,7 @@ STADF.test <- function(y,
 
     ## Part 4.2. Reindex.
     if (is.reindex == TRUE) {
-        tmp.reindex <- reindex(u.hat.star)
+        tmp.reindex <- reindex.CT(u.hat.star)
         eta.hat <- tmp.reindex$eta.hat
         new.index <- tmp.reindex$new.index
         rm(tmp.reindex)
@@ -153,7 +153,7 @@ STADF.test <- function(y,
             cr.values <- .cval_SADF_without_const
         }
 
-        p.value <- p.values.SADF(STADF.value, n.obs, cr.values)
+        p.value <- get.p.values.SADF(STADF.value, n.obs, cr.values)
     }
 
     result <- c(
@@ -264,7 +264,7 @@ GSTADF.test <- function(y,
 
     ## Part 4.2. Reindex.
     if (is.reindex == TRUE) {
-        tmp.reindex <- reindex(u.hat.star)
+        tmp.reindex <- reindex.CT(u.hat.star)
         eta.hat <- tmp.reindex$eta.hat
         new.index <- tmp.reindex$new.index
         rm(tmp.reindex)
@@ -303,7 +303,7 @@ GSTADF.test <- function(y,
             cr.values <- .cval_GSADF_without_const
         }
 
-        p.value <- p.values.SADF(GSTADF.value, n.obs, cr.values)
+        p.value <- get.p.values.SADF(GSTADF.value, n.obs, cr.values)
     }
 
     result <- c(
@@ -353,29 +353,13 @@ GSTADF.test <- function(y,
 }
 
 
-#' @title
-#' A function that makes reindexing
-#'
-#' @description
-#' The function is aimed to calculate the sequence of indices providing a new
-#' "time transformed" time series as in Cavaliere and Taylor (2008).
-#'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
-#' @param u The residuals series for reindexing.
-#'
-#' @references
-#' Cavaliere, Giuseppe, and A. M. Robert Taylor.
-#' “Time-Transformed Unit Root Tests for Models with Non-Stationary Volatility.”
-#' Journal of Time Series Analysis 29, no. 2 (March 2008): 300–330.
-#' https://doi.org/10.1111/j.1467-9892.2007.00557.x.
-#'
-#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
-#' “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
-#' Journal of Financial Econometrics, April 23, 2022.
-#' https://doi.org/10.1093/jjfinec/nbac004.
-reindex <- function(u) {
+# A function that makes reindexing
+#
+# The function is aimed to calculate the sequence of indices providing a new
+# "time transformed" time series as in Cavaliere and Taylor (2008).
+#
+# u: The residuals series for reindexing.
+reindex.CT <- function(u) {
     n.obs <- length(u)
     u.2 <- as.numeric(u^2)
 

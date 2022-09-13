@@ -59,8 +59,8 @@ VECM.test <- function(y,
     loglbp <- NULL
 
     for (i in 1:max.lag) {
-        loglp <- cbind(loglp, .VECM.logl(y, i))
-        loglbp <- cbind(loglbp, .VECM.break.logl(y, i, breaks.list))
+        loglp <- cbind(loglp, VECM.logl(y, i))
+        loglbp <- cbind(loglbp, VECM.break.logl(y, i, breaks.list))
     }
 
     bhatrp.index <- t(apply(loglbp, 2, which.min))
@@ -109,7 +109,7 @@ VECM.test <- function(y,
 
 
 #' @importFrom Rfast spdinv
-.VECM.logl <- function(y, p) {
+VECM.logl <- function(y, p) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     n.obs <- nrow(y)
@@ -158,7 +158,7 @@ VECM.test <- function(y,
 
 
 #' @importFrom Rfast spdinv
-.VECM.break.logl <- function(y, p, bv) {
+VECM.break.logl <- function(y, p, bv) {
     if (!is.matrix(y)) y <- as.matrix(y)
     n.obs <- nrow(y)
 

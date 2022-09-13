@@ -155,11 +155,13 @@ PY.single <- function(y,
 
         y.g <- rbind(
             y[1, , drop = FALSE],
-            y[2:n.obs, , drop = FALSE] - a.hat.M * y[1:(n.obs - 1), , drop = FALSE]
+            y[2:n.obs, , drop = FALSE] -
+                a.hat.M * y[1:(n.obs - 1), , drop = FALSE]
         )
         x.g <- rbind(
             x[1, , drop = FALSE],
-            x[2:n.obs, , drop = FALSE] - a.hat.M * x[1:(n.obs - 1), , drop = FALSE]
+            x[2:n.obs, , drop = FALSE] -
+                a.hat.M * x[1:(n.obs - 1), , drop = FALSE]
         )
 
         tmp.OLS <- OLS(y.g, x.g)
@@ -167,9 +169,9 @@ PY.single <- function(y,
         g.resid <- tmp.OLS$residuals
         rm(tmp.OLS)
 
-        if (k.hat == 1)
+        if (k.hat == 1) {
             h0 <- drop(t(g.resid) %*% g.resid) / nrow(g.resid)
-        else {
+        } else {
             if (a.hat.M == 1) {
                 x.v <- NULL
                 for (k.i in 1:(k.hat - 1))

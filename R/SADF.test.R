@@ -59,7 +59,7 @@ SADF.test <- function(y,
             cr.values <- .cval_SADF_without_const
         }
 
-        p.value <- p.values.SADF(SADF.value, n.obs, cr.values)
+        p.value <- get.p.values.SADF(SADF.value, n.obs, cr.values)
     }
 
     result <- c(
@@ -117,7 +117,7 @@ GSADF.test <- function(y,
             cr.values <- .cval_GSADF_without_const
         }
 
-        p.value <- p.values.SADF(GSADF.value, n.obs, cr.values)
+        p.value <- get.p.values.SADF(GSADF.value, n.obs, cr.values)
     }
 
     result <- c(

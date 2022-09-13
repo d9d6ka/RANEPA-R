@@ -402,7 +402,7 @@ MDF.multiple <- function(y,
             as.numeric(breaks.star == 1) *
             ((1 - t.alpha.2.id) * ur2.1olsgls.sa + t.alpha.2.id * ur2.1ols.sa) +
             as.numeric(breaks.star == 0) *
-            ((1-t.alpha.2.id) * ur2.2olsgls.sa + t.alpha.2.id * ur2.2ols.sa)
+            ((1 - t.alpha.2.id) * ur2.2olsgls.sa + t.alpha.2.id * ur2.2ols.sa)
 
         ## without pre-test    for breaks
 

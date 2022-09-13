@@ -18,7 +18,7 @@
 #' @param break.point Position of the break point.
 #' @param N Number of observations.
 #' @param k Number of RHS variables.
-critical.values.KPSS.1p <- function(model, break.point, N, k) {
+get.cv.KPSS.1p <- function(model, break.point, N, k) {
     lambda <- round(break.point / N, 1)
     i <- trunc(lambda * 10)
     if (i == 0) i <- 1
@@ -47,7 +47,7 @@ critical.values.KPSS.1p <- function(model, break.point, N, k) {
 #' * 5: for the AC-CA model.
 #' @param break.point Position of the break point.
 #' @param N Number of observations.
-critical.values.KPSS.2p <- function(model, break.point, N) {
+get.cv.KPSS.2p <- function(model, break.point, N) {
     lambda1 <- round(break.point[1] / N, 1)
     i <- trunc(lambda1 * 10)
 
@@ -74,7 +74,7 @@ critical.values.KPSS.2p <- function(model, break.point, N) {
 #'
 #' @description
 #' Auxiliary function returning pre-calculated critical values for
-#' [break.date.cset]
+#' [coint.conf.sets]
 #'
 #' @details
 #' The function is not intended to be used directly so it's not exported.
@@ -84,7 +84,7 @@ critical.values.KPSS.2p <- function(model, break.point, N) {
 #' @param conf.level Confidense level.
 #' @param p_zb Number of variables with breaks.
 #' @param p_zf Number of variables without breaks.
-critical.values.break.date.cset <- function(l_1, trend, conf.level,
+get.cv.coint.conf.sets <- function(l_1, trend, conf.level,
                                             p_zb, p_zf) {
     if (conf.level == 0.9) {
         if (p_zf == 0) {
@@ -172,7 +172,7 @@ critical.values.break.date.cset <- function(l_1, trend, conf.level,
 #' @param statistic The statistic value.
 #' @param N.obs The number of observations.
 #' @param cr.values The set of precalculated tables.
-p.values.SADF <- function(statistic, N.obs, cr.values) {
+get.p.values.SADF <- function(statistic, N.obs, cr.values) {
     N.table.obs <- as.numeric(names(cr.values))
 
     if (N.obs < min(N.table.obs)) {

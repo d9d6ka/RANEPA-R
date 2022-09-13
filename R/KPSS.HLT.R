@@ -37,8 +37,6 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
     tb1 <- NA
 
     for (tb in first.lag:last.lag) {
-        tau <- tb / n.obs
-
         DU <- c(rep(0, tb), rep(1, n.obs - tb))
         DT <- DU * (1:n.obs - tb)
 
@@ -108,7 +106,7 @@ KPSS.HLT <- function(y, const = FALSE, trim = 0.15) {
         DU1[2:n.obs]
     )
 
-    ctmp.OLS <- OLS(d.y, x)
+    tmp.OLS <- OLS(d.y, x)
 
     lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals)
     kpss.dy <- KPSS(tmp.OLS$residuals, lr.var.dy)

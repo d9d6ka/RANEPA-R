@@ -131,20 +131,25 @@ PY.sequential <- function(y,
 
                 if (tau > tau05)
                     c.tau <- -tau
-                if (tau <= tau05 && tau > -k)
-                    c.tau <- IP * tau / n.obs - (k.x + 1) / (tau + c2 * (tau + k))
-                if (tau <= -k && tau > -c1)
+                if (tau <= tau05 && tau > -k) {
+                    c.tau <- IP * tau / n.obs -
+                        (k.x + 1) / (tau + c2 * (tau + k))
+                }
+                if (tau <= -k && tau > -c1) {
                     c.tau <- IP * tau / n.obs - (k.x + 1) / tau
-                if (tau <= -c1)
+                }
+                if (tau <= -c1) {
                     c.tau <- 0
+                }
 
                 a.hat.M <- a.hat + c.tau * sqrt(var.a.hat)
-                if (a.hat.M >= 1)
+                if (a.hat.M >= 1) {
                     a.hat.M <- 1
-                else if (abs(a.hat.M) < 1)
+                } else if (abs(a.hat.M) < 1) {
                     a.hat.M <- a.hat.M
-                else
+                } else {
                     a.hat.M <- -0.99
+                }
 
                 CR <- sqrt(n.obs) * abs(a.hat.M - 1)
                 if (CR <= 1) a.hat.M <- 1
@@ -152,12 +157,12 @@ PY.sequential <- function(y,
                 y.g <- rbind(
                     y[date.vec[i], , drop = FALSE],
                     y[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE] -
-                    a.hat.M * y[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE]
+                    a.hat.M * y[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE] # nolint
                 )
                 x.g <- rbind(
                     x[date.vec[i], , drop = FALSE],
                     x[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE] -
-                    a.hat.M * x[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE]
+                    a.hat.M * x[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE] # nolint
                 )
 
                 tmp.OLS <- OLS(y.g, x.g)
@@ -182,7 +187,7 @@ PY.sequential <- function(y,
                         rm(tmp.OLS)
 
                         if (!const) {
-                            h0 <- (drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat)) /
+                            h0 <- (drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat)) / # nolint
                                 ((1 - sum(beta.v))^2)
                         }
                         if (const) {
@@ -198,12 +203,12 @@ PY.sequential <- function(y,
                                 )
                                 x.g.ki <- rbind(
                                     x.ki[date.vec[i] + 1, ],
-                                    x.ki[(date.vec[i] + 2):(date.vec[i + 1] - 1), ] -
-                                    a.hat.M * x.ki[(date.vec[i] + 1):(date.vec[i + 1] - 2), ]
+                                    x.ki[(date.vec[i] + 2):(date.vec[i + 1] - 1), ] - # nolint
+                                    a.hat.M * x.ki[(date.vec[i] + 1):(date.vec[i + 1] - 2), ] # nolint
                                 )
                                 beta.ki <- OLS(y.g, x.g.ki)$beta
                                 BETAS[k.i, ] <- drop(beta.ki)
-                                sig.e <- drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat)
+                                sig.e <- drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat) # nolint
                                 h0 <- sig.e / ((1 - sum(beta.v))^2)
                                 beta.g[2] <- (sqrt(h0) / sqrt(sig.e)) *
                                     (beta.g[2] - drop(t(BETAS[, 2]) %*% beta.v))
@@ -221,7 +226,7 @@ PY.sequential <- function(y,
             }
 
             vect1 <- vect1[t.low:t.high]
-            wald[i] <- log(sum(exp(vect1 / 2)) / (date.vec[i + 1] - date.vec[i]))
+            wald[i] <- log(sum(exp(vect1 / 2)) / (date.vec[i + 1] - date.vec[i])) # nolint
         }
     }
 

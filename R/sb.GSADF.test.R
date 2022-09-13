@@ -54,7 +54,7 @@ sb.GSADF.test <- function(y,
     ))
     registerDoSNOW(cluster)
 
-    GSADF.supSBADF.bootstrap.values <- foreach(
+    GSADF.supSBADF.bootstrap.values <- foreach( # nolint
         step = 1:iter,
         .combine = rbind,
         .options.snow = list(progress = progress)

@@ -452,12 +452,11 @@ MDF.CHLT <- function(y,
     return(result)
 }
 
-#' @title
-#' GLS fitering
-#'
-#' @param y Series of interest.
-#' @param trim Trimming parameter.
-#' @param c Filtering parameter.
+# GLS fitering
+#
+# y: Series of interest.
+# trim: Trimming parameter.
+# c: Filtering parameter.
 GLS.bt <- function(y, trim, c) {
     n.obs <- nrow(y)
 

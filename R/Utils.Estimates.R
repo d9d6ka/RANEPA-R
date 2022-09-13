@@ -212,7 +212,7 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
 
     rho <- rep(0, n.obs)
     for (k in 1:n.obs) {
-        W <- .NW.kernel(k, (1:n.obs) / n.obs, h, kernel)
+        W <- NW.kernel(k, (1:n.obs) / n.obs, h, kernel)
         rho[k] <- sum(x * W * y) / sum(x * W * x)
     }
 
@@ -263,7 +263,7 @@ NW.volatility <- function(e, h, kernel = "unif") {
 
     omega.sq <- rep(0, n.obs)
     for (k in 1:n.obs) {
-        W <- .NW.kernel(k, (1:n.obs) / n.obs, h, kernel)
+        W <- NW.kernel(k, (1:n.obs) / n.obs, h, kernel)
         omega.sq[k] <- sum(W * e^2) / sum(W)
     }
 
@@ -310,7 +310,7 @@ NW.loocv <- function(y, x, kernel = "unif") {
     for (hi in HT) {
         rho <- rep(0, n.obs)
         for (k in 1:n.obs) {
-            W <- .NW.kernel(k, (1:n.obs) / n.obs, hi, kernel)
+            W <- NW.kernel(k, (1:n.obs) / n.obs, hi, kernel)
             W[k] <- 0
             rho[k] <- sum(x * W * y) / sum(x * W * x)
         }
@@ -333,7 +333,7 @@ NW.loocv <- function(y, x, kernel = "unif") {
 }
 
 #' @importFrom stats pnorm
-.NW.kernel <- function(i, x, h, kernel = "unif") {
+NW.kernel <- function(i, x, h, kernel = "unif") {
     if (kernel == "unif") {
         W <- ifelse(abs((x - x[i]) / h) <= 1, 1, 0)
     } else if (kernel == "gauss") {
