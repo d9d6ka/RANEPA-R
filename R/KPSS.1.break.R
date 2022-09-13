@@ -240,7 +240,7 @@ DOLS.1.break <- function(y,
 
     n.obs <- nrow(y)
 
-    d.x.step <- x[2:n.obs, , drop = FALSE] - x[1:(n.obs - 1), , drop = FALSE]
+    d.x.step <- diff(x)
     d.x.lag <- d.x.step
     d.x.lead <- d.x.step
 

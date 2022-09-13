@@ -55,7 +55,7 @@ coint.conf.sets <- function(y,
     td <- as.matrix(td[2:n.obs, ])
     y <- as.matrix(y[2:n.obs, ])
     wb <- as.matrix(wb[2:n.obs, ])
-    d.z <- as.matrix(z[2:n.obs, ] - z[1:(n.obs - 1), ])
+    d.z <- diff(z)
 
     wf <- cbind(
         if (!is.null(zf)) as.matrix(zf[2:n.obs, ]) else NULL,
@@ -85,26 +85,26 @@ coint.conf.sets <- function(y,
         }
     }
 
-    N2 <- nrow(y)
-    first.break1 <- trunc(2 * trim * N2)
-    last.break1 <- trunc((1 - 2 * trim) * N2)
-    first.break2 <- trunc(trim * N2)
-    last.break2 <- trunc((1 - trim) * N2)
+    n.obs.2 <- nrow(y)
+    first.break1 <- trunc(2 * trim * n.obs.2)
+    last.break1 <- trunc((1 - 2 * trim) * n.obs.2)
+    first.break2 <- trunc(trim * n.obs.2)
+    last.break2 <- trunc((1 - trim) * n.obs.2)
 
-    cset.sup <- rep(0, N2)
-    cset.avg <- rep(0, N2)
-    cset.exp <- rep(0, N2)
-    cset.bls <- rep(0, N2)
+    cset.sup <- rep(0, n.obs.2)
+    cset.avg <- rep(0, n.obs.2)
+    cset.exp <- rep(0, n.obs.2)
+    cset.bls <- rep(0, n.obs.2)
 
     w <- cbind(wb, wf)
     u.hat <- OLS(y, w)$residuals
     ssr.0 <- c(t(u.hat) %*% u.hat)
-    est.date <- N2
+    est.date <- n.obs.2
 
     for (tb in first.break1:last.break1) {
         wb1 <- rbind(
             matrix(0, tb, ncol(wb)),
-            as.matrix(wb[(tb + 1):N2, ])
+            as.matrix(wb[(tb + 1):n.obs.2, ])
         )
         w <- cbind(wb, wb1, wf)
         u.hat <- OLS(y, w)$residuals
@@ -117,7 +117,7 @@ coint.conf.sets <- function(y,
 
     wb1e <- rbind(
         matrix(0, est.date, ncol(wb)),
-        as.matrix(wb[(est.date + 1):N2, ])
+        as.matrix(wb[(est.date + 1):n.obs.2, ])
     )
     td[est.date, 1] <- -1
 
@@ -146,18 +146,18 @@ coint.conf.sets <- function(y,
     if (bls.l < 1) {
         bls.l <- 1
     }
-    if (bls.u > N2) {
-        bls.u <- N2
+    if (bls.u > n.obs.2) {
+        bls.u <- n.obs.2
     }
 
     cset.bls[bls.l:bls.u] <- 1
 
     for (tb in first.break1:last.break1) {
-        lambda.1 <- tb / N2
+        lambda.1 <- tb / n.obs.2
 
         wb1 <- rbind(
             matrix(0, tb, ncol(wb)),
-            as.matrix(wb[(tb + 1):N2, ])
+            as.matrix(wb[(tb + 1):n.obs.2, ])
         )
 
         w <- cbind(wb, wb1, wf)
@@ -187,14 +187,14 @@ coint.conf.sets <- function(y,
         dbreak <- 0
 
         for (tb2 in first.break2:last.break2) {
-            lambda.2 <- tb2 / N2
+            lambda.2 <- tb2 / n.obs.2
 
             if (abs(lambda.2 - lambda.1) <= 0.05) {
                 dbreak <- dbreak + 1
             } else {
                 wb2 <- rbind(
                     matrix(0, tb2, ncol(wb)),
-                    as.matrix(wb[(tb2 + 1):N2, ])
+                    as.matrix(wb[(tb2 + 1):n.obs.2, ])
                 )
 
                 r <- wb2 - wb1
@@ -243,19 +243,19 @@ coint.conf.sets <- function(y,
         )
         cset.sup <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.sup, N2, 1)
+            matrix(cset.sup, n.obs.2, 1)
         )
         cset.avg <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.avg, N2, 1)
+            matrix(cset.avg, n.obs.2, 1)
         )
         cset.exp <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.exp, N2, 1)
+            matrix(cset.exp, n.obs.2, 1)
         )
         cset.bls <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.bls, N2, 1)
+            matrix(cset.bls, n.obs.2, 1)
         )
     } else {
         td <- rbind(
@@ -265,22 +265,22 @@ coint.conf.sets <- function(y,
         )
         cset.sup <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.sup, N2, 1),
+            matrix(cset.sup, n.obs.2, 1),
             matrix(0, z.lead, 1)
         )
         cset.avg <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.avg, N2, 1),
+            matrix(cset.avg, n.obs.2, 1),
             matrix(0, z.lead, 1)
         )
         cset.exp <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.exp, N2, 1),
+            matrix(cset.exp, n.obs.2, 1),
             matrix(0, z.lead, 1)
         )
         cset.bls <- rbind(
             matrix(0, (z.lag + 1), 1),
-            matrix(cset.bls, N2, 1),
+            matrix(cset.bls, n.obs.2, 1),
             matrix(0, z.lead, 1)
         )
     }

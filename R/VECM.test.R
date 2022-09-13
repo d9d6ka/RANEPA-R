@@ -117,7 +117,7 @@ VECM.logl <- function(y,
 
     trend <- matrix(1:n.obs, n.obs, 1)
 
-    d.y <- (y - lagn(y, 1))[2:n.obs, , drop = FALSE]
+    d.y <- diff(y)
 
     z0 <- d.y[p:(n.obs - 1), , drop = FALSE]
     z1 <- cbind(
@@ -167,7 +167,7 @@ VECM.break.logl <- function(y,
 
     trend <- matrix(1:n.obs, n.obs, 1)
 
-    d.y <- (y - lagn(y, 1))[2:n.obs, , drop = FALSE]
+    d.y <- diff(y)
     z0 <- as.matrix(d.y[p:(n.obs - 1), ])
 
     logL <- NULL

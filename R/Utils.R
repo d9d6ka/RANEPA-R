@@ -77,8 +77,11 @@ ACF <- function(y) {
 KPSS <- function(resids,
                  variance) {
     if (!is.matrix(resids)) resids <- as.matrix(resids)
+
     n.obs <- nrow(resids)
+
     S.t <- apply(resids, 2, cumsum)
+
     return(drop(t(S.t) %*% S.t) / (n.obs^2 * variance))
 }
 

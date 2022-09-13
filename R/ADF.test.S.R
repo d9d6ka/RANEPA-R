@@ -112,8 +112,7 @@ ADF.test.S <- function(y,
 
         if (res.lag > 0) {
             for (s in 1:n.obs) {
-                u[res.lag + s] <-
-                    u[(res.lag + s - 1):s] %*% res.beta + eps[s]
+                u[res.lag + s] <- u[(res.lag + s - 1):s] %*% res.beta + eps[s]
             }
             u <- u[-(1:res.lag)]
         } else {
