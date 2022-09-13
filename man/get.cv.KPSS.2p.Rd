@@ -4,7 +4,7 @@
 \alias{get.cv.KPSS.2p}
 \title{Critical values for KPSS test with 2 breaks}
 \usage{
-get.cv.KPSS.2p(model, break.point, N)
+get.cv.KPSS.2p(model, break.point, n.obs)
 }
 \arguments{
 \item{model}{A scalar equal to
@@ -18,7 +18,7 @@ get.cv.KPSS.2p(model, break.point, N)
 
 \item{break.point}{Position of the break point.}
 
-\item{N}{Number of observations.}
+\item{n.obs}{Number of observations.}
 }
 \description{
 Auxiliary function returning pre-calculated critical values for

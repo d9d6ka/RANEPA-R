@@ -4,7 +4,7 @@
 \alias{determinants.KPSS.2.breaks}
 \title{Construct determinant variables for \link{KPSS.2.breaks}}
 \usage{
-determinants.KPSS.2.breaks(model, N, break.point)
+determinants.KPSS.2.breaks(model, n.obs, break.point)
 }
 \arguments{
 \item{model}{A scalar equal to
@@ -18,7 +18,7 @@ determinants.KPSS.2.breaks(model, N, break.point)
 \item 7: for the AC-CA model.
 }}
 
-\item{N}{Number of observations.}
+\item{n.obs}{Number of observations.}
 
 \item{break.point}{Positions for the first and second structural breaks
 (respective to the origin which is 1).}

@@ -34,7 +34,9 @@
 #' @importFrom stats predict
 #'
 #' @export
-eos.break.test <- function(eq, m, dataset) {
+eos.break.test <- function(eq,
+                           m,
+                           dataset) {
     result <- list(m = m)
 
     dep.var <- eq[[2]]

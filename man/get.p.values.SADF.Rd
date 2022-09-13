@@ -4,12 +4,12 @@
 \alias{get.p.values.SADF}
 \title{Critical values for SADF-type tests}
 \usage{
-get.p.values.SADF(statistic, N.obs, cr.values)
+get.p.values.SADF(statistic, n.obs, cr.values)
 }
 \arguments{
 \item{statistic}{The statistic value.}
 
-\item{N.obs}{The number of observations.}
+\item{n.obs}{The number of observations.}
 
 \item{cr.values}{The set of precalculated tables.}
 }

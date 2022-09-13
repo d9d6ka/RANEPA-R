@@ -29,9 +29,11 @@
 #' https://doi.org/10.1111/1468-0262.00256.
 #'
 #' @export
-info.criterion <- function(resids, extra,
+info.criterion <- function(resids,
+                           extra,
                            modification = FALSE,
-                           alpha = 0, y = NULL) {
+                           alpha = 0,
+                           y = NULL) {
     if (!is.matrix(resids)) resids <- as.matrix(resids)
 
     n.obs <- nrow(resids)

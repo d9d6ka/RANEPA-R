@@ -58,10 +58,14 @@
 #'
 #' @export
 ADF.test.S <- function(y,
-                       const = TRUE, trend = FALSE,
-                       c = 0, gamma = 0, trim = 0.15,
+                       const = TRUE,
+                       trend = FALSE,
+                       c = 0,
+                       gamma = 0,
+                       trim = 0.15,
                        max.lag = 0,
-                       criterion = NULL, modified.criterion = FALSE,
+                       criterion = NULL,
+                       modified.criterion = FALSE,
                        iter = 999) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
@@ -148,22 +152,49 @@ ADF.test.S <- function(y,
 }
 
 
-# Detrending the data recursively
-#
-# This procedure is aimed to provide a recursively detrended series. More or
-# less classical approach of full-sample detrending may lead to the regressors
-# correlated with the error term.
-#
-# y: The dependent (LHS) variable.
-# x: The matrix of explanatory (RHS) variables.
-# c: A filtration parameter used to construct an autocorrelation coefficient.
-# gamma: A detrending type selection parameter. If 0 the OLS detrending
-# is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
-# coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.
-# trim: The trimming parameter. It's used to find the minimum size of
-# subsamples while calculating recursive estimates. The ending point of the
-# subsample for the \eqn{t} is \eqn{max(t, trim \times T)}.
-detrend.recursively <- function(y, x, c, gamma, trim) {
+#' @title
+#' Detrending the data recursively
+#'
+#' @description
+#' This procedure is aimed to provide a recursively detrended series. More or
+#' less classical approach of full-sample detrending may lead to the regressors
+#' correlated with the error term.
+#'
+#' @details
+#' Elliott et al (1996) recommend using \eqn{c = -7} for the model with only
+#' an intercept, and \eqn{c = -13.5} for the model with a linear trend.
+#'
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y The dependent (LHS) variable.
+#' @param x The matrix of explanatory (RHS) variables.
+#' @param c A filtration parameter used to construct an autocorrelation
+#' coefficient.
+#' @param gamma A detrending type selection parameter. If 0 the OLS detrending
+#' is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
+#' coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.
+#' @param trim The trimming parameter. It's used to find the minimum size of
+#' subsamples while calculating recursive estimates. The ending point of the
+#' subsample for the \eqn{t} is \eqn{max(t, trim \times T)}.
+#'
+#' @return A detrended series.
+#'
+#' @references
+#' Elliott, Graham, Thomas J. Rothenberg, and James H. Stock.
+#' “Efficient Tests for an Autoregressive Unit Root.”
+#' Econometrica 64, no. 4 (1996): 813–36.
+#' https://doi.org/10.2307/2171846.
+#'
+#' Taylor, A. M. Robert.
+#' “Regression-Based Unit Root Tests With Recursive Mean Adjustment for
+#' Seasonal and Nonseasonal Time Series.”
+#' Journal of Business & Economic Statistics 20, no. 2 (April 2002): 269–81.
+#' https://doi.org/10.1198/073500102317352001.
+detrend.recursively <- function(y,
+                                x,
+                                c,
+                                gamma,
+                                trim) {
     if (is.null(x)) {
         return(y)
     }

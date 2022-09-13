@@ -49,12 +49,17 @@
 #' https://doi.org/10.1007/s10108-006-9017-8.
 #'
 #' @export
-KPSS.N.breaks <- function(y, x,
-                          model, break.point,
-                          const = FALSE, trend = FALSE,
+KPSS.N.breaks <- function(y,
+                          x,
+                          model,
+                          break.point,
+                          const = FALSE,
+                          trend = FALSE,
                           weakly.exog = TRUE,
-                          lags.init, leads.init,
-                          max.lag, kernel,
+                          lags.init,
+                          leads.init,
+                          max.lag,
+                          kernel,
                           criterion = "bic") {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.null(x)) {
@@ -174,12 +179,17 @@ KPSS.N.breaks <- function(y, x,
 #' @importFrom utils setTxtProgressBar
 #'
 #' @export
-KPSS.N.breaks.bootstrap <- function(y, x,
-                                    model, break.point,
-                                    const = FALSE, trend = FALSE,
+KPSS.N.breaks.bootstrap <- function(y,
+                                    x,
+                                    model,
+                                    break.point,
+                                    const = FALSE,
+                                    trend = FALSE,
                                     weakly.exog = TRUE,
-                                    lags.init, leads.init,
-                                    max.lag, kernel,
+                                    lags.init,
+                                    leads.init,
+                                    max.lag,
+                                    kernel,
                                     iter = 9999,
                                     bootstrap = "sample",
                                     criterion = "bic") {
@@ -267,17 +277,27 @@ KPSS.N.breaks.bootstrap <- function(y, x,
 }
 
 
-# Estimating DOLS regression for multiple known break points
-#
-# y: A dependent (LHS) variable.
-# x: A matrix of explanatory (RHS) variables.
-# model: A scalar or vector of break types:
-# * 1: for the break in const.
-# * 2: for the break in trend.
-# * 3: for the break in const and trend.
-# break.point: An array of moments of structural breaks.
-# const,trend: Whether a constant or trend are to be included.
-# k.lags,k.leads: A number of lags and leads in DOLS regression.
+#' @title
+#' Estimating DOLS regression for multiple known break points
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y A dependent (LHS) variable.
+#' @param x A matrix of explanatory (RHS) variables.
+#' @param model A scalar or vector of break types:
+#' * 1: for the break in const.
+#' * 2: for the break in trend.
+#' * 3: for the break in const and trend.
+#' @param break.point An array of moments of structural breaks.
+#' @param const,trend Whether a constant or trend are to be included.
+#' @param k.lags,k.leads A number of lags and leads in DOLS regression.
+#'
+#' @return A list of:
+#' * Estimates of coefficients,
+#' * Estimates of residuals,
+#' * A set of informational criterions values,
+#' * \eqn{t}-statistics for the estimates of coefficients.
 DOLS.N.breaks <- function(y,
                           x,
                           model,
@@ -314,23 +334,31 @@ DOLS.N.breaks <- function(y,
 }
 
 
-# Preparing variables for DOLS regression with multiple known break points
-#
-# The function is not intended to be used directly so it's not exported.
-#
-# y: A dependent (LHS) variable.
-# x: A matrix of explanatory (RHS) variables.
-# model: A scalar or vector of
-# * 1: for the break in const.
-# * 2: for the break in trend.
-# * 3: for the break in const and trend.
-# break.point: An array of moments of structural breaks.
-# const,trend: Whether a constant or trend are to be included.
-# k.lags,k.leads: A number of lags and leads in DOLS regression.
-DOLS.vars.N.breaks <- function(y, x,
-                               model, break.point,
-                               const = FALSE, trend = FALSE,
-                               k.lags, k.leads) {
+#' @title
+#' Preparing variables for DOLS regression with multiple known break points
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y A dependent (LHS) variable.
+#' @param x A matrix of explanatory (RHS) variables.
+#' @param model A scalar or vector of
+#' * 1: for the break in const.
+#' * 2: for the break in trend.
+#' * 3: for the break in const and trend.
+#' @param break.point An array of moments of structural breaks.
+#' @param const,trend Whether a constant or trend are to be included.
+#' @param k.lags,k.leads A number of lags and leads in DOLS regression.
+#'
+#' @return A list of LHS and RHS variables.
+DOLS.vars.N.breaks <- function(y,
+                               x,
+                               model,
+                               break.point,
+                               const = FALSE,
+                               trend = FALSE,
+                               k.lags,
+                               k.leads) {
     if (is.null(x)) {
         stop("ERROR! Explanatory variables needed for DOLS")
     }

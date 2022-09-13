@@ -370,8 +370,6 @@ weighted.GSADF.test <- function(y,
 #' “Testing Explosive Bubbles with Time-Varying Volatility.”
 #' Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
 #' https://doi.org/10.1080/07474938.2018.1536099.
-#'
-#' @export
 supBZ.statistic <- function(y,
                             trim = 0.01 + 1.8 / sqrt(length(y)),
                             sigma.sq = NULL,

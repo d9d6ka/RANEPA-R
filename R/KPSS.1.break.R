@@ -39,9 +39,12 @@
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
 #' @export
-KPSS.1.break <- function(y, x,
-                         model, break.point,
-                         weakly.exog = TRUE, ll.init) {
+KPSS.1.break <- function(y,
+                         x,
+                         model,
+                         break.point,
+                         weakly.exog = TRUE,
+                         ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.null(x)) {
         if (!is.matrix(x)) x <- as.matrix(x)
@@ -154,7 +157,11 @@ KPSS.1.break <- function(y, x,
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
 #' @export
-KPSS.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
+KPSS.1.break.unknown <- function(y,
+                                 x,
+                                 model,
+                                 weakly.exog,
+                                 ll.init) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -190,20 +197,41 @@ KPSS.1.break.unknown <- function(y, x, model, weakly.exog, ll.init) {
 }
 
 
-# Estimating DOLS regression for multiple known break points
-#
-# y: A dependent (LHS) variable.
-# x: A matrix of explanatory (RHS) variables.
-# model: See Carrion-i-Silvestre and Sansó (2006)
-# * 1: for model An,
-# * 2: for model A,
-# * 3: for model B,
-# * 4: for model C,
-# * 5: for model D,
-# * 6: for model E.
-# break.point: A position of the break point.
-# k.lags,k.leads: A number of lags and leads in DOLS regression.
-DOLS.1.break <- function(y, x, model, break.point, k.lags, k.leads) {
+#' @title
+#' Estimating DOLS regression for multiple known break points
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param y A dependent (LHS) variable.
+#' @param x A matrix of explanatory (RHS) variables.
+#' @param model See Carrion-i-Silvestre and Sansó (2006)
+#' * 1: for model An,
+#' * 2: for model A,
+#' * 3: for model B,
+#' * 4: for model C,
+#' * 5: for model D,
+#' * 6: for model E.
+#' @param break.point A position of the break point.
+#' @param k.lags,k.leads A number of lags and leads in DOLS regression.
+#'
+#' @return A list of:
+#' * Estimates of coefficients,
+#' * Estimates of residuals,
+#' * A value of BIC,
+#' * \eqn{t}-statistics for the estimates of coefficients.
+#'
+#' @references
+#' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
+#' “Testing the Null of Cointegration with Structural Breaks.”
+#' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
+#' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
+DOLS.1.break <- function(y,
+                         x,
+                         model,
+                         break.point,
+                         k.lags,
+                         k.leads) {
     if (is.null(x)) {
         stop("ERROR! Explanatory variables needed for DOLS")
     }

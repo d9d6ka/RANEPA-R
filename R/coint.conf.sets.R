@@ -20,6 +20,8 @@
 #' “Confidence Sets for the Break Date in Cointegrating Regressions.”
 #' Oxford Bulletin of Economics and Statistics 80, no. 3 (2018): 514–35.
 #' https://doi.org/10.1111/obes.12223.
+#'
+#' @export
 coint.conf.sets <- function(y,
                             trend = FALSE,
                             zb = NULL,

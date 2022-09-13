@@ -232,7 +232,9 @@ lr.var.SPC <- function(y,
 }
 
 
-lr.var.kernel <- function(kernel, alpha, n.obs) {
+lr.var.kernel <- function(kernel,
+                          alpha,
+                          n.obs) {
     if (kernel == "truncated") {
         f.limit <- function(y, l) {
             return(0.6611 * (n.obs * alpha(y, l)$q2)^(1 / 5))
@@ -297,7 +299,8 @@ lr.var.kernel <- function(kernel, alpha, n.obs) {
     )
 }
 
-.lr.var.alpha.single <- function(y, upper.rho.limit) {
+.lr.var.alpha.single <- function(y,
+                                 upper.rho.limit) {
     n.obs <- nrow(y)
 
     if (!is.null(n.obs) && n.obs > 1) {
@@ -323,7 +326,8 @@ lr.var.kernel <- function(kernel, alpha, n.obs) {
     )
 }
 
-.lr.var.alpha.multi <- function(y, upper.rho.limit) {
+.lr.var.alpha.multi <- function(y,
+                                upper.rho.limit) {
     n.obs <- nrow(y)
     n.var <- ncol(y)
 

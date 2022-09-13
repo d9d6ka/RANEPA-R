@@ -18,7 +18,8 @@
 #'
 #' @export
 PY.single <- function(y,
-                      const = FALSE, trend = FALSE,
+                      const = FALSE,
+                      trend = FALSE,
                       criterion = "aic",
                       trim = 0.15,
                       max.lag) {

@@ -4,10 +4,10 @@
 \alias{get.cv.coint.conf.sets}
 \title{Critical values for break point confidence intervals}
 \usage{
-get.cv.coint.conf.sets(l_1, trend, conf.level, p_zb, p_zf)
+get.cv.coint.conf.sets(lambda, trend, conf.level, p_zb, p_zf)
 }
 \arguments{
-\item{l_1}{Relative break point position.}
+\item{lambda}{Relative break point position.}
 
 \item{trend}{Whether thern is to be included.}
 

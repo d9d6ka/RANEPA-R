@@ -9,7 +9,9 @@
 #' @param na Value to fill missing observations, `NA` by default.
 #'
 #' @return Lagged or leaded vector.
-lagn <- function(x, i, na = NA) {
+lagn <- function(x,
+                 i,
+                 na = NA) {
     if (!is.matrix(x)) x <- as.matrix(x)
     n.obs <- nrow(x)
     k <- ncol(x)
@@ -72,7 +74,8 @@ ACF <- function(y) {
 #'
 #' @param resids The series of residuals.
 #' @param variance The value of the long-run variance.
-KPSS <- function(resids, variance) {
+KPSS <- function(resids,
+                 variance) {
     if (!is.matrix(resids)) resids <- as.matrix(resids)
     n.obs <- nrow(resids)
     S.t <- apply(resids, 2, cumsum)
@@ -103,8 +106,10 @@ KPSS <- function(resids, variance) {
 #' Stock, James H.
 #' “A Class of Tests for Integration and Cointegration.”
 #' Kennedy School of Government, Harvard University, 1990.
-MZ.statistic <- function(y, l,
-                         const = FALSE, trend = FALSE) {
+MZ.statistic <- function(y,
+                         l,
+                         const = FALSE,
+                         trend = FALSE) {
     n.obs <- nrow(y)
 
     tmp.ADF <- ADF.test(y, const, trend, l, criterion = NULL)

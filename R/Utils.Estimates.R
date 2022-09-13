@@ -17,7 +17,8 @@
 #' * `t.beta`: \eqn{t}-statistics for `beta`.
 #'
 #' @importFrom stats .lm.fit
-OLS <- function(y, x) {
+OLS <- function(y,
+                x) {
     tmp.model <- .lm.fit(x, y)
     fitted.values <- y - tmp.model$residuals
     S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) /
@@ -49,7 +50,9 @@ OLS <- function(y, x) {
 #' @param c Coefficient for \eqn{\rho} calculation.
 #'
 #' @return The list of betas, residuals, forecasted values and t-values.
-GLS <- function(y, z, c) {
+GLS <- function(y,
+                z,
+                c) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(z)) z <- as.matrix(z)
 
@@ -95,7 +98,10 @@ GLS <- function(y, z, c) {
 #' * `predict`: forecasted values,
 #' * `t.beta`: \eqn{t}-statistics for `beta`,
 #' * `lag`: estimated number of lags.
-AR <- function(y, x, max.lag, criterion = "aic") {
+AR <- function(y,
+               x,
+               max.lag,
+               criterion = "aic") {
     if (!is.null(criterion)) {
         if (!criterion %in% c("bic", "aic", "lwz", "hq")) {
             warning("WARNING! Unknown criterion, none is used")
@@ -202,7 +208,10 @@ AR <- function(y, x, max.lag, criterion = "aic") {
 #' “Nonparametric Estimation of the Variance Function
 #' in an Explosive Autoregression Model.”
 #' School of Economics. University of Nottingham, 2022.
-NW.estimation <- function(y, x, h, kernel = "unif") {
+NW.estimation <- function(y,
+                          x,
+                          h,
+                          kernel = "unif") {
     if (!kernel %in% c("unif", "gauss")) {
         warning("WARNING! Unknown kernel, unif is used instead")
         kernel <- "unif"
@@ -253,7 +262,9 @@ NW.estimation <- function(y, x, h, kernel = "unif") {
 #' “Nonparametric Estimation of the Variance Function
 #' in an Explosive Autoregression Model.”
 #' School of Economics. University of Nottingham, 2022.
-NW.volatility <- function(e, h, kernel = "unif") {
+NW.volatility <- function(e,
+                          h,
+                          kernel = "unif") {
     if (!kernel %in% c("unif", "gauss")) {
         warning("WARNING! Unknown kernel, unif is used instead")
         kernel <- "unif"
@@ -296,7 +307,9 @@ NW.volatility <- function(e, h, kernel = "unif") {
 #' School of Economics. University of Nottingham, 2022.
 #'
 #' @return A list of arguments as well as the estimated bandwidth `h`.
-NW.loocv <- function(y, x, kernel = "unif") {
+NW.loocv <- function(y,
+                     x,
+                     kernel = "unif") {
     if (!kernel %in% c("unif", "gauss")) {
         warning("WARNING! Unknown kernel, unif is used instead")
         kernel <- "unif"
@@ -333,7 +346,10 @@ NW.loocv <- function(y, x, kernel = "unif") {
 }
 
 #' @importFrom stats pnorm
-NW.kernel <- function(i, x, h, kernel = "unif") {
+NW.kernel <- function(i,
+                      x,
+                      h,
+                      kernel = "unif") {
     if (kernel == "unif") {
         W <- ifelse(abs((x - x[i]) / h) <= 1, 1, 0)
     } else if (kernel == "gauss") {

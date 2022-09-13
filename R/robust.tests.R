@@ -9,7 +9,9 @@
 #'
 #' @export
 robust.tests.single <- function(y,
-                                const = FALSE, trend = FALSE, season = FALSE,
+                                const = FALSE,
+                                trend = FALSE,
+                                season = FALSE,
                                 trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
@@ -50,7 +52,8 @@ robust.tests.single <- function(y,
 #'
 #' @export
 robust.tests.multiple <- function(y,
-                                  const = FALSE, season = FALSE,
+                                  const = FALSE,
+                                  season = FALSE,
                                   breaks = 2,
                                   trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)

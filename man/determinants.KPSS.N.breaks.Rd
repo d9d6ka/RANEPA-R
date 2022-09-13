@@ -4,7 +4,13 @@
 \alias{determinants.KPSS.N.breaks}
 \title{Deterministic terms for \link{KPSS.N.breaks}}
 \usage{
-determinants.KPSS.N.breaks(model, N, break.point, const = FALSE, trend = FALSE)
+determinants.KPSS.N.breaks(
+  model,
+  n.obs,
+  break.point,
+  const = FALSE,
+  trend = FALSE
+)
 }
 \arguments{
 \item{model}{A scalar or vector of
@@ -14,7 +20,7 @@ determinants.KPSS.N.breaks(model, N, break.point, const = FALSE, trend = FALSE)
 \item 3: for the break in const and trend.
 }}
 
-\item{N}{Number of observations.}
+\item{n.obs}{Number of observations.}
 
 \item{break.point}{Array of structural breaks.}
 

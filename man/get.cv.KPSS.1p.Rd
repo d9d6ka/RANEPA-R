@@ -4,7 +4,7 @@
 \alias{get.cv.KPSS.1p}
 \title{Critical values for KPSS test with 1 break}
 \usage{
-get.cv.KPSS.1p(model, break.point, N, k)
+get.cv.KPSS.1p(model, break.point, n.obs, k)
 }
 \arguments{
 \item{model}{A scalar equal to
@@ -19,7 +19,7 @@ get.cv.KPSS.1p(model, break.point, N, k)
 
 \item{break.point}{Position of the break point.}
 
-\item{N}{Number of observations.}
+\item{n.obs}{Number of observations.}
 
 \item{k}{Number of RHS variables.}
 }

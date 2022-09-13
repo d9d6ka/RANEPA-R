@@ -4,7 +4,7 @@
 \alias{determinants.KPSS.1.break}
 \title{Construct determinant variables for \link{KPSS.1.break}}
 \usage{
-determinants.KPSS.1.break(model, N, break.point)
+determinants.KPSS.1.break(model, n.obs, break.point)
 }
 \arguments{
 \item{model}{A scalar equal to
@@ -15,7 +15,7 @@ determinants.KPSS.1.break(model, N, break.point)
 \item 4: Model with const and trend, break in const and trend.
 }}
 
-\item{N}{Number of observations.}
+\item{n.obs}{Number of observations.}
 
 \item{break.point}{Break point.}
 }

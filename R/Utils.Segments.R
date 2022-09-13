@@ -20,9 +20,12 @@
 #' “Testing the Null of Cointegration with Structural Breaks.”
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
-segments.OLS.1.break <- function(beg, end,
-                                first.break, last.break,
-                                len, SSR.data) {
+segments.OLS.1.break <- function(beg,
+                                 end,
+                                 first.break,
+                                 last.break,
+                                 len,
+                                 SSR.data) {
     tmp.result <- matrix(data = Inf, nrow = len, ncol = 1)
 
     for (tb in first.break:last.break) {
@@ -67,7 +70,8 @@ segments.OLS.1.break <- function(beg, end,
 #' “The KPSS Test with Two Structural Breaks.”
 #' Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
 #' https://doi.org/10.1007/s10108-006-9017-8.
-segments.OLS.2.breaks <- function(y, model) {
+segments.OLS.2.breaks <- function(y,
+                                  model) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     n.obs <- nrow(y)
@@ -151,7 +155,11 @@ segments.OLS.2.breaks <- function(y, model) {
 #' “Computation and Analysis of Multiple Structural Change Models.”
 #' Journal of Applied Econometrics 18, no. 1 (2003): 1–22.
 #' https://doi.org/10.1002/jae.659.
-segments.OLS.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
+segments.OLS.N.breaks <- function(y,
+                                  x,
+                                  m = 1,
+                                  width = 2,
+                                  SSR.data = NULL) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -269,9 +277,11 @@ segments.OLS.N.breaks <- function(y, x, m = 1, width = 2, SSR.data = NULL) {
 #' Journal of Time Series Econometrics 10, no. 1 (2018): 1–15.
 #' https://doi.org/10.1515/jtse-2016-0014.
 segments.GLS <- function(y,
-                         const = FALSE, trend = FALSE,
+                         const = FALSE,
+                         trend = FALSE,
                          breaks = 1,
-                         first.break = NULL, last.break = NULL,
+                         first.break = NULL,
+                         last.break = NULL,
                          trim = 0.15) {
     if (!is.matrix(y)) y <- as.matrix(y)
 

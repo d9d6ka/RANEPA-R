@@ -4,10 +4,10 @@
 \alias{seasonal.dummies}
 \title{Generating monthly seasonal dummy variables}
 \usage{
-seasonal.dummies(N)
+seasonal.dummies(n.obs)
 }
 \arguments{
-\item{N}{number of observations.}
+\item{n.obs}{number of observations.}
 }
 \value{
 The matrix of values od seasonal dummies.

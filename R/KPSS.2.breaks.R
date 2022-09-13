@@ -42,7 +42,11 @@
 #' https://doi.org/10.1007/s10108-006-9017-8.
 #'
 #' @export
-KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
+KPSS.2.breaks <- function(y,
+                          model,
+                          break.point,
+                          max.lag,
+                          kernel) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     n.obs <- nrow(y)
@@ -112,7 +116,10 @@ KPSS.2.breaks <- function(y, model, break.point, max.lag, kernel) {
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 #'
 #' @export
-KPSS.2.breaks.unknown <- function(y, model, max.lag = 0, kernel = "bartlett") {
+KPSS.2.breaks.unknown <- function(y,
+                                  model,
+                                  max.lag = 0,
+                                  kernel = "bartlett") {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     res.segs <- segments.OLS.2.breaks(y, model)

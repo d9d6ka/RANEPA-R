@@ -9,9 +9,9 @@
 #' @param width Minimum spacing between the breaks.
 #'
 #' @return The matrix of recursive SSR values.
-#'
-#' @export
-SSR.matrix <- function(y, x, width = 2) {
+SSR.matrix <- function(y,
+                       x,
+                       width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 
@@ -47,9 +47,11 @@ SSR.matrix <- function(y, x, width = 2) {
 #' “Techniques for Testing the Constancy of Regression Relationships over Time.”
 #' Journal of the Royal Statistical Society.
 #' Series B (Methodological) 37, no. 2 (1975): 149–92.
-#'
-#' @export
-SSR.recursive <- function(y, x, beg, end, width = 2) {
+SSR.recursive <- function(y,
+                          x,
+                          beg,
+                          end,
+                          width = 2) {
     if (!is.matrix(y)) y <- as.matrix(y)
     if (!is.matrix(x)) x <- as.matrix(x)
 

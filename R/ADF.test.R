@@ -44,9 +44,11 @@
 #'
 #' @export
 ADF.test <- function(y,
-                     const = TRUE, trend = FALSE,
+                     const = TRUE,
+                     trend = FALSE,
                      max.lag = 0,
-                     criterion = NULL, modified.criterion = FALSE,
+                     criterion = NULL,
+                     modified.criterion = FALSE,
                      rescale.criterion = FALSE) {
     if (!is.null(criterion)) {
         if (!criterion %in% c("bic", "aic", "lwz", "hq")) {
@@ -169,19 +171,37 @@ ADF.test <- function(y,
 }
 
 
-# Generating rescaled series as in Cavaliere et al. (2015)
-#
-# This rescaling procedure is needed to cope with possible heteroscedasticity
-# in the data. Simply it's achieved by taking a cumulative sum of the
-# first difference normalized by the non-parametric local estimate of the
-# variance.
-#
-# d.y: A series of first differences.
-# x: A matrix of ADF RHS variables.
-# deter: A matrix of deterministic variables for detrending.
-# adf.lag: A lag of the corresponding ADF model.
-# max.lag: The maximum possible lag.
-rescale.CPST <- function(d.y, x, deter, adf.lag, max.lag) {
+#' @title
+#' Generating rescaled series as in Cavaliere et al. (2015)
+#'
+#' @description
+#' This rescaling procedure is needed to cope with possible heteroscedasticity
+#' in the data. Simply it's achieved by taking a cumulative sum of the
+#' first difference normalized by the non-parametric local estimate of the
+#' variance.
+#'
+#' @details
+#' The function is not intended to be used directly so it's not exported.
+#'
+#' @param d.y A series of first differences.
+#' @param x A matrix of ADF RHS variables.
+#' @param deter A matrix of deterministic variables for detrending.
+#' @param adf.lag A lag of the corresponding ADF model.
+#' @param max.lag The maximum possible lag.
+#'
+#' @return A rescaled series.
+#'
+#' @references
+#' Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
+#' and A. M. Robert Taylor. “Lag Length Selection for Unit Root Tests
+#' in the Presence of Nonstationary Volatility.”
+#' Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
+#' https://doi.org/10.1080/07474938.2013.808065.
+rescale.CPST <- function(d.y,
+                         x,
+                         deter,
+                         adf.lag,
+                         max.lag) {
     e <- OLS(d.y, x[, 1:(1 + adf.lag), drop = FALSE])$residuals
 
     NW.se <- NW.volatility(

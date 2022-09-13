@@ -109,7 +109,8 @@ VECM.test <- function(y,
 
 
 #' @importFrom Rfast spdinv
-VECM.logl <- function(y, p) {
+VECM.logl <- function(y,
+                      p) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
     n.obs <- nrow(y)
@@ -158,7 +159,9 @@ VECM.logl <- function(y, p) {
 
 
 #' @importFrom Rfast spdinv
-VECM.break.logl <- function(y, p, bv) {
+VECM.break.logl <- function(y,
+                            p,
+                            breaks.list) {
     if (!is.matrix(y)) y <- as.matrix(y)
     n.obs <- nrow(y)
 
@@ -170,8 +173,8 @@ VECM.break.logl <- function(y, p, bv) {
     logL <- NULL
 
     bc <- 1
-    while (bc <= nrow(bv)) {
-        b <- bv[bc, 1]
+    while (bc <= nrow(breaks.list)) {
+        b <- breaks.list[bc, 1]
 
         D <- NULL
         j <- 1
