@@ -19,6 +19,7 @@
 #' @param n.obs Number of observations.
 #' @param k Number of RHS variables.
 #'
+#' @keywords internal
 #' @export
 get.cv.KPSS.1p <- function(model,
                            break.point,
@@ -53,6 +54,7 @@ get.cv.KPSS.1p <- function(model,
 #' @param break.point Position of the break point.
 #' @param n.obs Number of observations.
 #'
+#' @keywords internal
 #' @export
 get.cv.KPSS.2p <- function(model,
                            break.point,
@@ -94,6 +96,7 @@ get.cv.KPSS.2p <- function(model,
 #' @param p_zb Number of variables with breaks.
 #' @param p_zf Number of variables without breaks.
 #'
+#' @keywords internal
 #' @export
 get.cv.coint.conf.sets <- function(lambda,
                                    trend,
@@ -187,6 +190,7 @@ get.cv.coint.conf.sets <- function(lambda,
 #' @param n.obs The number of observations.
 #' @param cr.values The set of precalculated tables.
 #'
+#' @keywords internal
 #' @export
 get.p.values.SADF <- function(statistic,
                               n.obs,

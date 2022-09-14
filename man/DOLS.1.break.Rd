@@ -37,12 +37,10 @@ A list of:
 \description{
 Estimating DOLS regression for multiple known break points
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
 “Testing the Null of Cointegration with Structural Breaks.”
 Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 https://doi.org/10.1111/j.1468-0084.2006.00180.x.
 }
+\keyword{internal}

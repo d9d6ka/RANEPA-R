@@ -280,9 +280,6 @@ KPSS.N.breaks.bootstrap <- function(y,
 #' @title
 #' Estimating DOLS regression for multiple known break points
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y A dependent (LHS) variable.
 #' @param x A matrix of explanatory (RHS) variables.
 #' @param model A scalar or vector of break types:
@@ -298,6 +295,8 @@ KPSS.N.breaks.bootstrap <- function(y,
 #' * Estimates of residuals,
 #' * A set of informational criterions values,
 #' * \eqn{t}-statistics for the estimates of coefficients.
+#'
+#' @keywords internal
 DOLS.N.breaks <- function(y,
                           x,
                           model,
@@ -337,9 +336,6 @@ DOLS.N.breaks <- function(y,
 #' @title
 #' Preparing variables for DOLS regression with multiple known break points
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y A dependent (LHS) variable.
 #' @param x A matrix of explanatory (RHS) variables.
 #' @param model A scalar or vector of
@@ -351,6 +347,8 @@ DOLS.N.breaks <- function(y,
 #' @param k.lags,k.leads A number of lags and leads in DOLS regression.
 #'
 #' @return A list of LHS and RHS variables.
+#'
+#' @keywords internal
 DOLS.vars.N.breaks <- function(y,
                                x,
                                model,

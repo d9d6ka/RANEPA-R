@@ -5,8 +5,6 @@
 #' Procedure to compute deterministic terms
 #' for KPSS with 1 structural break.
 #'
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param model A scalar equal to
 #' * 1: Model with trend, break in const,
 #' * 2: Model with const and trend, break in const,
@@ -16,6 +14,8 @@
 #' @param break.point Break point.
 #'
 #' @return Matrix of determinant variables.
+#'
+#' @keywords internal
 determinants.KPSS.1.break <- function(model,
                                       n.obs,
                                       break.point) {
@@ -73,8 +73,6 @@ determinants.KPSS.1.break <- function(model,
 #' Procedure to compute deterministic terms
 #' for KPSS with 2 structural breaks.
 #'
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param model A scalar equal to
 #' * 1: for the AA (without trend) model,
 #' * 2: for the AA (with trend) model,
@@ -88,6 +86,8 @@ determinants.KPSS.1.break <- function(model,
 #'            (respective to the origin which is 1).
 #'
 #' @return Matrix of deterministic terms.
+#'
+#' @keywords internal
 determinants.KPSS.2.breaks <- function(model,
                                        n.obs,
                                        break.point) {
@@ -233,6 +233,8 @@ determinants.KPSS.2.breaks <- function(model,
 #' @param const,trend Include constant and trend if `TRUE`.
 #'
 #' @return Matrix of deterministic terms.
+#'
+#' @keywords internal
 determinants.KPSS.N.breaks <- function(model,
                                        n.obs,
                                        break.point,
@@ -327,12 +329,11 @@ determinants.KPSS.N.breaks <- function(model,
 #' @title
 #' Generating monthly seasonal dummy variables
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param n.obs number of observations.
 #'
 #' @return The matrix of values od seasonal dummies.
+#'
+#' @keywords internal
 seasonal.dummies <- function(n.obs) {
     s1 <- c(1 - 1 / 12, rep(-1 / 12, 11))
 

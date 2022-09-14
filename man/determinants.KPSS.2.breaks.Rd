@@ -32,6 +32,5 @@ Construct determinant variables for \link{KPSS.2.breaks}
 \details{
 Procedure to compute deterministic terms
 for KPSS with 2 structural breaks.
-
-The function is not intended to be used directly so it's not exported.
 }
+\keyword{internal}

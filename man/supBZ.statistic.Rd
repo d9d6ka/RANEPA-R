@@ -35,12 +35,10 @@ A list of:
 \description{
 Calculate supBZ statistic
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Harvey, David I., Stephen J. Leybourne, and Yang Zu.
 “Testing Explosive Bubbles with Time-Varying Volatility.”
 Econometric Reviews 38, no. 10 (November 26, 2019): 1131–51.
 https://doi.org/10.1080/07474938.2018.1536099.
 }
+\keyword{internal}

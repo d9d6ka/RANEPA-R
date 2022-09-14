@@ -45,6 +45,4 @@ A list of:
 \description{
 Estimating DOLS regression for multiple known break points
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
+\keyword{internal}

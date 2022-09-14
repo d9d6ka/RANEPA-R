@@ -1,9 +1,6 @@
 #' @title
 #' Procedure to minimize the SSR for 1 break point
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param beg Sample begin.
 #' @param end Sample end.
 #' @param first.break First possible break point.
@@ -20,6 +17,8 @@
 #' “Testing the Null of Cointegration with Structural Breaks.”
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
+#'
+#' @keywords internal
 segments.OLS.1.break <- function(beg,
                                  end,
                                  first.break,
@@ -49,9 +48,6 @@ segments.OLS.1.break <- function(beg,
 #' @title
 #' Procedure to minimize the SSR for 2 break points
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y (Tx1)-vector of time series
 #' @param model A scalar equal to
 #' * 1: for the AA (without trend) model,
@@ -70,6 +66,8 @@ segments.OLS.1.break <- function(beg,
 #' “The KPSS Test with Two Structural Breaks.”
 #' Spanish Economic Review 9, no. 2 (May 16, 2007): 105–27.
 #' https://doi.org/10.1007/s10108-006-9017-8.
+#'
+#' @keywords internal
 segments.OLS.2.breaks <- function(y,
                                   model) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -137,9 +135,6 @@ segments.OLS.2.breaks <- function(y,
 #' @title
 #' Find \eqn{m + 1} optimal partitions
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y (Tx1)-vector of the dependent variable.
 #' @param x (Txk)-vector of the explanatory stochastic regressors.
 #' @param m Number of breaks.
@@ -155,6 +150,8 @@ segments.OLS.2.breaks <- function(y,
 #' “Computation and Analysis of Multiple Structural Change Models.”
 #' Journal of Applied Econometrics 18, no. 1 (2003): 1–22.
 #' https://doi.org/10.1002/jae.659.
+#'
+#' @keywords internal
 segments.OLS.N.breaks <- function(y,
                                   x,
                                   m = 1,
@@ -257,9 +254,6 @@ segments.OLS.N.breaks <- function(y,
 #' @title
 #' Procedure to minimize the GLS-SSR for 1 break point
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y Variable of interest.
 #' @param const Whether there is a break in the constant.
 #' @param trend Whether there is a break in the trend.
@@ -276,6 +270,8 @@ segments.OLS.N.breaks <- function(y,
 #' “On Trend Breaks and Initial Condition in Unit Root Testing.”
 #' Journal of Time Series Econometrics 10, no. 1 (2018): 1–15.
 #' https://doi.org/10.1515/jtse-2016-0014.
+#'
+#' @keywords internal
 segments.GLS <- function(y,
                          const = FALSE,
                          trend = FALSE,

@@ -102,3 +102,4 @@ Sul, Donggyu, Peter C. B. Phillips, and Chi-Young Choi.
 Oxford Bulletin of Economics and Statistics 67, no. 4 (August 2005): 517–46.
 https://doi.org/10.1111/j.1468-0084.2005.00130.x.
 }
+\keyword{internal}

@@ -13,7 +13,14 @@ NW.estimation(y, x, h, kernel = "unif")
 
 \item{h}{Bandwidth.}
 
-\item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}.}
+\item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}:
+\itemize{
+\item \code{unif}: \eqn{K(x) = \left\{\begin{array}{ll}
+1 & \frac{|x - x_i|}{h} \leq 1 \\
+0 & \textrm{otherwize}
+\end{array}\right.}
+\item \code{gauss}: \eqn{\Phi(\frac{x - x_i}{h})}
+}}
 }
 \value{
 A list of arguments as well as the estimated coefficient vector and
@@ -22,12 +29,10 @@ residuals.
 \description{
 Nadaraya–Watson kernel regression.
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
 “Nonparametric Estimation of the Variance Function
 in an Explosive Autoregression Model.”
 School of Economics. University of Nottingham, 2022.
 }
+\keyword{internal}

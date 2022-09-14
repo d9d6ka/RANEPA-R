@@ -34,7 +34,7 @@ coint.conf.sets <- function(y,
     if (!is.matrix(y)) y <- as.matrix(y)
 
     if (is.null(z.lead) || is.null(z.lag)) {
-        ll.est <- select.lead.lag(y, trend, zb, zf, trim, criterion)
+        ll.est <- select.lead.lag.KS(y, trend, zb, zf, trim, criterion)
         z.lead <- ll.est$lead
         z.lag <- ll.est$lag
     }
@@ -318,7 +318,9 @@ coint.conf.sets <- function(y,
 #' “Confidence Sets for the Break Date in Cointegrating Regressions.”
 #' Oxford Bulletin of Economics and Statistics 80, no. 3 (2018): 514–35.
 #' https://doi.org/10.1111/obes.12223.
-select.lead.lag <- function(y,
+#'
+#' @keywords internal
+select.lead.lag.KS <- function(y,
                             trend = TRUE,
                             zb = NULL,
                             zf = NULL,

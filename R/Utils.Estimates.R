@@ -4,9 +4,6 @@
 #' @description
 #' Getting OLS estimates of betas, residuals, forecasted values and t-values.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y Dependent variable.
 #' @param x Explanatory variables.
 #'
@@ -17,6 +14,8 @@
 #' * `t.beta`: \eqn{t}-statistics for `beta`.
 #'
 #' @importFrom stats .lm.fit
+#'
+#' @keywords internal
 OLS <- function(y,
                 x) {
     tmp.model <- .lm.fit(x, y)
@@ -42,14 +41,13 @@ OLS <- function(y,
 #' @description
 #' Getting GLS estimates of betas, residuals, forecasted values and t-values.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y Dependent variable.
 #' @param z Explanatory variables.
 #' @param c Coefficient for \eqn{\rho} calculation.
 #'
 #' @return The list of betas, residuals, forecasted values and t-values.
+#'
+#' @keywords internal
 GLS <- function(y,
                 z,
                 c) {
@@ -84,9 +82,6 @@ GLS <- function(y,
 #' @title
 #' Custom AR with extra information
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y Dependent variable.
 #' @param x Exogenous explanatory variables.
 #' @param max.lag The maximum number of lags.
@@ -98,6 +93,8 @@ GLS <- function(y,
 #' * `predict`: forecasted values,
 #' * `t.beta`: \eqn{t}-statistics for `beta`,
 #' * `lag`: estimated number of lags.
+#'
+#' @keywords internal
 AR <- function(y,
                x,
                max.lag,
@@ -192,13 +189,15 @@ AR <- function(y,
 #' @title
 #' Nadaraya–Watson kernel regression.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y LHS dependent variable.
 #' @param x RHS explanation variable.
 #' @param h Bandwidth.
-#' @param kernel Needed kernel, currently only `unif` and `gauss`.
+#' @param kernel Needed kernel, currently only `unif` and `gauss`:
+#' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
+#' 1 & \frac{|x - x_i|}{h} \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `gauss`: \eqn{\Phi(\frac{x - x_i}{h})}
 #'
 #' @return A list of arguments as well as the estimated coefficient vector and
 #' residuals.
@@ -208,6 +207,8 @@ AR <- function(y,
 #' “Nonparametric Estimation of the Variance Function
 #' in an Explosive Autoregression Model.”
 #' School of Economics. University of Nottingham, 2022.
+#'
+#' @keywords internal
 NW.estimation <- function(y,
                           x,
                           h,
@@ -239,14 +240,16 @@ NW.estimation <- function(y,
 
 
 #' @title
-#' NW.volatility - Nadaraya–Watson kernel volatility estimation
-#'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
+#' Nadaraya–Watson kernel volatility estimation
 #'
 #' @param e The series of interest.
 #' @param h Bandwidth.
-#' @param kernel Needed kernel, currently only `unif` and `gauss`.
+#' @param kernel Needed kernel, currently only `unif` and `gauss`:
+#' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
+#' 1 & \frac{|x - x_i|}{h} \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `gauss`: \eqn{\Phi(\frac{x - x_i}{h})}
 #'
 #' @return A list of arguments as well as the estimated omega and s.e.
 #'
@@ -262,6 +265,8 @@ NW.estimation <- function(y,
 #' “Nonparametric Estimation of the Variance Function
 #' in an Explosive Autoregression Model.”
 #' School of Economics. University of Nottingham, 2022.
+#'
+#' @keywords internal
 NW.volatility <- function(e,
                           h,
                           kernel = "unif") {
@@ -293,12 +298,14 @@ NW.volatility <- function(e,
 #' @title
 #' LOO-CV for h in Nadaraya–Watson kernel regression.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y LHS dependent variable.
 #' @param x RHS explanation variable.
-#' @param kernel Needed kernel, currently only `unif` and `gauss`.
+#' @param kernel Needed kernel, currently only `unif` and `gauss`:
+#' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
+#' 1 & \frac{|x - x_i|}{h} \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `gauss`: \eqn{\Phi(\frac{x - x_i}{h})}
 #'
 #' @references
 #' Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
@@ -307,6 +314,8 @@ NW.volatility <- function(e,
 #' School of Economics. University of Nottingham, 2022.
 #'
 #' @return A list of arguments as well as the estimated bandwidth `h`.
+#'
+#' @keywords internal
 NW.loocv <- function(y,
                      x,
                      kernel = "unif") {
@@ -345,7 +354,23 @@ NW.loocv <- function(y,
     )
 }
 
+
+#' @title
+#' Returning a kernel value for a specific point
+#'
+#' @param i Index of the base point.
+#' @param x Series for kernel calculations.
+#' @param h Kernel bandwidth.
+#' @param kernel Kernel type:
+#' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
+#' 1 & \frac{|x - x_i|}{h} \leq 1 \\
+#' 0 & \textrm{otherwize}
+#' \end{array}\right.}
+#' * `gauss`: \eqn{\Phi(\frac{x - x_i}{h})}
+#'
 #' @importFrom stats pnorm
+#'
+#' @keywords internal
 NW.kernel <- function(i,
                       x,
                       h,

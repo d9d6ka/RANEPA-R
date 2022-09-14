@@ -38,3 +38,4 @@ structural breaks.
 \strong{break.point}. If scalar \strong{model} will be repeated till the length of
 \strong{break.point} is achieved.
 }
+\keyword{internal}

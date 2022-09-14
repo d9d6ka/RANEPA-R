@@ -1,14 +1,13 @@
 #' @title
 #' Pre-calculate matrix of recursive SSR values.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y Dependent variable.
 #' @param x Explanatory variables.
 #' @param width Minimum spacing between the breaks.
 #'
 #' @return The matrix of recursive SSR values.
+#'
+#' @keywords internal
 SSR.matrix <- function(y,
                        x,
                        width = 2) {
@@ -32,9 +31,6 @@ SSR.matrix <- function(y,
 #' @title
 #' Calculate SSR recursively
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y (Tx1)-vector of the dependent variable.
 #' @param x (Txk)-vector of the explanatory stochastic regressors.
 #' @param beg,end The start and the end of SSR calculating period.
@@ -47,6 +43,8 @@ SSR.matrix <- function(y,
 #' “Techniques for Testing the Constancy of Regression Relationships over Time.”
 #' Journal of the Royal Statistical Society.
 #' Series B (Methodological) 37, no. 2 (1975): 149–92.
+#'
+#' @keywords internal
 SSR.recursive <- function(y,
                           x,
                           beg,

@@ -13,9 +13,6 @@ reindex.CT(u)
 The function is aimed to calculate the sequence of indices providing a new
 "time transformed" time series as in Cavaliere and Taylor (2008).
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Cavaliere, Giuseppe, and A. M. Robert Taylor.
 “Time-Transformed Unit Root Tests for Models with Non-Stationary Volatility.”
@@ -27,3 +24,4 @@ Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
 Journal of Financial Econometrics, April 23, 2022.
 https://doi.org/10.1093/jjfinec/nbac004.
 }
+\keyword{internal}

@@ -180,9 +180,6 @@ ADF.test <- function(y,
 #' first difference normalized by the non-parametric local estimate of the
 #' variance.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param d.y A series of first differences.
 #' @param x A matrix of ADF RHS variables.
 #' @param deter A matrix of deterministic variables for detrending.
@@ -197,6 +194,8 @@ ADF.test <- function(y,
 #' in the Presence of Nonstationary Volatility.”
 #' Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
 #' https://doi.org/10.1080/07474938.2013.808065.
+#'
+#' @keywords internal
 rescale.CPST <- function(d.y,
                          x,
                          deter,

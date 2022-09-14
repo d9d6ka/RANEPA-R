@@ -167,9 +167,6 @@ sb.GSADF.test <- function(y,
 #' @title
 #' Calculate superior sign-based SADF statistic.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y The series of interest.
 #' @param trim Trimming parameter to determine the lower and upper bounds.
 #' @param generalized Whether to calculate generalized statistic value.
@@ -188,6 +185,8 @@ sb.GSADF.test <- function(y,
 #' of Deterministically Time-Varying Volatility.”
 #' Econometric Theory 36, no. 1 (February 2020): 122–69.
 #' https://doi.org/10.1017/S0266466619000057.
+#'
+#' @keywords internal
 supSBADF.statistic <- function(y,
                                trim = 0.01 + 1.8 / sqrt(length(y)),
                                generalized = FALSE) {

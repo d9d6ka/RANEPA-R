@@ -163,8 +163,6 @@ ADF.test.S <- function(y,
 #' Elliott et al (1996) recommend using \eqn{c = -7} for the model with only
 #' an intercept, and \eqn{c = -13.5} for the model with a linear trend.
 #'
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y The dependent (LHS) variable.
 #' @param x The matrix of explanatory (RHS) variables.
 #' @param c A filtration parameter used to construct an autocorrelation
@@ -189,6 +187,8 @@ ADF.test.S <- function(y,
 #' Seasonal and Nonseasonal Time Series.”
 #' Journal of Business & Economic Statistics 20, no. 2 (April 2002): 269–81.
 #' https://doi.org/10.1198/073500102317352001.
+#'
+#' @keywords internal
 detrend.recursively <- function(y,
                                 x,
                                 c,

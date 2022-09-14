@@ -2,7 +2,7 @@
 % Please edit documentation in R/Utils.Estimates.R
 \name{NW.volatility}
 \alias{NW.volatility}
-\title{NW.volatility - Nadaraya–Watson kernel volatility estimation}
+\title{Nadaraya–Watson kernel volatility estimation}
 \usage{
 NW.volatility(e, h, kernel = "unif")
 }
@@ -11,16 +11,20 @@ NW.volatility(e, h, kernel = "unif")
 
 \item{h}{Bandwidth.}
 
-\item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}.}
+\item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}:
+\itemize{
+\item \code{unif}: \eqn{K(x) = \left\{\begin{array}{ll}
+1 & \frac{|x - x_i|}{h} \leq 1 \\
+0 & \textrm{otherwize}
+\end{array}\right.}
+\item \code{gauss}: \eqn{\Phi(\frac{x - x_i}{h})}
+}}
 }
 \value{
 A list of arguments as well as the estimated omega and s.e.
 }
 \description{
-NW.volatility - Nadaraya–Watson kernel volatility estimation
-}
-\details{
-The function is not intended to be used directly so it's not exported.
+Nadaraya–Watson kernel volatility estimation
 }
 \references{
 Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
@@ -35,3 +39,4 @@ Harvey, David I., S. Leybourne, Stephen J., and Yang Zu.
 in an Explosive Autoregression Model.”
 School of Economics. University of Nottingham, 2022.
 }
+\keyword{internal}

@@ -26,3 +26,4 @@
 \description{
 Custom functions for printing results in a nice way.
 }
+\keyword{internal}

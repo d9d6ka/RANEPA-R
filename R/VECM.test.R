@@ -108,7 +108,21 @@ VECM.test <- function(y,
 }
 
 
+#' @title
+#' Quasi log likelihood for VECM without and with breaks
+#' @order 1
+#'
+#' @param y The matrix of \eqn{n} VAR variables.
+#' @param p Number of lags.
+#' @param breaks.list Vector of possible break dates.
+#'
+#' @return The vector or matrix with the values of quasi log likelihood
+#' for all possible values of co-integration rank and different break dates,
+#' if the function with breaks is called.
+#'
 #' @importFrom Rfast spdinv
+#'
+#' @keywords internal
 VECM.logl <- function(y,
                       p) {
     if (!is.matrix(y)) y <- as.matrix(y)
@@ -158,7 +172,10 @@ VECM.logl <- function(y,
 }
 
 
+#' @rdname VECM.logl
+#' @order 2
 #' @importFrom Rfast spdinv
+#' @keywords internal
 VECM.break.logl <- function(y,
                             p,
                             breaks.list) {

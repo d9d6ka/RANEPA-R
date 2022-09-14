@@ -39,6 +39,4 @@ A list of LHS and RHS variables.
 \description{
 Preparing variables for DOLS regression with multiple known break points
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
+\keyword{internal}

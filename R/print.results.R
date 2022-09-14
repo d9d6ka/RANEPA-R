@@ -4,6 +4,7 @@
 #' @param x Object containing results.
 #' @param ... Any additional arguments for [print] function.
 #'
+#' @keywords internal
 #' @export
 print.sadf <- function(x, ...) {
     test_name <- NULL
@@ -46,6 +47,7 @@ print.sadf <- function(x, ...) {
 
 #' @rdname print.sadf
 #' @importFrom stringr str_split
+#' @keywords internal
 #' @export
 print.mdfHLT <- function(x, ...) {
     if (x$const && !x$trend) {
@@ -106,6 +108,7 @@ print.mdfHLT <- function(x, ...) {
 
 #' @rdname print.sadf
 #' @importFrom stringr str_split
+#' @keywords internal
 #' @export
 print.mdfHLTN <- function(x, ...) {
     cat("\t\tstat\tc.v.\n\n")
@@ -143,6 +146,7 @@ print.mdfHLTN <- function(x, ...) {
 
 
 #' @rdname print.sadf
+#' @keywords internal
 #' @export
 print.mdfCHLT <- function(x, ...) {
     cat("\t\tstat\tc.v.\t wild c.v.\n\n")
@@ -161,6 +165,7 @@ print.mdfCHLT <- function(x, ...) {
 
 
 #' @rdname print.sadf
+#' @keywords internal
 #' @export
 print.cointGH <- function(x, ...) {
     cat("Gregory-Hansen tests\n")

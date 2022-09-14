@@ -200,9 +200,6 @@ KPSS.1.break.unknown <- function(y,
 #' @title
 #' Estimating DOLS regression for multiple known break points
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y A dependent (LHS) variable.
 #' @param x A matrix of explanatory (RHS) variables.
 #' @param model See Carrion-i-Silvestre and Sansó (2006)
@@ -226,6 +223,8 @@ KPSS.1.break.unknown <- function(y,
 #' “Testing the Null of Cointegration with Structural Breaks.”
 #' Oxford Bulletin of Economics and Statistics 68, no. 5 (October 2006): 623–46.
 #' https://doi.org/10.1111/j.1468-0084.2006.00180.x.
+#'
+#' @keywords internal
 DOLS.1.break <- function(y,
                          x,
                          model,

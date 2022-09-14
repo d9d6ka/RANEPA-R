@@ -2,7 +2,7 @@
 % Please edit documentation in R/MDF.CHLT.R
 \name{GLS.bt}
 \alias{GLS.bt}
-\title{GLS fitering}
+\title{GLS fitering with a break}
 \usage{
 GLS.bt(y, lambda, c)
 }
@@ -14,5 +14,6 @@ GLS.bt(y, lambda, c)
 \item{c}{Filtering parameter.}
 }
 \description{
-GLS fitering
+GLS fitering with a break
 }
+\keyword{internal}

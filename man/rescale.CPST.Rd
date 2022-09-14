@@ -26,9 +26,6 @@ in the data. Simply it's achieved by taking a cumulative sum of the
 first difference normalized by the non-parametric local estimate of the
 variance.
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Cavaliere, Giuseppe, Peter C. B. Phillips, Stephan Smeekes,
 and A. M. Robert Taylor. “Lag Length Selection for Unit Root Tests
@@ -36,3 +33,4 @@ in the Presence of Nonstationary Volatility.”
 Econometric Reviews 34, no. 4 (April 21, 2015): 512–36.
 https://doi.org/10.1080/07474938.2013.808065.
 }
+\keyword{internal}

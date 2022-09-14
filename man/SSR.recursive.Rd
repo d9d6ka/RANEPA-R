@@ -21,12 +21,10 @@ The vector of calculated recursive SSR.
 \description{
 Calculate SSR recursively
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Brown, R. L., J. Durbin, and J. M. Evans.
 “Techniques for Testing the Constancy of Regression Relationships over Time.”
 Journal of the Royal Statistical Society.
 Series B (Methodological) 37, no. 2 (1975): 149–92.
 }
+\keyword{internal}

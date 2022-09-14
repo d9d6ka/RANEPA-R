@@ -18,6 +18,4 @@ order 0, and the N-th value is the autcorrelation of order \eqn{N - 1}.
 A simple auxiliary function providing the estimates of autocorrelations of
 orders from \eqn{0} to \eqn{N - 1}.
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
+\keyword{internal}

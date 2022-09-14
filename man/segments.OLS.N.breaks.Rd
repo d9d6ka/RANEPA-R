@@ -27,12 +27,10 @@ A list of:
 \description{
 Find \eqn{m + 1} optimal partitions
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Bai, Jushan, and Pierre Perron.
 “Computation and Analysis of Multiple Structural Change Models.”
 Journal of Applied Econometrics 18, no. 1 (2003): 1–22.
 https://doi.org/10.1002/jae.659.
 }
+\keyword{internal}

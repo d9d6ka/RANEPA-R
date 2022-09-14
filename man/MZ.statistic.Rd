@@ -20,9 +20,6 @@ statistics.
 \description{
 Calculating M-statistics by Stock (1990) and Perron and Ng (1996).
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
 \references{
 Perron, Pierre, and Serena Ng.
 “Useful Modifications to Some Unit Root Tests with Dependent Errors
@@ -34,3 +31,4 @@ Stock, James H.
 “A Class of Tests for Integration and Cointegration.”
 Kennedy School of Government, Harvard University, 1990.
 }
+\keyword{internal}

@@ -1,14 +1,13 @@
 #' @title
 #' Produce a vector lagged backward of forward
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param x Initial vector.
 #' @param i Size of lag (lead if negative).
 #' @param na Value to fill missing observations, `NA` by default.
 #'
 #' @return Lagged or leaded vector.
+#'
+#' @keywords internal
 lagn <- function(x,
                  i,
                  na = NA) {
@@ -40,14 +39,13 @@ lagn <- function(x,
 #' A simple auxiliary function providing the estimates of autocorrelations of
 #' orders from \eqn{0} to \eqn{N - 1}.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param y An input time series of interest.
 #'
 #' @return The vector of ACF values of orders from 0 to \eqn{N - 1}.
 #' Due to the R's way of indexing the 1-st element is the autocorrelation of
 #' order 0, and the N-th value is the autcorrelation of order \eqn{N - 1}.
+#'
+#' @keywords internal
 ACF <- function(y) {
     if (!is.matrix(y)) y <- as.matrix(y)
 
@@ -69,11 +67,10 @@ ACF <- function(y) {
 #' @title
 #' Auxiliary function returning KPSS statistic value.
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param resids The series of residuals.
 #' @param variance The value of the long-run variance.
+#'
+#' @keywords internal
 KPSS <- function(resids,
                  variance) {
     if (!is.matrix(resids)) resids <- as.matrix(resids)
@@ -88,9 +85,6 @@ KPSS <- function(resids,
 
 #' @title
 #' Calculating M-statistics by Stock (1990) and Perron and Ng (1996).
-#'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
 #'
 #' @param y A series of interest.
 #' @param l Number of lags for inner ADF test.
@@ -109,6 +103,8 @@ KPSS <- function(resids,
 #' Stock, James H.
 #' “A Class of Tests for Integration and Cointegration.”
 #' Kennedy School of Government, Harvard University, 1990.
+#'
+#' @keywords internal
 MZ.statistic <- function(y,
                          l,
                          const = FALSE,

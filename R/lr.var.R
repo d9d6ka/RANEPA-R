@@ -60,7 +60,7 @@
 #'
 #' @importFrom stats na.omit
 #'
-#' @export
+#' @keywords internal
 lr.var <- function(y,
                    demean = TRUE,
                    kernel = "bartlett",

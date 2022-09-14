@@ -30,3 +30,4 @@ Auxiliary function returning pre-calculated critical values for
 \details{
 The function is not intended to be used directly so it's not exported.
 }
+\keyword{internal}

@@ -19,6 +19,4 @@ Lagged or leaded vector.
 \description{
 Produce a vector lagged backward of forward
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
+\keyword{internal}

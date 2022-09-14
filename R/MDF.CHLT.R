@@ -453,11 +453,13 @@ MDF.CHLT <- function(y,
 }
 
 #' @title
-#' GLS fitering
+#' GLS fitering with a break
 #'
 #' @param y Series of interest.
 #' @param lambda Break relative position.
 #' @param c Filtering parameter.
+#'
+#' @keywords internal
 GLS.bt <- function(y,
                    lambda,
                    c) {

@@ -33,8 +33,6 @@ correlated with the error term.
 \details{
 Elliott et al (1996) recommend using \eqn{c = -7} for the model with only
 an intercept, and \eqn{c = -13.5} for the model with a linear trend.
-
-The function is not intended to be used directly so it's not exported.
 }
 \references{
 Elliott, Graham, Thomas J. Rothenberg, and James H. Stock.
@@ -48,3 +46,4 @@ Seasonal and Nonseasonal Time Series.”
 Journal of Business & Economic Statistics 20, no. 2 (April 2002): 269–81.
 https://doi.org/10.1198/073500102317352001.
 }
+\keyword{internal}

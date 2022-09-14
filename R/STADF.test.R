@@ -360,9 +360,6 @@ GSTADF.test <- function(y,
 #' The function is aimed to calculate the sequence of indices providing a new
 #' "time transformed" time series as in Cavaliere and Taylor (2008).
 #'
-#' @details
-#' The function is not intended to be used directly so it's not exported.
-#'
 #' @param u The residuals series for reindexing.
 #'
 #' @references
@@ -375,6 +372,8 @@ GSTADF.test <- function(y,
 #' “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
 #' Journal of Financial Econometrics, April 23, 2022.
 #' https://doi.org/10.1093/jjfinec/nbac004.
+#'
+#' @keywords internal
 reindex.CT <- function(u) {
     n.obs <- length(u)
     u.2 <- as.numeric(u^2)

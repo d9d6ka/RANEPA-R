@@ -20,3 +20,4 @@ tests.
 \details{
 The function is not intended to be used directly so it's not exported.
 }
+\keyword{internal}

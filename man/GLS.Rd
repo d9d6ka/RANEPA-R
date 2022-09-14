@@ -19,6 +19,4 @@ The list of betas, residuals, forecasted values and t-values.
 \description{
 Getting GLS estimates of betas, residuals, forecasted values and t-values.
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
+\keyword{internal}

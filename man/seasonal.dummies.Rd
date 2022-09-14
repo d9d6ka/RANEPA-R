@@ -15,6 +15,4 @@ The matrix of values od seasonal dummies.
 \description{
 Generating monthly seasonal dummy variables
 }
-\details{
-The function is not intended to be used directly so it's not exported.
-}
+\keyword{internal}
