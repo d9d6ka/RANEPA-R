@@ -55,6 +55,7 @@ GLS <- function(y,
     if (!is.matrix(z)) z <- as.matrix(z)
 
     n.obs <- nrow(y)
+    n.var <- ncol(y)
 
     rho <- 1 + c / n.obs
 
@@ -64,16 +65,34 @@ GLS <- function(y,
     z.hat <- z - rho * lagn(z, 1)
     z.hat[1, ] <- z[1, ]
 
-    res.OLS <- OLS(y.hat, z.hat)
-    fitted.values <- z %*% res.OLS$beta
-    resids <- y - fitted.values
+    betas <- NULL
+    resids <- NULL
+    fitted.values <- NULL
+    t.betas <- NULL
+
+    for (i in 1:n.var) {
+        res.OLS <- OLS(y.hat[, i, drop = FALSE], z.hat)
+        betas <- cbind(betas, res.OLS$beta)
+        t.betas <- cbind(
+            t.betas,
+            res.OLS$t.beta
+        )
+        fitted.values <- cbind(
+            fitted.values,
+            z %*% res.OLS$beta
+        )
+        resids <- cbind(
+            resids,
+            y[, i, drop = FALSE] - fitted.values
+        )
+    }
 
     return(
         list(
-            beta = res.OLS$beta,
+            beta = betas,
             residuals = resids,
             predict = fitted.values,
-            t.beta = res.OLS$t.beta
+            t.beta = drop(t.betas)
         )
     )
 }
