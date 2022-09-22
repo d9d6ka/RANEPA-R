@@ -13,11 +13,11 @@ lagn <- function(x,
                  na = NA) {
     if (!is.matrix(x)) x <- as.matrix(x)
     n.obs <- nrow(x)
-    k <- ncol(x)
+    n.var <- ncol(x)
     if (i > 0) {
         return(
             rbind(
-                matrix(data = na, nrow = i, ncol = k),
+                matrix(data = na, nrow = i, ncol = n.var),
                 x[1:(n.obs - i), , drop = FALSE]
             )
         )
@@ -25,10 +25,42 @@ lagn <- function(x,
         return(
             rbind(
                 x[(1 + abs(i)):n.obs, , drop = FALSE],
-                matrix(data = na, nrow = abs(i), ncol = k)
+                matrix(data = na, nrow = abs(i), ncol = n.var)
             )
         )
     }
+}
+
+
+#' @title
+#' Produce a vector or matrix of differences, keeping initial length
+#'
+#' @param x Initial vector.
+#' @param lag Size of lag.
+#' @param difference Order of differentiating.
+#' @param na Value to fill missing observations, `NA` by default.
+#'
+#' @return Vector or matrix of differences.
+#'
+#' @keywords internal
+diffn <- function(x,
+                  lag = 1,
+                  differences = 1,
+                  na = NA) {
+    if (!is.matrix(x)) x <- as.matrix(x)
+    n.obs <- nrow(x)
+    n.var <- ncol(x)
+    tmp.diff <- diff(x, lag = lag, differences = differences)
+    return(
+        rbind(
+            matrix(
+                data = na,
+                nrow = n.obs - nrow(tmp.diff),
+                ncol = n.var
+            ),
+            tmp.diff
+        )
+    )
 }
 
 
