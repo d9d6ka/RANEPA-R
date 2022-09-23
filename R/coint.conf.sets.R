@@ -1,6 +1,10 @@
 #' @title
 #' Confidence sets for the break date in cointegrating regressions
 #'
+#' @description
+#' This procedure is to construct a confidence set for the change point in
+#' cointegrating regressions.
+#'
 #' @param y A LHS variable of interest.
 #' @param trend Whether the trend is to be included.
 #' @param zb I(1) regressors with break.
