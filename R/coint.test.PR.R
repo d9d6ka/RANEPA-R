@@ -24,10 +24,10 @@ coint.test.PR <- function(y, x, det.comp, kmin = 0) {
         cbind(rep(1, n.obs), (1:n.obs))
     }
 
-    y_d <- GLS(y, z, opt.cbar)$residuals
-    x_d <- GLS(x, z, opt.cbar)$residuals
+    y.d <- GLS(y, z, opt.cbar)$residuals
+    x.d <- GLS(x, z, opt.cbar)$residuals
 
-    model <- OLS(y_d, x_d)
+    model <- OLS(y.d, x.d)
     ud.hat <- cbind(model$residuals)
 
     result <- resid.tests.PR(ud.hat, kmin, kmax, opt.cbar, det.comp)
@@ -36,52 +36,55 @@ coint.test.PR <- function(y, x, det.comp, kmin = 0) {
 }
 
 
-resid.tests.PR <- function(ud.hat, kmin, kmax, opt.cbar, det.comp) {
-    result <- list()
+resid.tests.PR <- function(ud, kmin, kmax, c.bar, det.comp) {
+    n.obs <- nrow(ud)
 
-    n.obs <- nrow(ud.hat)
-
-    if (ncol(ud.hat) > 1) {
+    if (ncol(ud) > 1) {
         stop("ERROR:")
     }
 
     gls.tests <- matrix(0, 7, 1)
-    min.bic <- Inf
 
-    ud.hat.1 <- cbind(ud.hat[(1:(nrow(ud.hat) - 1)), 1])
+    lag.ud <- ud[1:(n.obs - 1), 1, drop = FALSE]
+    d.ud <- diffn(ud, na = 0)
+    sum.ud.sq <- drop(t(lag.ud) %*% lag.ud)
 
     model.1 <- OLS(
-        as.matrix(ud.hat[(2:nrow(ud.hat)), 1]),
-        ud.hat.1
+        ud[2:n.obs, 1, drop = FALSE],
+        ud[1:(n.obs - 1), 1, drop = FALSE]
     )
 
-    alpha.1 <- cbind(model.1$beta)
-    ee.1 <- cbind(model.1$residuals)
+    rho.hat <- as.matrix(model.1$beta)
+    omega <- as.matrix(model.1$residuals)
+    s2.ud <- c(t(omega) %*% omega) / (nrow(omega) - 1)
+    t.rho <- (rho.hat - 1) / sqrt(s2.ud / sum.ud.sq)
 
-    aa <- solve(t(ud.hat.1) %*% ud.hat.1)
-    ss <- c(t(ee.1) %*% ee.1) / (nrow(ee.1) - ncol(ud.hat.1))
-    t.alpha <- (alpha.1 - 1) / sqrt(ss * aa[1, 1])
-    sum.ud.hat <- sum(ud.hat[(1:(n.obs - 1)), 1]^2) / (n.obs - 1)^2
-
+    min.bic <- Inf
+    min.lag <- kmin
     lag.bic <- kmin
     while (lag.bic <= kmax) {
-        dud.hat <- diffn(ud.hat, na = 0)
-        reg <- lagn(ud.hat, 1, na = 0)
+        tmp.reg <- lagn(ud, 1, na = 0)
 
         h <- 1
         while (h <= lag.bic) {
-            reg <- cbind(reg, lagn(dud.hat, h, na = 0))
+            tmp.reg <- cbind(
+                tmp.reg,
+                lagn(d.ud, h, na = 0)
+            )
             h <- h + 1
         }
 
-        dud.hat.1 <- as.matrix(dud.hat[(lag.bic + 2):nrow(dud.hat), ])
-        reg.1 <- as.matrix(reg[(lag.bic + 2):nrow(reg), ])
+        tmp.reg <-
+            tmp.reg[(lag.bic + 2):nrow(tmp.reg), , drop = FALSE]
 
-        model.2 <- OLS(dud.hat.1, reg.1)
+        model.2 <- OLS(
+            d.ud[(lag.bic + 2):nrow(d.ud), , drop = FALSE],
+            tmp.reg
+        )
 
-        ee.2 <- cbind(model.2$residuals)
-        ss.2 <- c(t(ee.2) %*% ee.2) / (nrow(ee.2) - ncol(reg.1))
-        xx.2 <- solve(t(reg.1) %*% reg.1)
+        eta <- cbind(model.2$residuals)
+        s2.eta <- c(t(eta) %*% eta) / (nrow(eta) - ncol(tmp.reg))
+        xtx.inv <- solve(t(tmp.reg) %*% tmp.reg)
 
         if (lag.bic == 0) {
             sumb <- 0
@@ -89,40 +92,55 @@ resid.tests.PR <- function(ud.hat, kmin, kmax, opt.cbar, det.comp) {
             sumb <- sum(model.2$beta[2:(lag.bic + 1)])
         }
 
-        ss.adj <- ss.2 / ((1 - sumb)^2)
+        ss.adj <- s2.eta / ((1 - sumb)^2)
 
-        cur.bic <- log(c(t(ee.2) %*% ee.2) / (n.obs - kmax)) +
-            (log(n.obs - kmax) * (lag.bic)) / (n.obs - kmax)
+        cur.bic <- log(c(t(eta) %*% eta) / (n.obs - kmax)) +
+            log(n.obs - kmax) * lag.bic / (n.obs - kmax)
         if (cur.bic < min.bic) {
             min.bic <- cur.bic
-            kbic <- lag.bic
+            min.lag <- lag.bic
 
-            gls.tests[1, 1] <- ((ud.hat[n.obs, 1]^2 / n.obs) - ss.adj) *
-                ((2 * sum.ud.hat))^(-1)
-            gls.tests[2, 1] <- sqrt(sum.ud.hat / ss.adj)
+            gls.tests[1, 1] <- (ud[n.obs, 1]^2 / n.obs - ss.adj) /
+                (2 * sum.ud.sq / n.obs^2)
+            gls.tests[2, 1] <- sqrt(2 * sum.ud.sq / (n.obs^2 * ss.adj))
             gls.tests[3, 1] <- gls.tests[1, 1] * gls.tests[2, 1]
-            gls.tests[4, 1] <- model.2$coefficients[1] / sqrt(ss.2 * xx.2[1, 1])
-            gls.tests[5, 1] <- (n.obs - 1) * (c(alpha.1) - 1) -
-                0.5 * (ss.adj - ss) * sum.ud.hat^(-1)
-            gls.tests[6, 1] <- sqrt(ss / ss.adj) * t.alpha -
-                (ss.adj - ss) / sqrt(4 * ss.adj * sum.ud.hat)
+            gls.tests[4, 1] <- model.2$beta[1] / sqrt(s2.eta * xtx.inv[1, 1])
+            gls.tests[5, 1] <- (n.obs - 1) * (rho.hat - 1) -
+                (ss.adj - s2.ud) / (2 * sum.ud.sq / n.obs^2)
+            gls.tests[6, 1] <- sqrt(s2.ud / ss.adj) * t.rho -
+                (ss.adj - s2.ud) / sqrt(4 * ss.adj * sum.ud.sq / n.obs^2)
         }
 
         lag.bic <- lag.bic + 1
     }
 
     if (det.comp == 1 || det.comp == 3) {
-        gls.tests[7, 1] <- ((opt.cbar^2) * (sum.ud.hat) -
-            (opt.cbar * (ud.hat[n.obs, 1]^2 / n.obs))) / s22
+        gls.tests[7, 1] <- (c.bar^2 * sum.ud.sq / n.obs^2 -
+            c.bar * ud[n.obs, 1]^2 / n.obs) / ss.adj
     } else if (det.comp == 2) {
-        gls.tests[7, 1] <- ((opt.cbar^2) * (sum.ud.hat) +
-            (1 - opt.cbar) * (ud.hat[n.obs, 1]^2 / n.obs)) / s22
+        gls.tests[7, 1] <- (c.bar^2 * sum.ud.sq / n.obs^2 +
+            (1 - c.bar) * ud[n.obs, 1]^2 / n.obs) / ss.adj
     } else {
         stop("ERROR:")
     }
 
+    rownames(gls.tests) <- c(
+        "MZ(rho)",
+        "MSB",
+        "MZ(t.rho)",
+        "ADF",
+        "Z(rho)",
+        "Z(t.rho)",
+        if (det.comp == 1 || det.comp == 3) {
+            "MP(T, demeaned)"
+        } else if (det.comp == 2) {
+            "MP(T, detrended)"
+        }
+    )
+
+    result <- list()
     result$gls.tests <- gls.tests
-    result$kbic <- kbic
+    result$kbic <- min.lag
 
     return(result)
 }
