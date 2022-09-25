@@ -1,4 +1,29 @@
-coint.test.PR <- function(y, x, det.comp, kmin = 0) {
+#' @title
+#' A set of residual based tests for cointegration
+#'
+#' @param y,x Variables of interest. `x` can be a matrix of several variables.
+#' @param deter A value equal to
+#' * 1: quasi-demeaned y and x,
+#' * 2: quasi-detrended y and x,
+#' * 3: quasi-demeaned y and quasi-detrended x.
+#' @param min.lag A minimum number of lags to be used in the tests.
+#'
+#' @return A list of:
+#' * 7x1-matrix of test statistics values,
+#' * estimated number of lags.
+#'
+#' @references
+#' Perron, Pierre, and Gabriel Rodríguez.
+#' “Residuals‐based Tests for Cointegration with Generalized Least‐squares
+#' Detrended Data.”
+#' The Econometrics Journal 19, no. 1 (February 1, 2016): 84–111.
+#' https://doi.org/10.1111/ectj.12056.
+#'
+#' @export
+coint.test.PR <- function(y,
+                          x,
+                          deter,
+                          min.lag = 0) {
     n.obs <- nrow(y)
     n.var <- ncol(x)
 
@@ -14,29 +39,56 @@ coint.test.PR <- function(y, x, det.comp, kmin = 0) {
         options <- c(-30.00, -33.75, -29.75)
     }
 
-    opt.cbar <- options[det.comp]
+    opt.cbar <- options[deter]
 
-    kmax <- round(4 * (n.obs / 100)^(1 / 4))
+    max.lag <- round(4 * (n.obs / 100)^(1 / 4))
 
-    z <- if (det.comp == 1 || det.comp == 3) {
+    zy <- if (deter == 1 || deter == 3) {
         as.matrix(rep(1, n.obs))
-    } else if (det.comp == 2) {
+    } else if (deter == 2) {
         cbind(rep(1, n.obs), (1:n.obs))
     }
 
-    y.d <- GLS(y, z, opt.cbar)$residuals
-    x.d <- GLS(x, z, opt.cbar)$residuals
+    zx <- if (deter == 1) {
+        as.matrix(rep(1, n.obs))
+    } else if (deter == 2 || deter == 3) {
+        cbind(rep(1, n.obs), (1:n.obs))
+    }
+
+    y.d <- GLS(y, zy, opt.cbar)$residuals
+    x.d <- GLS(x, zx, opt.cbar)$residuals
 
     model <- OLS(y.d, x.d)
     ud.hat <- cbind(model$residuals)
 
-    result <- resid.tests.PR(ud.hat, kmin, kmax, opt.cbar, det.comp)
+    result <- resid.tests.PR(ud.hat, min.lag, max.lag, opt.cbar, deter)
 
     return(result)
 }
 
 
-resid.tests.PR <- function(ud, kmin, kmax, c.bar, det.comp) {
+#' @title
+#' Internal procedure for calculating test statistics from
+#' Perron-Rodriguez (2016)
+#'
+#' @param ud A vecctor of residuals for testing.
+#' @param min.lag,max.lag Minimum and maximum lag number.
+#' @param c.bar A `c` parameter used for GLS detrending purposes.
+#' @param deter A value equal to
+#' * 1: quasi-demeaned y and x,
+#' * 2: quasi-detrended y and x,
+#' * 3: quasi-demeaned y and quasi-detrended x.
+#'
+#' @return A list of:
+#' * 7x1-matrix of test statistics values,
+#' * estimated number of lags.
+#'
+#' @keywords internal
+resid.tests.PR <- function(ud,
+                           min.lag,
+                           max.lag,
+                           c.bar,
+                           deter) {
     n.obs <- nrow(ud)
 
     if (ncol(ud) > 1) {
@@ -59,10 +111,10 @@ resid.tests.PR <- function(ud, kmin, kmax, c.bar, det.comp) {
     s2.ud <- c(t(omega) %*% omega) / (nrow(omega) - 1)
     t.rho <- (rho.hat - 1) / sqrt(s2.ud / sum.ud.sq)
 
-    min.bic <- Inf
-    min.lag <- kmin
-    lag.bic <- kmin
-    while (lag.bic <= kmax) {
+    fin.bic <- Inf
+    fin.lag <- min.lag
+    lag.bic <- min.lag
+    while (lag.bic <= max.lag) {
         tmp.reg <- lagn(ud, 1, na = 0)
 
         h <- 1
@@ -92,36 +144,36 @@ resid.tests.PR <- function(ud, kmin, kmax, c.bar, det.comp) {
             sumb <- sum(model.2$beta[2:(lag.bic + 1)])
         }
 
-        ss.adj <- s2.eta / ((1 - sumb)^2)
+        s2.adj <- s2.eta / ((1 - sumb)^2)
 
-        cur.bic <- log(c(t(eta) %*% eta) / (n.obs - kmax)) +
-            log(n.obs - kmax) * lag.bic / (n.obs - kmax)
-        if (cur.bic < min.bic) {
-            min.bic <- cur.bic
-            min.lag <- lag.bic
+        cur.bic <- log(c(t(eta) %*% eta) / (n.obs - max.lag)) +
+            log(n.obs - max.lag) * lag.bic / (n.obs - max.lag)
+        if (cur.bic < fin.bic) {
+            fin.bic <- cur.bic
+            fin.lag <- lag.bic
 
-            gls.tests[1, 1] <- (ud[n.obs, 1]^2 / n.obs - ss.adj) /
+            gls.tests[1, 1] <- (ud[n.obs, 1]^2 / n.obs - s2.adj) /
                 (2 * sum.ud.sq / n.obs^2)
-            gls.tests[2, 1] <- sqrt(2 * sum.ud.sq / (n.obs^2 * ss.adj))
+            gls.tests[2, 1] <- sqrt(2 * sum.ud.sq / (n.obs^2 * s2.adj))
             gls.tests[3, 1] <- gls.tests[1, 1] * gls.tests[2, 1]
             gls.tests[4, 1] <- model.2$beta[1] / sqrt(s2.eta * xtx.inv[1, 1])
             gls.tests[5, 1] <- (n.obs - 1) * (rho.hat - 1) -
-                (ss.adj - s2.ud) / (2 * sum.ud.sq / n.obs^2)
-            gls.tests[6, 1] <- sqrt(s2.ud / ss.adj) * t.rho -
-                (ss.adj - s2.ud) / sqrt(4 * ss.adj * sum.ud.sq / n.obs^2)
+                (s2.adj - s2.ud) / (2 * sum.ud.sq / n.obs^2)
+            gls.tests[6, 1] <- sqrt(s2.ud / s2.adj) * t.rho -
+                (s2.adj - s2.ud) / sqrt(4 * s2.adj * sum.ud.sq / n.obs^2)
         }
 
         lag.bic <- lag.bic + 1
     }
 
-    if (det.comp == 1 || det.comp == 3) {
+    if (deter == 1 || deter == 3) {
         gls.tests[7, 1] <- (c.bar^2 * sum.ud.sq / n.obs^2 -
-            c.bar * ud[n.obs, 1]^2 / n.obs) / ss.adj
-    } else if (det.comp == 2) {
+            c.bar * ud[n.obs, 1]^2 / n.obs) / s2.adj
+    } else if (deter == 2) {
         gls.tests[7, 1] <- (c.bar^2 * sum.ud.sq / n.obs^2 +
-            (1 - c.bar) * ud[n.obs, 1]^2 / n.obs) / ss.adj
+            (1 - c.bar) * ud[n.obs, 1]^2 / n.obs) / s2.adj
     } else {
-        stop("ERROR:")
+        stop("ERROR! Unknown `det.comp` value")
     }
 
     rownames(gls.tests) <- c(
@@ -131,16 +183,16 @@ resid.tests.PR <- function(ud, kmin, kmax, c.bar, det.comp) {
         "ADF",
         "Z(rho)",
         "Z(t.rho)",
-        if (det.comp == 1 || det.comp == 3) {
+        if (deter == 1 || deter == 3) {
             "MP(T, demeaned)"
-        } else if (det.comp == 2) {
+        } else if (deter == 2) {
             "MP(T, detrended)"
         }
     )
 
     result <- list()
     result$gls.tests <- gls.tests
-    result$kbic <- min.lag
+    result$lag <- fin.lag
 
     return(result)
 }
