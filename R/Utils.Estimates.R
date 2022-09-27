@@ -18,8 +18,10 @@
 #' @keywords internal
 OLS <- function(y,
                 x) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.matrix(x)) x <- as.matrix(x)
+
     tmp.model <- .lm.fit(x, y)
-    fitted.values <- y - tmp.model$residuals
     S.2 <- drop(t(tmp.model$residuals) %*% tmp.model$residuals) /
         (nrow(x) - ncol(x))
     t.beta <- tmp.model$coefficients / sqrt(diag(S.2 * qr.solve(t(x) %*% x)))
@@ -28,7 +30,7 @@ OLS <- function(y,
         list(
             beta = as.matrix(tmp.model$coefficients),
             residuals = tmp.model$residuals,
-            predict = fitted.values,
+            predict = tmp.model$fitted.values,
             t.beta = t.beta
         )
     )
