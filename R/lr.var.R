@@ -163,13 +163,13 @@ lr.var <- function(y,
             if (i == 0) break
             if (i < n.obs - 1) {
                 lrv <- lrv + funcs$weight(i, limit) * (
-                    (t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs +
-                    t(t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs
+                    (t(trimr(y, 0, i)) %*% trimr(y, i, 0)) / n.obs +
+                    t(t(trimr(y, 0, i)) %*% trimr(y, i, 0)) / n.obs
                 )
             } else {
                 lrv <- lrv + funcs$weight(i, limit) * as.vector(
-                    (t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs +
-                    t(t(y[1:(n.obs - i), ]) %*% y[(1 + i):n.obs, ]) / n.obs
+                    (t(trimr(y, 0, i)) %*% trimr(y, i, 0)) / n.obs +
+                    t(t(trimr(y, 0, i)) %*% trimr(y, i, 0)) / n.obs
                 )
             }
         }
@@ -305,8 +305,8 @@ lr.var.kernel <- function(kernel,
 
     if (!is.null(n.obs) && n.obs > 1) {
         r <- drop(
-            (t(y[1:(n.obs - 1), 1]) %*% y[2:n.obs, 1]) /
-            (t(y[1:(n.obs - 1), 1]) %*% y[1:(n.obs - 1), 1])
+            (t(trimr(y, 0, 1)) %*% trimr(y, 1, 0)) /
+            (t(trimr(y, 0, 1)) %*% trimr(y, 0, 1))
         )
 
         if (r > upper.rho.limit) {
@@ -336,8 +336,8 @@ lr.var.kernel <- function(kernel,
     denominator <- 0
 
     for (i in 1:n.var) {
-        r <- (t(y[1:(n.obs - 1), i]) %*% y[2:n.obs, i]) /
-            (t(y[1:(n.obs - 1), i]) %*% y[1:(n.obs - 1), i])
+        r <- (t(trimr(y, 0, 1)) %*% trimr(y, 1, 0)) /
+            (t(trimr(y, 0, 1)) %*% trimr(y, 0, 1))
         r <- drop(r)
 
         if (r > upper.rho.limit) {
@@ -346,7 +346,7 @@ lr.var.kernel <- function(kernel,
             r <- -upper.rho.limit
         }
 
-        resids <- y[2:n.obs, i] - y[1:(n.obs - 1), i] * r
+        resids <- trimr(y - r * lagn(y), 1, 0)
         s2 <- mean(resids^2)
 
         nominator_1 <- nominator_1 + 4 * r^2 * s2^2 / (1 - r)^6 / (1 + r)^2

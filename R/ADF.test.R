@@ -75,7 +75,7 @@ ADF.test <- function(y,
         yd <- y
     }
 
-    d.y <- as.matrix(c(yd[1], diff(yd)))
+    d.y <- diffn(yd, na = yd[1])
 
     x <- lagn(yd, 1, na = 0)
     if (max.lag > 0) {
@@ -98,8 +98,8 @@ ADF.test <- function(y,
         }
 
         tmp.ols <- OLS(
-            d.yr[(2 + max.lag):n.obs, , drop = FALSE],
-            xr[(2 + max.lag):n.obs, 1, drop = FALSE]
+            trimr(d.yr, max.lag + 1, 0),
+            trimr(x, max.lag + 1, 0)[, 1, drop = FALSE]
         )
         b <- tmp.ols$beta
         e <- tmp.ols$residuals
@@ -108,7 +108,8 @@ ADF.test <- function(y,
         res.ic <- info.criterion(
             e, 0,
             modification = modified.criterion,
-            alpha = b[1], y = xr[(2 + max.lag):n.obs, 1, drop = FALSE]
+            alpha = b[1],
+            y = trimr(xr, max.lag + 1, 0)[, 1, drop = FALSE]
         )[[criterion]]
         res.lag <- 0
 
@@ -126,8 +127,8 @@ ADF.test <- function(y,
             }
 
             tmp.ols <- OLS(
-                d.yr[(2 + max.lag):n.obs, , drop = FALSE],
-                xr[(2 + max.lag):n.obs, 1:(1 + l), drop = FALSE]
+                trimr(d.yr, max.lag + 1, 0),
+                trimr(xr, max.lag + 1, 0)[, 1:(1 + l), drop = FALSE]
             )
             b <- tmp.ols$beta
             e <- tmp.ols$residuals
@@ -136,7 +137,8 @@ ADF.test <- function(y,
             tmp.ic <- info.criterion(
                 e, l,
                 modification = modified.criterion,
-                alpha = b[1], y = xr[(2 + max.lag):n.obs, 1, drop = FALSE]
+                alpha = b[1],
+                y = trimr(xr, max.lag + 1, 0)[, 1, drop = FALSE]
             )[[criterion]]
 
             if (tmp.ic < res.ic) {
@@ -147,8 +149,8 @@ ADF.test <- function(y,
     }
 
     res.OLS <- OLS(
-        d.y[(2 + res.lag):n.obs, , drop = FALSE],
-        x[(2 + res.lag):n.obs, 1:(1 + res.lag), drop = FALSE]
+        trimr(d.y, res.lag + 1, 0),
+        trimr(x, res.lag + 1, 0)[, 1:(1 + res.lag), drop = FALSE]
     )
 
     Z.stat <- (n.obs - res.lag - 1) * drop(res.OLS$beta[1] - 1)

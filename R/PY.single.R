@@ -102,14 +102,14 @@ PY.single <- function(y,
 
         d.resid <- c(0, diff(resids))
 
-        y.u <- resids[k.hat:n.obs, , drop = FALSE]
+        y.u <- trimr(resids, k.hat - 1, 0)
         x.u <- lagn(resids, 1, na = 0)
         if (k.hat > 1) {
             for (l in 1:(k.hat - 1)) {
                 x.u <- cbind(x.u, lagn(d.resid, l, na = 0))
             }
         }
-        x.u <- x.u[k.hat:n.obs, , drop = FALSE]
+        x.u <- trimr(x.u, k.hat - 1, 0)
 
         tmp.OLS <- OLS(y.u, x.u)
         beta.u <- tmp.OLS$beta
@@ -154,16 +154,8 @@ PY.single <- function(y,
         CR <- sqrt(n.obs) * abs(a.hat.M - 1)
         if (CR <= 1) a.hat.M <- 1
 
-        y.g <- rbind(
-            y[1, , drop = FALSE],
-            y[2:n.obs, , drop = FALSE] -
-                a.hat.M * y[1:(n.obs - 1), , drop = FALSE]
-        )
-        x.g <- rbind(
-            x[1, , drop = FALSE],
-            x[2:n.obs, , drop = FALSE] -
-                a.hat.M * x[1:(n.obs - 1), , drop = FALSE]
-        )
+        y.g <- y - a.hat.M * lagn(y, 1, na = 0)
+        x.g <- x - a.hat.M * lagn(x, 1, na = 0)
 
         tmp.OLS <- OLS(y.g, x.g)
         beta.g <- tmp.OLS$beta
@@ -178,8 +170,8 @@ PY.single <- function(y,
                 for (k.i in 1:(k.hat - 1))
                     x.v <- cbind(x.v, lagn(g.resid, k.i, na = 0))
 
-                y.v <- g.resid[(k.hat - 1):nrow(g.resid), , drop = FALSE]
-                x.v <- x.v[(k.hat - 1):nrow(g.resid), , drop = FALSE]
+                y.v <- trimr(g.resid, k.hat - 2, 0)
+                x.v <- trimr(x.v, k.hat - 2, 0)
 
                 tmp.OLS <- OLS(y.v, x.v)
                 beta.v <- tmp.OLS$beta
@@ -195,10 +187,7 @@ PY.single <- function(y,
                             DU.ki,
                             x.trend
                         )
-                        x.g.ki <- rbind(
-                            x.ki[1, ],
-                            x.ki[2:n.obs, ] - a.hat.M * x.ki[1:(n.obs - 1), ]
-                        )
+                        x.g.ki <- x.ki - a.hat.M * lagn(x.ki, 1, na = 0)
                         beta.ki <- OLS(y.g, x.g.ki)$beta
                         BETAS[k.i, ] <- drop(beta.ki)
                     }
@@ -219,10 +208,7 @@ PY.single <- function(y,
                             1:n.obs,
                             DT.ki
                         )
-                        x.g.ki <- rbind(
-                            x.ki[1, ],
-                            x.ki[2:n.obs, ] - a.hat.M * x.ki[1:(n.obs - 1), ]
-                        )
+                        x.g.ki <- x.ki - a.hat.M * lagn(x.ki, 1, na = 0)
                         beta.ki <- OLS(y.g, x.g.ki)$beta
                         BETAS[k.i, ] <- drop(beta.ki)
                         sig.e <- drop(t(v.resid) %*% v.resid) / (n.obs - k.hat)

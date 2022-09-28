@@ -391,7 +391,7 @@ supBZ.statistic <- function(y,
 
     y <- y - y[1]
     d.y <- diff(y)
-    l.y <- y[1:(n.obs - 1)]
+    l.y <- trimr(y, 0, 1)
 
     BZ.values <- c()
     m <- 1

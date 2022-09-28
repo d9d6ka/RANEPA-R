@@ -58,27 +58,26 @@ coint.conf.sets <- function(y,
     p.zb <- if (!is.null(zb)) ncol(zb) else 0
     p.zf <- if (!is.null(zf)) ncol(zf) else 0
 
-    td <- as.matrix(td[2:n.obs, ])
-    y <- as.matrix(y[2:n.obs, ])
-    wb <- as.matrix(wb[2:n.obs, ])
+    td <- trimr(td, 1, 0)
+    y <- trimr(y, 1, 0)
+    wb <- trimr(wb, 1, 0)
     d.z <- diff(z)
 
     wf <- cbind(
-        if (!is.null(zf)) as.matrix(zf[2:n.obs, ]) else NULL,
+        if (!is.null(zf)) trimr(zf, 1, 0) else NULL,
         d.z
     )
 
-    N1 <- nrow(y)
-    td <- as.matrix(td[(z.lag + 1):(N1 - z.lead), ])
-    y <- as.matrix(y[(z.lag + 1):(N1 - z.lead), ])
-    wb <- as.matrix(wb[(z.lag + 1):(N1 - z.lead), ])
-    wf <- as.matrix(wf[(z.lag + 1):(N1 - z.lead), ])
+    td <- trimr(td, z.lag, z.lead)
+    y <- trimr(y, z.lag, z.lead)
+    wb <- trimr(wb, z.lag, z.lead)
+    wf <- trimr(wf, z.lag, z.lead)
 
     if (z.lead > 0) {
         for (k in 1:z.lead) {
             wf <- cbind(
                 wf,
-                d.z[((z.lag + 1) - k):((N1 - z.lead) - k), ]
+                trimr(d.z, z.lag - k, z.lead - k)
             )
         }
     }
@@ -86,7 +85,7 @@ coint.conf.sets <- function(y,
         for (k in 1:z.lag) {
             wf <- cbind(
                 wf,
-                d.z[((z.lag + 1) + k):((N1 - z.lead) + k), ]
+                trimr(d.z, z.lag + k, z.lead + k)
             )
         }
     }
@@ -110,7 +109,7 @@ coint.conf.sets <- function(y,
     for (tb in first.break1:last.break1) {
         wb1 <- rbind(
             matrix(0, tb, ncol(wb)),
-            as.matrix(wb[(tb + 1):n.obs.2, ])
+            trimr(wb, tb, 0)
         )
         w <- cbind(wb, wb1, wf)
         ww.inv <- solve(t(w) %*% w)
@@ -124,7 +123,7 @@ coint.conf.sets <- function(y,
 
     wb1e <- rbind(
         matrix(0, est.date, ncol(wb)),
-        as.matrix(wb[(est.date + 1):n.obs.2, ])
+        trimr(wb, est.date, 0)
     )
     td[est.date, 1] <- -1
 
@@ -164,7 +163,7 @@ coint.conf.sets <- function(y,
 
         wb1 <- rbind(
             matrix(0, tb, ncol(wb)),
-            as.matrix(wb[(tb + 1):n.obs.2, ])
+            trimr(wb, tb, 0)
         )
 
         w <- cbind(wb, wb1, wf)
@@ -201,7 +200,7 @@ coint.conf.sets <- function(y,
             } else {
                 wb2 <- rbind(
                     matrix(0, tb2, ncol(wb)),
-                    as.matrix(wb[(tb2 + 1):n.obs.2, ])
+                    trimr(wb, tb2, 0)
                 )
 
                 r <- wb2 - wb1
@@ -363,7 +362,7 @@ select.lead.lag.KS <- function(y,
     for (t in first.break:last.break) {
         wb1 <- rbind(
             matrix(data = 0, nrow = t, ncol = ncol(wb)),
-            as.matrix(wb[(t + 1):n.obs, ])
+            trimr(wb, t, 0)
         )
         w <- cbind(wb, wb1, zf)
         u.hat <- OLS(y, w)$residuals
@@ -377,15 +376,15 @@ select.lead.lag.KS <- function(y,
 
     est.dt <- rbind(
         matrix(data = 0, nrow = est.date, ncol = ncol(wb)),
-        as.matrix(wb[(est.date + 1):n.obs, ])
+        trimr(wb, est.date, 0)
     )
-    y <- as.matrix(y[2:n.obs, ])
-    wb <- as.matrix(wb[2:n.obs, ])
-    est.dt <- as.matrix(est.dt[2:n.obs, ])
-    d.z <- as.matrix(z[2:n.obs, ]) - as.matrix(z[1:(n.obs - 1), ])
+    y <- trimr(y, 1, 0)
+    wb <- trimr(wb, 1, 0)
+    est.dt <- trimr(est.dt, 1, 0)
+    d.z <- diff(z)
 
     wf <- cbind(
-        if (!is.null(zf)) as.matrix(zf[2:n.obs, ]) else NULL,
+        if (!is.null(zf)) trimr(zf, 1, 0) else NULL,
         d.z
     )
 
@@ -398,11 +397,11 @@ select.lead.lag.KS <- function(y,
         max.lead.lag <- N - est.date - ncol(wb) - 1
     }
 
-    y.0 <- as.matrix(y[(max.lead.lag + 1):(N - max.lead.lag), ])
+    y.0 <- trimr(y, max.lead.lag, max.lead.lag)
     w.0 <- cbind(
-        as.matrix(wb[(max.lead.lag + 1):(N - max.lead.lag), ]),
-        as.matrix(est.dt[(max.lead.lag + 1):(N - max.lead.lag), ]),
-        as.matrix(wf[(max.lead.lag + 1):(N - max.lead.lag), ])
+        trimr(wb, max.lead.lag, max.lead.lag),
+        trimr(est.dt, max.lead.lag, max.lead.lag),
+        trimr(wf, max.lead.lag, max.lead.lag)
     )
 
     u.hat <- OLS(y.0, w.0)$residuals
@@ -416,17 +415,13 @@ select.lead.lag.KS <- function(y,
             for (k in 1:cur.lead) {
                 w.1 <- cbind(
                     w.1,
-                    as.matrix(
-                        d.z[(max.lead.lag + 1 - k):(N - max.lead.lag - k), ]
-                    )
+                    trimr(d.z, max.lead.lag - k, max.lead.lag + k)
                 )
             }
             for (k in 1:cur.lag) {
                 w.1 <- cbind(
                     w.1,
-                    as.matrix(
-                        d.z[(max.lead.lag + 1 + k):(N - max.lead.lag + k), ]
-                    )
+                    trimr(d.z, max.lead.lag + k, max.lead.lag - k)
                 )
             }
 

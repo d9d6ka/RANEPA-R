@@ -100,13 +100,13 @@ resid.tests.PR <- function(ud,
 
     gls.tests <- matrix(0, 7, 1)
 
-    lag.ud <- ud[1:(n.obs - 1), 1, drop = FALSE]
+    lag.ud <- trimr(ud, 0, 1)
     d.ud <- diffn(ud, na = 0)
     sum.ud.sq <- drop(t(lag.ud) %*% lag.ud)
 
     model.1 <- OLS(
-        ud[2:n.obs, 1, drop = FALSE],
-        ud[1:(n.obs - 1), 1, drop = FALSE]
+        trimr(ud, 1, 0),
+        trimr(ud, 0, 1)
     )
 
     rho.hat <- as.matrix(model.1$beta)
@@ -129,11 +129,10 @@ resid.tests.PR <- function(ud,
             h <- h + 1
         }
 
-        tmp.reg <-
-            tmp.reg[(lag.bic + 2):nrow(tmp.reg), , drop = FALSE]
+        tmp.reg <- trimr(tmp.reg, lag.bic + 1, 0)
 
         model.2 <- OLS(
-            d.ud[(lag.bic + 2):nrow(d.ud), , drop = FALSE],
+            trimr(d.ud, lag.bic + 1, 0),
             tmp.reg
         )
 
@@ -144,7 +143,7 @@ resid.tests.PR <- function(ud,
         if (lag.bic == 0) {
             sumb <- 0
         } else {
-            sumb <- sum(model.2$beta[2:(lag.bic + 1)])
+            sumb <- sum(subr(model.2$beta, 2, lag.bic + 1))
         }
 
         s2.adj <- s2.eta / ((1 - sumb)^2)

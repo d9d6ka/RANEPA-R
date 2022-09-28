@@ -88,8 +88,8 @@ PY.sequential <- function(y,
                     DT
                 )
 
-                y.i <- y[date.vec[i]:(date.vec[i + 1] - 1), , drop = FALSE]
-                x.i <- x[date.vec[i]:(date.vec[i + 1] - 1), , drop = FALSE]
+                y.i <- subr(y, date.vec[i], n.obs.i)
+                x.i <- subr(x, date.vec[i], n.obs.i)
 
                 k.hat <- max(1, AR(y.i, x.i, max.lag, criterion)$lag)
 
@@ -97,14 +97,14 @@ PY.sequential <- function(y,
 
                 d.resid <- as.matrix(c(0, diff(resids)))
 
-                y.u <- resids[k.hat:nrow(resids), , drop = FALSE]
+                y.u <- trimr(resids, k.hat - 1, 0)
                 x.u <- lagn(resids, 1, na = 0)
                 if (k.hat > 1) {
                     for (l in 1:(k.hat - 1)) {
                         x.u <- cbind(x.u, lagn(d.resid, l, na = 0))
                     }
                 }
-                x.u <- x.u[k.hat:nrow(x.u), , drop = FALSE]
+                x.u <- trimr(x.u, k.hat - 1, 0)
 
                 tmp.OLS <- OLS(y.u, x.u)
                 beta.u <- tmp.OLS$beta
@@ -154,16 +154,10 @@ PY.sequential <- function(y,
                 CR <- sqrt(n.obs) * abs(a.hat.M - 1)
                 if (CR <= 1) a.hat.M <- 1
 
-                y.g <- rbind(
-                    y[date.vec[i], , drop = FALSE],
-                    y[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE] -
-                    a.hat.M * y[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE] # nolint
-                )
-                x.g <- rbind(
-                    x[date.vec[i], , drop = FALSE],
-                    x[(date.vec[i] + 1):(date.vec[i + 1] - 1), , drop = FALSE] -
-                    a.hat.M * x[date.vec[i]:(date.vec[i + 1] - 2), , drop = FALSE] # nolint
-                )
+                y.g <- subr(y, date.vec[i] + 1, n.obs.i - 1)
+                y.g <- y.g - a.hat.M * lagn(y.g, 1, na = 0)
+                x.g <- subr(x.g, date.vec[i] + 1, n.obs.i - 1)
+                x.g <- x.g - a.hat.M * lagn(x.g, 1, na = 0)
 
                 tmp.OLS <- OLS(y.g, x.g)
                 beta.g <- tmp.OLS$beta
@@ -178,8 +172,8 @@ PY.sequential <- function(y,
                         for (k.i in 1:(k.hat - 1))
                             x.v <- cbind(x.v, lagn(g.resid, k.i, na = 0))
 
-                        y.v <- g.resid[(k.hat - 1):nrow(g.resid)]
-                        x.v <- x.v[(k.hat - 1):nrow(g.resid), , drop = FALSE]
+                        y.v <- trimr(g.resid, k.hat - 2, 0)
+                        x.v <- trimr(x.v, k.hat - 2, 0)
 
                         tmp.OLS <- OLS(y.v, x.v)
                         beta.v <- tmp.OLS$beta
@@ -195,17 +189,14 @@ PY.sequential <- function(y,
                             for (k.i in 1:(k.hat - 1)) {
                                 DU.ki <- as.numeric(x.trend > tb - k.i)
                                 DT.ki <- DU.ki * (x.trend - tb)
-                                x.ki <- cbind(
-                                    x.const,
-                                    DU.ki,
-                                    x.trend,
-                                    DT.ki
-                                )
-                                x.g.ki <- rbind(
-                                    x.ki[date.vec[i] + 1, ],
-                                    x.ki[(date.vec[i] + 2):(date.vec[i + 1] - 1), ] - # nolint
-                                    a.hat.M * x.ki[(date.vec[i] + 1):(date.vec[i + 1] - 2), ] # nolint
-                                )
+                                x.ki <- subr(
+                                    cbind(
+                                        x.const,
+                                        DU.ki,
+                                        x.trend,
+                                        DT.ki
+                                    ), date.vec[i] + 1, n.obs.i - 1)
+                                x.g.ki <- x.ki - a.hat.M * lagn(x.ki, 1, na = 0)
                                 beta.ki <- OLS(y.g, x.g.ki)$beta
                                 BETAS[k.i, ] <- drop(beta.ki)
                                 sig.e <- drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat) # nolint

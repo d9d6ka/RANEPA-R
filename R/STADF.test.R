@@ -78,7 +78,7 @@ STADF.test <- function(y,
     ## Estimate kernel regression either on the basis of CV or for a fixed h.
     y.0 <- y - y[1]
     my <- diff(y.0)
-    mx <- y.0[1:(n.obs - 1)]
+    mx <- trimr(y.0, 0, 1)
     nw.model.cv <- NW.loocv(my, mx)
     nw.model <- NW.estimation(my, mx, h = nw.model.cv$h)
 
@@ -225,7 +225,7 @@ GSTADF.test <- function(y,
     ## Estimate kernel regression either on the basis of CV or for a fixed h.
     y.0 <- y - y[1]
     my <- diff(y.0)
-    mx <- y.0[1:(n.obs - 1)]
+    mx <- trimr(y.0, 0, 1)
     nw.model.cv <- NW.loocv(my, mx)
     nw.model <- NW.estimation(my, mx, h = nw.model.cv$h)
 
