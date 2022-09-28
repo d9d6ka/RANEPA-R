@@ -36,6 +36,8 @@ coint.conf.sets <- function(y,
                             trim = 0.05,
                             criterion = "bic") {
     if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.null(zb) && !is.matrix(zb)) zb <- as.matrix(zb)
+    if (!is.null(zf) && !is.matrix(zf)) zf <- as.matrix(zf)
 
     if (is.null(z.lead) || is.null(z.lag)) {
         ll.est <- select.lead.lag.KS(y, trend, zb, zf, trim, criterion)
@@ -111,6 +113,7 @@ coint.conf.sets <- function(y,
             as.matrix(wb[(tb + 1):n.obs.2, ])
         )
         w <- cbind(wb, wb1, wf)
+        ww.inv <- solve(t(w) %*% w)
         u.hat <- OLS(y, w)$residuals
         ssr.1 <- c(t(u.hat) %*% u.hat)
         if (ssr.1 < ssr.0) {
@@ -202,7 +205,8 @@ coint.conf.sets <- function(y,
                 )
 
                 r <- wb2 - wb1
-                r.hat <- OLS(r, w)$residuals
+                br.hat <- ww.inv %*% t(w) %*% r
+                r.hat <- r - w %*% br.hat
 
                 g <- t(r.hat) %*% y.hat
                 h <- t(r.hat) %*% r.hat
@@ -230,13 +234,13 @@ coint.conf.sets <- function(y,
             p.zf
         )
         if (sup.stat <= cv$cval_sup) {
-            cset.sup[t] <- 1
+            cset.sup[tb] <- 1
         }
         if (avg.stat <= cv$cval_avg) {
-            cset.avg[t] <- 1
+            cset.avg[tb] <- 1
         }
         if (exp.stat <= cv$cval_exp) {
-            cset.exp[t] <- 1
+            cset.exp[tb] <- 1
         }
     }
 
@@ -335,6 +339,8 @@ select.lead.lag.KS <- function(y,
     }
 
     if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.null(zb) && !is.matrix(zb)) zb <- as.matrix(zb)
+    if (!is.null(zf) && !is.matrix(zf)) zf <- as.matrix(zf)
 
     n.obs <- nrow(y)
 
@@ -356,7 +362,7 @@ select.lead.lag.KS <- function(y,
 
     for (t in first.break:last.break) {
         wb1 <- rbind(
-            matrix(data = 0, nrow = t, ncol = 1),
+            matrix(data = 0, nrow = t, ncol = ncol(wb)),
             as.matrix(wb[(t + 1):n.obs, ])
         )
         w <- cbind(wb, wb1, zf)
