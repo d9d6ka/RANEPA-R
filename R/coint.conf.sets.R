@@ -167,8 +167,9 @@ coint.conf.sets <- function(y,
         )
 
         w <- cbind(wb, wb1, wf)
-
-        y.hat <- OLS(y, w)$residuals
+        ww.inv <- solve(t(w) %*% w)
+        b.hat <- ww.inv %*% t(w) %*% y
+        y.hat <- y - w %*% b.hat
 
         if (abs(tb - est.date) > ncol(wb)) {
             we <- cbind(w, wb1e)
@@ -361,7 +362,7 @@ select.lead.lag.KS <- function(y,
 
     for (t in first.break:last.break) {
         wb1 <- rbind(
-            matrix(data = 0, nrow = t, ncol = ncol(wb)),
+            matrix(0, t, ncol(wb)),
             trimr(wb, t, 0)
         )
         w <- cbind(wb, wb1, zf)
