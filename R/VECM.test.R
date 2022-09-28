@@ -131,12 +131,12 @@ VECM.logl <- function(y,
 
     trend <- matrix(1:n.obs, n.obs, 1)
 
-    d.y <- diff(y)
+    d.y <- diffn(y)
 
-    z0 <- d.y[p:(n.obs - 1), , drop = FALSE]
+    z0 <- trimr(d.y, p, 0)
     z1 <- cbind(
-        y[p:(n.obs - 1), , drop = FALSE],
-        trend[(p + 1):n.obs, , drop = FALSE]
+        trimr(y, p - 1, 1),
+        trimr(trend, p, 0)
     )
 
     Xp <- matrix(1, (n.obs - p), 1)
@@ -144,7 +144,7 @@ VECM.logl <- function(y,
     while (j <= (p - 1)) {
         Xp <- cbind(
             Xp,
-            d.y[(p - j):(n.obs - 1 - j), ]
+            trimr(d.y, p - j, j)
         )
         j <- j + 1
     }
@@ -184,8 +184,8 @@ VECM.break.logl <- function(y,
 
     trend <- matrix(1:n.obs, n.obs, 1)
 
-    d.y <- diff(y)
-    z0 <- as.matrix(d.y[p:(n.obs - 1), ])
+    d.y <- diffn(y)
+    z0 <- trimr(d.y, p, 0)
 
     logL <- NULL
 
@@ -204,12 +204,12 @@ VECM.break.logl <- function(y,
         E2 <- ifelse(trend > b, 1, 0)
         tE <- apply(cbind(E1, E2), 2, cumsum)
 
-        z1 <- cbind(y[p:(n.obs - 1), ], tE[(p + 1):nrow(tE), ])
-        Xp <- cbind(E1, E2, D)[(p + 1):nrow(E1), ]
+        z1 <- cbind(trimr(y, p - 1, 1), trimr(tE, p, 0))
+        Xp <- trimr(cbind(E1, E2, D), p, 0)
 
         j <- 1
         while (j <= (p - 1)) {
-            Xp <- cbind(Xp, d.y[(p - j):(n.obs - 1 - j)])
+            Xp <- cbind(Xp, trimr(d.y, p - j, j))
             j <- j + 1
         }
 

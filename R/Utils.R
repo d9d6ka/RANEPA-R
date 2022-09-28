@@ -65,6 +65,45 @@ diffn <- function(x,
 
 
 #' @title
+#' Trim the matrix by cutting rows from the beginning and the end
+#'
+#' @param x The series of interest.
+#' @param fst,lst Number of row to trim fro the beginning and the end of the
+#' matrix.
+#' @param drop Wipe out dimentions of size one.
+#'
+#' @keywords internal
+trimr <- function(x,
+                  fst = 0,
+                  lst = 0,
+                  drop = FALSE) {
+    if (!is.matrix(x)) x <- as.matrix(x)
+
+    if (fst + lst >= nrow(x)) {
+        return(NULL)
+    }
+
+    return(
+        x[(1 + fst):(nrow(x) - lst), , drop = drop]
+    )
+}
+
+
+subr <- function(x,
+                 fst,
+                 n,
+                 drop = FALSE) {
+    if (!is.matrix(x)) x <- as.matrix(x)
+
+    lst <- min(nrow(x), fst + n - 1)
+
+    return(
+        x[fst:lst, , drop = drop]
+    )
+}
+
+
+#' @title
 #' Auxiliary function returning KPSS statistic value.
 #'
 #' @param resids The series of residuals.

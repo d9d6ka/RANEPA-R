@@ -58,13 +58,12 @@ eos.break.test <- function(eq,
     for (j in seq_len(n.obs - m + 1)) {
         low <- j
         high <- j + ceiling(m / 2) - 1
-        tmp.data <-
-            dataset[1:n.obs, , drop = FALSE][-(low:high), , drop = FALSE]
+        tmp.data <- trimr(dataset, 0, m)[-(low:high), , drop = FALSE]
 
         tmp.model <- lm(formula = eq, data = tmp.data)
 
-        tmp.resid <- dataset[[dep.var]][j:(j + m - 1)] -
-            predict(tmp.model, newdata = dataset[j:(j + m - 1), , drop = FALSE])
+        tmp.resid <- subr(dataset[[dep.var]], j, m) -
+            predict(tmp.model, newdata = subr(dataset, j, m))
         tmp.resid <- as.matrix(tmp.resid)
 
         result$Pj[j] <- drop(t(tmp.resid) %*% tmp.resid)

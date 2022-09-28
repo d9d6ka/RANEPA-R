@@ -365,7 +365,7 @@ DOLS.vars.N.breaks <- function(y,
 
     n.obs <- nrow(y)
 
-    d.x.step <- x[2:n.obs, , drop = FALSE] - x[1:(n.obs - 1), , drop = FALSE]
+    d.x.step <- diff(d.x.step)
     d.x.lag <- d.x.step
     d.x.lead <- d.x.step
 
@@ -387,28 +387,27 @@ DOLS.vars.N.breaks <- function(y,
         lags <- d.x.lag
         leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
         lags.leads <- cbind(lags, leads)
-        lags.leads <-
-            lags.leads[(k.lags + 1):(n.obs - 1 - k.leads), , drop = FALSE]
+        lags.leads <- trimr(lags.leads, k.lags, k.leads)
     } else if (k.lags != 0 && k.leads == 0) {
         lags <- d.x.lag
-        lags.leads <- lags[(k.lags + 1):(n.obs - 1), , drop = FALSE]
+        lags.leads <- trimr(lags, k.lags, 0)
     } else if (k.lags == 0 && k.leads != 0) {
         lags <- d.x.lag
         leads <- d.x.lead[, (ncol(x) + 1):(ncol(d.x.lead)), drop = FALSE]
         lags.leads <- cbind(lags, leads)
-        lags.leads <- lags.leads[1:(n.obs - 1 - k.leads), , drop = FALSE]
+        lags.leads <- trimr(lags.leads, 0, k.leads)
     } else if (k.lags == 0 && k.leads == 0) {
         lags.leads <- d.x.lag
     }
     deter <- determinants.KPSS.N.breaks(model, n.obs, break.point, const, trend)
 
     xreg <- cbind(
-        deter[(k.lags + 2):(n.obs - k.leads), , drop = FALSE],
-        x[(k.lags + 2):(n.obs - k.leads), , drop = FALSE],
+        trimr(deter, k.lags + 1, k.leads),
+        trimr(x, k.lags + 1, k.leads),
         lags.leads
     )
 
-    yreg <- y[(k.lags + 2):(n.obs - k.leads), 1, drop = FALSE]
+    yreg <- trimr(y, k.lags + 1, k.leads)
 
     return(
         list(

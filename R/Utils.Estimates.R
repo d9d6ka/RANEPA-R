@@ -129,12 +129,12 @@ AR <- function(y,
 
     if (!is.matrix(y)) y <- as.matrix(y)
     n.obs <- nrow(y)
-    tmp.y <- y[(1 + max.lag):n.obs, , drop = FALSE]
+    tmp.y <- trimr(y, max.lag, 0)
 
     if (!is.null(x)) {
         if (!is.null(x) && !is.matrix(x)) x <- as.matrix(x)
         k <- ncol(x)
-        tmp.x <- x[(1 + max.lag):n.obs, , drop = FALSE]
+        tmp.x <- trimr(x, max.lag, 0)
     } else {
         k <- 0
         tmp.x <- NULL
@@ -144,7 +144,7 @@ AR <- function(y,
         if (l <= max.lag) {
             tmp.x <- cbind(
                 tmp.x,
-                lagn(y, l)[(1 + max.lag):n.obs, , drop = FALSE]
+                trimr(lagn(y, l), max.lag, 0)
             )
         }
     }

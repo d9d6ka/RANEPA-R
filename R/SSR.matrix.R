@@ -60,8 +60,8 @@ SSR.recursive <- function(y,
 
     result <- matrix(data = Inf, nrow = n.obs, ncol = 1)
 
-    y.0 <- y[beg:(beg + width - 1), , drop = FALSE]
-    x.0 <- x[beg:(beg + width - 1), , drop = FALSE]
+    y.0 <- subr(y, beg, width)
+    x.0 <- subr(x, beg, width)
 
     inv.XX.0 <- qr.solve(t(x.0) %*% x.0)
     tmp.OLS <- OLS(y.0, x.0)

@@ -102,24 +102,24 @@ coint.test.GH <- function(...,
         }
 
         e <- OLS(y1, x)$residuals
+        e0 <- trimr(e, 0, 1, drop = TRUE)
+        e1 <- trimr(e, 1, 0, drop = TRUE)
 
-        rho <- sum(e[1:(n.obs - 1), ] * e[2:n.obs, ]) /
-            sum(e[1:(n.obs - 1), ]^2)
+        rho <- sum(e0 * e1) / sum(e0^2)
 
         nu <- e - rho * lagn(e, 1, na = 0)
 
         lrv <- lr.var.bartlett(nu)
         lambda <- (lrv - drop(t(nu) %*% nu) / n.obs) / 2
 
-        rho.star <- sum(e[1:(n.obs - 1), ] * e[2:n.obs, ] - lambda) /
-            sum(e[1:(n.obs - 1), ]^2)
+        rho.star <- sum(e0 * e1 - lambda) / sum(e0^2)
 
         res.Za <- min(
             n.obs * (rho.star - 1),
             res.Za
         )
         res.Zt <- min(
-            (rho.star - 1) * sqrt(sum(e[1:(n.obs - 1), ]^2) / lrv),
+            (rho.star - 1) * sqrt(sum(e0^2) / lrv),
             res.Zt
         )
 
