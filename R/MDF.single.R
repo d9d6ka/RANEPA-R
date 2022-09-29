@@ -109,7 +109,7 @@ MDF.single <- function(y,
 
     ## Trend case
     xreg <- x[, 1:2]
-    resid.OLS.t <- y - xreg %*% solve(t(xreg) %*% xreg) %*% xreg %*% y
+    resid.OLS.t <- y - xreg %*% solve(t(xreg) %*% xreg) %*% t(xreg) %*% y
     DF.OLS.t <- ADF.test(resid.OLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
