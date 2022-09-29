@@ -12,14 +12,14 @@ print.sadf <- function(x, ...) {
     if ("SADF.value" %in% names(x)) {
         test_statistic <- x$SADF.value
         test_name <- "SADF"
-    } else if ("stadf.value" %in% names(x)) {
-        test_statistic <- x$stadf.value
+    } else if ("STADF.value" %in% names(x)) {
+        test_statistic <- x$STADF.value
         test_name <- "STADF"
     } else if ("GSADF.value" %in% names(x)) {
         test_statistic <- x$GSADF.value
         test_name <- "GSADF"
-    } else if ("gstadf.value" %in% names(x)) {
-        test_statistic <- x$gstadf.value
+    } else if ("GSTADF.value" %in% names(x)) {
+        test_statistic <- x$GSTADF.value
         test_name <- "GSTADF"
     }
 
