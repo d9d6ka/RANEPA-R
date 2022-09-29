@@ -176,7 +176,6 @@ lr.var <- function(y,
     }
 
     if (recolor) {
-        print(rho)
         lrv.recolored <- lrv / (1 - sum(rho))^2
         lrv <- min(lrv.recolored, n.obs * 0.15 * lrv)
     }

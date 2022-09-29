@@ -154,7 +154,7 @@ PY.sequential <- function(y,
 
                 y.g <- subr(y, date.vec[i] + 1, n.obs.i - 1)
                 y.g <- y.g - a.hat.M * lagn(y.g, 1, na = 0)
-                x.g <- subr(x.g, date.vec[i] + 1, n.obs.i - 1)
+                x.g <- subr(x, date.vec[i] + 1, n.obs.i - 1)
                 x.g <- x.g - a.hat.M * lagn(x.g, 1, na = 0)
 
                 beta.g <- solve(t(x.g) %*% x.g) %*% t(x.g) %*% y.g
