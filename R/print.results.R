@@ -169,20 +169,54 @@ print.mdfCHLT <- function(x, ...) {
 #' @export
 print.cointGH <- function(x, ...) {
     cat("Gregory-Hansen tests\n")
+    cat("\t\tstat\tc.v.\tasymptotic\n\n")
     for (v in c("Za", "Zt", "ADF")) {
         cat(
             sprintf(
-                paste(
-                    "%s-type statistic:",
-                    "statistic: %.4f",
-                    "c.v.: %.4f",
-                    "asymptotic c.v.: %.4f\n",
-                    sep = "\n"
-                ),
+                "%s stat:\t%.4f\t%.4f\t%.4f\n",
                 v,
                 x[[v]]$stat,
                 x[[v]]$cv,
                 x[[v]]$asy.cv
+            )
+        )
+    }
+}
+
+
+#' @rdname print.sadf
+#' @keywords internal
+#' @export
+print.robustUR <- function(x, ...) {
+    cat(sprintf("Estimated break moment: %d\n", x$break.time))
+    cat("\t\tstat\tc.v.\t\n\n")
+    for (v in c("HLT", "PY", "DF.GLS", "DF.OLS",
+                "MDF.GLS", "MDF.OLS", "MDF.t")) {
+        cat(
+            sprintf(
+                "%s stat:\t%.4f\t%.4f\n",
+                v,
+                x[[v]]$stat,
+                x[[v]]$cv
+            )
+        )
+    }
+}
+
+
+#' @rdname print.sadf
+#' @keywords internal
+#' @export
+print.robustURN <- function(x, ...) {
+    cat(sprintf("Estimated break moment: %d\n", x$breaks.star))
+    cat("\t\tstat\tc.v.\n\n")
+    for (v in c("MDF.GLS.1", "MDF.OLS.1", "MDF.GLS.2", "MDF.OLS.2")) {
+        cat(
+            sprintf(
+                "%s stat:\t%.4f\t%.4f\n",
+                v,
+                x[[v]]$stat,
+                x[[v]]$cv
             )
         )
     }
