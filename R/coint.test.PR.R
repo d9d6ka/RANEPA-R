@@ -24,6 +24,9 @@ coint.test.PR <- function(y,
                           x,
                           deter,
                           min.lag = 0) {
+    if (!is.matrix(y)) y <- as.matrix(y)
+    if (!is.matrix(x)) x <- as.matrix(x)
+
     n.obs <- nrow(y)
     n.var <- ncol(x)
 
