@@ -30,7 +30,7 @@
 #' aic, bic, hq, or lwz.
 #'
 #' @return A list of
-#' * `beta`: DOLS estimates of the coefficients regressors,
+#' * `beta`: DOLS estimates of the coefficients,
 #' * `tests`: SC test (coinKPSS-test),
 #' * `resid`: Residuals of the model,
 #' * `t.beta`: \eqn{t}-statistics for `beta`,

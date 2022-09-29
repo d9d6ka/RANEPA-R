@@ -39,7 +39,8 @@ possible break date.}
 A list of confidence sets.
 }
 \description{
-Confidence sets for the break date in cointegrating regressions
+This procedure is to construct a confidence set for the change point in
+cointegrating regressions.
 }
 \references{
 Kurozumi, Eiji, and Anton Skrobotov.

@@ -35,11 +35,11 @@ KPSS.1.break(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 \value{
 A list of:
 \itemize{
-\item \code{beta}: DOLS estimates of the coefficients regressors,
+\item \code{beta}: DOLS estimates of the coefficients,
 \item \code{tests}: SC test (coinKPSS-test),
 \item \code{resid}: Residuals of the model,
 \item \code{t.beta}: Individual significance t-statistics,
-\item \code{break_point}: Break points.
+\item \code{break_point}: Break point.
 }
 }
 \description{

@@ -35,7 +35,7 @@ BIC information criterion.}
 \value{
 A list of:
 \itemize{
-\item \code{beta}: DOLS estimates of the coefficients regressors,
+\item \code{beta}: DOLS estimates of the coefficients,
 \item \code{tests}: SC test (coinKPSS-test),
 \item \code{resid}: Residuals of the model,
 \item \code{t.beta}: \eqn{t}-statistics for \code{beta},

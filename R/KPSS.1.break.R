@@ -26,11 +26,11 @@
 #' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
 #'
 #' @return A list of:
-#' * `beta`: DOLS estimates of the coefficients regressors,
+#' * `beta`: DOLS estimates of the coefficients,
 #' * `tests`: SC test (coinKPSS-test),
 #' * `resid`: Residuals of the model,
 #' * `t.beta`: Individual significance t-statistics,
-#' * `break_point`: Break points.
+#' * `break_point`: Break point.
 #'
 #' @references
 #' Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.

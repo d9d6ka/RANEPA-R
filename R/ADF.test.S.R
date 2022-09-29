@@ -12,7 +12,7 @@
 #' obtained were 1999 values of test statistics. After that 1st, 2.5-th, 5-th,
 #' 10-th, and 97.5-th percentiles were calculated and saved along with the
 #' corresponding number of observations. This step was repeated 5 times to cope
-#' with possible biases. After that MacKunnon-like regressions were estimated.
+#' with possible biases. After that MacKinnon-like regressions were estimated.
 #'
 #' @param y A series of interest.
 #' @param const,trend Whether the constant and trend are to be included.

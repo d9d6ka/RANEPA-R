@@ -6,6 +6,8 @@
 \alias{print.mdfHLTN}
 \alias{print.mdfCHLT}
 \alias{print.cointGH}
+\alias{print.robustUR}
+\alias{print.robustURN}
 \title{Custom functions for printing results in a nice way.}
 \usage{
 \method{print}{sadf}(x, ...)
@@ -17,6 +19,10 @@
 \method{print}{mdfCHLT}(x, ...)
 
 \method{print}{cointGH}(x, ...)
+
+\method{print}{robustUR}(x, ...)
+
+\method{print}{robustURN}(x, ...)
 }
 \arguments{
 \item{x}{Object containing results.}

@@ -29,7 +29,7 @@
 #' * `NULL` for the Kurozumi's proposal, using Bartlett kernel.
 #'
 #' @return A list of:
-#' * `beta`: DOLS estimates of the coefficients regressors,
+#' * `beta`: DOLS estimates of the coefficients,
 #' * `tests`: SC test (coinKPSS-test),
 #' * `resid`: Residuals of the model,
 #' * `t.beta`: \eqn{t}-statistics for `beta`,
