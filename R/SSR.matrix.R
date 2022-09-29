@@ -64,10 +64,8 @@ SSR.recursive <- function(y,
     x.0 <- subr(x, beg, width)
 
     inv.XX.0 <- qr.solve(t(x.0) %*% x.0)
-    tmp.OLS <- OLS(y.0, x.0)
-    beta.0 <- tmp.OLS$beta
-    resid.0 <- tmp.OLS$residuals
-    rm(tmp.OLS)
+    beta.0 <- inv.XX.0 %*% t(x.0) %*% y.0
+    resid.0 <- y.0 - x.0 %*% beta.0
 
     result[beg + width - 1, 1] <- drop(t(resid.0) %*% resid.0)
 

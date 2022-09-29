@@ -83,7 +83,7 @@ segments.OLS.2.breaks <- function(y,
         for (i in 2:(n.obs - 4)) {
             for (j in (i + 2):(n.obs - 2)) {
                 z <- determinants.KPSS.2.breaks(model, n.obs, c(i, j))
-                resids <- OLS(y, z)$residuals
+                resids <- y - z %*% solve(t(z) %*% z) %*% t(z) %*% y
                 ssr <- drop(t(resids) %*% resids)
                 if (ssr < cur.ssr) {
                     res.r <- resids
@@ -97,7 +97,7 @@ segments.OLS.2.breaks <- function(y,
         for (i in 2:(n.obs - 4)) {
             for (j in (i + 2):(n.obs - 2)) {
                 z <- determinants.KPSS.2.breaks(model, n.obs, c(i, j))
-                resids <- OLS(y, z)$residuals
+                resids <- y - z %*% solve(t(z) %*% z) %*% t(z) %*% y
                 ssr <- drop(t(resids) %*% resids)
                 if (ssr < cur.ssr) {
                     res.r <- resids
@@ -110,7 +110,7 @@ segments.OLS.2.breaks <- function(y,
         for (j in 2:(n.obs - 4)) {
             for (i in (j + 2):(n.obs - 2)) {
                 z <- determinants.KPSS.2.breaks(model, n.obs, c(i, j))
-                resids <- OLS(y, z)$residuals
+                resids <- y - z %*% solve(t(z) %*% z) %*% t(z) %*% y
                 ssr <- drop(t(resids) %*% resids)
                 if (ssr < cur.ssr) {
                     res.r <- resids

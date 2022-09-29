@@ -122,7 +122,7 @@ MDF.multiple <- function(y,
     ## GLS case
     resid.GLS.t <- GLS(y, x, -13.5)$residuals
 
-    resid.OLS.t <- OLS(y, x)$residuals
+    resid.OLS.t <- y - x %*% solve(t(x) %*% x) %*% t(x) %*% y
     DF.OLS.t <- ADF.test(resid.OLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
@@ -159,7 +159,7 @@ MDF.multiple <- function(y,
             DT1
         )
 
-        resid.OLS <- OLS(y, x)$residuals
+        resid.OLS <- y - x %*% solve(t(x) %*% x) %*% t(x) %*% y
         DF1.tb <- ADF.test(resid.OLS,
                            const = FALSE, trend = FALSE,
                            max.lag = max.lag,
@@ -208,7 +208,7 @@ MDF.multiple <- function(y,
                 DT2
             )
 
-            resid.OLS <- OLS(y, x)$residuals
+            resid.OLS <- y - x %*% solve(t(x) %*% x) %*% t(x) %*% y
             DF2.tb <- ADF.test(resid.OLS,
                 const = FALSE, trend = FALSE,
                 max.lag = max.lag,
@@ -266,7 +266,7 @@ MDF.multiple <- function(y,
                     DT3
                 )
 
-                resid.OLS <- OLS(y, x)$residuals
+                resid.OLS <- y - x %*% solve(t(x) %*% x) %*% t(x) %*% y
                 DF3.tb <- ADF.test(resid.OLS,
                     const = FALSE, trend = FALSE,
                     max.lag = max.lag,
@@ -318,10 +318,8 @@ MDF.multiple <- function(y,
             DT2
         )
 
-        tmp.OLS <- OLS(y, x)
-        bb <- tmp.OLS$beta
-        rr <- tmp.OLS$residuals
-        rm(tmp.OLS)
+        bb <- solve(t(x) %*% x) %*% t(x) %*% y
+        rr <- y - x %*% bb
         t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / n.obs)
         t.alpha.2.id <- as.numeric(t.alpha > 1)
     }
@@ -346,10 +344,8 @@ MDF.multiple <- function(y,
             DT3
         )
 
-        tmp.OLS <- OLS(y, x)
-        bb <- tmp.OLS$beta
-        rr <- tmp.OLS$residuals
-        rm(tmp.OLS)
+        bb <- solve(t(x) %*% x) %*% t(x) %*% y
+        rr <- y - x %*% bb
         t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / n.obs)
         t.alpha.3.id <- as.numeric(t.alpha > 1)
     }

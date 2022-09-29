@@ -123,12 +123,12 @@ MDF.CHLT <- function(y,
         cumsum(x.trend),
         cumsum(DT.tb.dy)
     )
-    u.resid <- OLS(z, x)$residuals
+    u.resid <- z - x %*% solve(t(x) %*% x) %*% t(x) %*% z
     x <- cbind(
         x.trend,
         cumsum(x.trend)
     )
-    r.resid <- OLS(z, x)$residuals
+    r.resid <- z - x %*% solve(t(x) %*% x) %*% t(x) %*% z
     W.stat.dy <- drop(t(r.resid) %*% r.resid) /
         drop(t(u.resid) %*% u.resid) - 1
 
@@ -145,7 +145,7 @@ MDF.CHLT <- function(y,
     )
 
     resid.GLS <- GLS(y, x, -13.5)$residuals
-    resid.OLS <- OLS(y, x)$residuals
+    resid.OLS <- y - x %*% solve(t(x) %*% x) %*% t(x) %*% y
     k.t <- ADF.test(
         resid.OLS,
         const = FALSE, trend = FALSE,
@@ -225,14 +225,12 @@ MDF.CHLT <- function(y,
         DTr <- as.numeric(x.trend > tb.lam.MZ) *
             (x.trend - tb.lam.MZ)
 
-        resid.OLS.bt <- OLS(
-            y,
-            cbind(
-                x.const,
-                x.trend,
-                DTr
-            )
-        )$residuals
+        xreg <- cbind(
+            x.const,
+            x.trend,
+            DTr
+        )
+        resid.OLS.bt <- y - xreg %*% solve(t(xreg) %*% xreg) %*% t(xreg) %*% y
 
         k.bt <- ADF.test(
             resid.OLS.bt,
@@ -301,14 +299,12 @@ MDF.CHLT <- function(y,
         DTr <- as.numeric(x.trend > tb.lam.ADF) *
             (x.trend - tb.lam.ADF)
 
-        resid.OLS.bt <- OLS(
-            y,
-            cbind(
-                x.const,
-                x.trend,
-                DTr
-            )
-        )$residuals
+        xreg <- cbind(
+            x.const,
+            x.trend,
+            DTr
+        )
+        resid.OLS.bt <- y - xreg %*% solve(t(xreg) %*% xreg) %*% t(xreg) %*% y
 
         k.bt <- ADF.test(
             resid.OLS.bt,
@@ -336,13 +332,11 @@ MDF.CHLT <- function(y,
     }
 
     ## Bootstrap
-    eps <- OLS(
-        d.y,
-        cbind(
-            x.const,
-            DU.tb.dy
-        )[2:n.obs, ]
-    )$residuals
+    xreg <- cbind(
+        x.const,
+        DU.tb.dy
+    )[2:n.obs, ]
+    eps <- d.y - xreg %*% solve(t(xreg) %*% xreg) %*% t(xreg) %*% d.y
     eps <- as.matrix(c(0, eps))
 
     cores <- detectCores()

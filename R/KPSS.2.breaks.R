@@ -53,26 +53,29 @@ KPSS.2.breaks <- function(y,
 
     z <- determinants.KPSS.2.breaks(model, n.obs, break.point)
 
-    res.OLS <- OLS(y, z)
+    beta <- solve(t(z) %*% z) %*% t(z) %*% y
+    resid <- y - z %*% beta
+    s2 <- drop(t(resid) %*% resid) / (nrow(z) - ncol(z))
+    t.beta <- beta / sqrt(diag(s2 * solve(t(z) %*% z)))
 
     if (!is.null(kernel)) {
         test <- KPSS(
-            res.OLS$residuals,
-            lr.var.SPC(res.OLS$residuals, max.lag, kernel)
+            resid,
+            lr.var.SPC(resid, max.lag, kernel)
         )
     } else {
         test <- KPSS(
-            res.OLS$residuals,
-            lr.var.bartlett.AK(res.OLS$residuals)
+            resid,
+            lr.var.bartlett.AK(resid)
         )
     }
 
     return(
         list(
-            beta = res.OLS$beta,
+            beta = beta,
             test = test,
-            residuals = res.OLS$residuals,
-            t.beta = res.OLS$t.beta,
+            residuals = resid,
+            t.beta = t.beta,
             break_point = break.point
         )
     )
