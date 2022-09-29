@@ -74,13 +74,12 @@ KPSS.N.breaks <- function(y,
             determinants.KPSS.N.breaks(model, n.obs, break.point, const, trend)
         )
 
-        tmp.OLS <- OLS(y, xt)
-        beta <- tmp.OLS$beta
-        resids <- tmp.OLS$residuals
-        t.beta <- tmp.OLS$t.beta
+        beta <- solve(t(xt) %*% xt) %*% t(xt) %*% y
+        resids <- y - xt %*% beta
+        s2 <- drop(t(resids) %*% resids) / (nrow(xt) - ncol(xt))
+        t.beta <- beta / sqrt(diag(s2 * solve(t(xt) %*% xt)))
         DOLS.lags <- 0
         DOLS.leads <- 0
-        rm(tmp.OLS)
     } else {
         info.crit.min <- Inf
         for (i in lags.init:1) {
@@ -318,16 +317,22 @@ DOLS.N.breaks <- function(y,
         k.lags, k.leads
     )
 
-    res.OLS <- OLS(dols.vars$yreg, dols.vars$xreg)
+    beta <- solve(t(dols.vars$xreg) %*% dols.vars$xreg) %*%
+        t(dols.vars$xreg) %*% dols.vars$yreg
+    resids <- dols.vars$yreg - dols.vars$xreg %*% beta
+    s2 <- drop(t(resids) %*% resids) /
+        (nrow(dols.vars$xreg) - ncol(dols.vars$xreg))
+    t.beta <- beta /
+        sqrt(diag(s2 * solve(t(dols.vars$xreg) %*% dols.vars$xreg)))
 
-    criterions <- info.criterion(res.OLS$residuals, ncol(dols.vars$xreg))
+    criterions <- info.criterion(resids, ncol(dols.vars$xreg))
 
     return(
         list(
-            beta = res.OLS$beta,
-            residuals = res.OLS$residuals,
+            beta = beta,
+            residuals = resids,
             criterions = criterions,
-            t.beta = res.OLS$t.beta
+            t.beta = t.beta
         )
     )
 }

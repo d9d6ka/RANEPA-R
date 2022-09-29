@@ -98,7 +98,7 @@ PY.single <- function(y,
 
         k.hat <- max(1, AR(y, x, max.lag, criterion)$lag)
 
-        resids <- OLS(y, x)$residuals
+        resids <- y - x %*% solve(t(x) %*% x) %*% t(x) %*% y
 
         d.resid <- c(0, diff(resids))
 
@@ -111,10 +111,8 @@ PY.single <- function(y,
         }
         x.u <- trimr(x.u, k.hat - 1, 0)
 
-        tmp.OLS <- OLS(y.u, x.u)
-        beta.u <- tmp.OLS$beta
-        u.resid <- tmp.OLS$residuals
-        rm(tmp.OLS)
+        beta.u <- solve(t(x.u) %*% x.u) %*% t(x.u) %*% y.u
+        u.resid <- y.u - x.u %*% beta.u
 
         VCV <- qr.solve(t(x.u) %*% x.u) *
             drop(t(u.resid) %*% u.resid) / nrow(u.resid)
@@ -157,10 +155,8 @@ PY.single <- function(y,
         y.g <- y - a.hat.M * lagn(y, 1, na = 0)
         x.g <- x - a.hat.M * lagn(x, 1, na = 0)
 
-        tmp.OLS <- OLS(y.g, x.g)
-        beta.g <- tmp.OLS$beta
-        g.resid <- tmp.OLS$residuals
-        rm(tmp.OLS)
+        beta.g <- solve(t(x.g) %*% x.g) %*% t(x.g) %*% y.g
+        g.resid <- y.g - x.g %*% beta.g
 
         if (k.hat == 1) {
             h0 <- drop(t(g.resid) %*% g.resid) / nrow(g.resid)
@@ -173,10 +169,8 @@ PY.single <- function(y,
                 y.v <- trimr(g.resid, k.hat - 2, 0)
                 x.v <- trimr(x.v, k.hat - 2, 0)
 
-                tmp.OLS <- OLS(y.v, x.v)
-                beta.v <- tmp.OLS$beta
-                v.resid <- tmp.OLS$residuals
-                rm(tmp.OLS)
+                beta.v <- solve(t(x.v) %*% x.v) %*% t(x.v) %*% y.v
+                v.resid <- y.v - x.v %*% beta.v
 
                 if (const && !trend) {
                     BETAS <- matrix(0, nrow = k.hat - 1, ncol = 3)
@@ -188,7 +182,8 @@ PY.single <- function(y,
                             x.trend
                         )
                         x.g.ki <- x.ki - a.hat.M * lagn(x.ki, 1, na = 0)
-                        beta.ki <- OLS(y.g, x.g.ki)$beta
+                        beta.ki <- solve(t(x.g.ki) %*% x.g.ki) %*%
+                            t(x.g.ki) %*% y.g
                         BETAS[k.i, ] <- drop(beta.ki)
                     }
                     beta.g[2] <- beta.g[2] -
@@ -209,7 +204,8 @@ PY.single <- function(y,
                             DT.ki
                         )
                         x.g.ki <- x.ki - a.hat.M * lagn(x.ki, 1, na = 0)
-                        beta.ki <- OLS(y.g, x.g.ki)$beta
+                        beta.ki <- solve(t(x.g.ki) %*% x.g.ki) %*%
+                            t(x.g.ki) %*% y.g
                         BETAS[k.i, ] <- drop(beta.ki)
                         sig.e <- drop(t(v.resid) %*% v.resid) / (n.obs - k.hat)
                         h0 <- sig.e / ((1 - sum(beta.v))^2)

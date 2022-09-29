@@ -73,20 +73,16 @@ GLS <- function(y,
     t.betas <- NULL
 
     for (i in 1:n.var) {
-        res.OLS <- OLS(y.hat[, i, drop = FALSE], z.hat)
-        betas <- cbind(betas, res.OLS$beta)
-        t.betas <- cbind(
-            t.betas,
-            res.OLS$t.beta
-        )
-        fitted.values <- cbind(
-            fitted.values,
-            z %*% res.OLS$beta
-        )
-        resids <- cbind(
-            resids,
-            y[, i, drop = FALSE] - fitted.values
-        )
+        y.reg <- y.hat[, i, drop = FALSE]
+        beta.reg <- solve(t(z.hat) %*% z.hat) %*% t(z.hat) %*% y.reg
+        resid.reg <- y.reg - z.hat %*% beta.reg
+        s2 <- drop(t(resid.reg) %*% resid.reg) / (nrow(z.hat) - ncol(z.hat))
+        t.beta.reg <- beta.reg / sqrt(diag(s2 * solve(t(z.hat) %*% z.hat)))
+
+        betas <- cbind(betas, beta.reg)
+        t.betas <- cbind(t.betas, t.beta.reg)
+        fitted.values <- cbind(fitted.values, z %*% beta.reg)
+        resids <- cbind(resids, y[, i, drop = FALSE] - z %*% beta.reg)
     }
 
     return(
@@ -151,22 +147,22 @@ AR <- function(y,
 
     if (is.null(criterion)) {
         res.lag <- max.lag
-        tmp.OLS <- OLS(tmp.y, tmp.x[, 1:(k + res.lag), drop = FALSE])
-        res.beta <- tmp.OLS$beta
-        res.resid <- tmp.OLS$residuals
-        res.predict <- tmp.OLS$predict
-        res.t.beta <- tmp.OLS$t.beta
-        rm(tmp.OLS)
+        xreg <- tmp.x[, 1:(k + res.lag), drop = FALSE]
+        res.beta <- solve(t(xreg) %*% xreg) %*% t(xreg) %*% tmp.y
+        res.resid <- tmp.y - xreg %*% res.beta
+        res.predict <- xreg %*% res.beta
+        s2 <- drop(t(res.resid) %*% res.resid) / (nrow(xreg) - ncol(xreg))
+        res.t.beta <- res.beta / sqrt(diag(s2 * solve(t(xreg) %*% xreg)))
     } else {
         res.lag <- 0
 
         if (!is.null(x)) {
-            tmp.OLS <- OLS(tmp.y, tmp.x[, 1:k, drop = FALSE])
-            res.beta <- tmp.OLS$beta
-            res.resid <- tmp.OLS$residuals
-            res.predict <- tmp.OLS$predict
-            res.t.beta <- tmp.OLS$t.beta
-            rm(tmp.OLS)
+            xreg <- tmp.x[, 1:k, drop = FALSE]
+            res.beta <- solve(t(xreg) %*% xreg) %*% t(xreg) %*% tmp.y
+            res.resid <- tmp.y - xreg %*% res.beta
+            res.predict <- xreg %*% res.beta
+            s2 <- drop(t(res.resid) %*% res.resid) / (nrow(xreg) - ncol(xreg))
+            res.t.beta <- res.beta / sqrt(diag(s2 * solve(t(xreg) %*% xreg)))
             res.IC <- log(drop(t(res.resid) %*% res.resid) / (n.obs - max.lag))
         } else {
             res.IC <- Inf
@@ -174,12 +170,12 @@ AR <- function(y,
 
         for (l in 1:max.lag) {
             if (l <= max.lag) {
-                tmp.OLS <- OLS(tmp.y, tmp.x[, 1:(k + l), drop = FALSE])
-                tmp.beta <- tmp.OLS$beta
-                tmp.resid <- tmp.OLS$residuals
-                tmp.predict <- tmp.OLS$predict
-                tmp.t.beta <- tmp.OLS$t.beta
-                rm(tmp.OLS)
+                xreg <- tmp.x[, 1:(k + l), drop = FALSE]
+                tmp.beta <- solve(t(xreg) %*% xreg) %*% t(xreg) %*% tmp.y
+                tmp.resid <- tmp.y - xreg %*% tmp.beta
+                tmp.predict <- xreg %*% tmp.beta
+                s2 <- drop(t(tmp.resid) %*% tmp.resid) / (nrow(xreg) - ncol(xreg)) # nolint
+                tmp.t.beta <- tmp.beta / sqrt(diag(s2 * solve(t(xreg) %*% xreg))) # nolint
                 temp.IC <- info.criterion(tmp.resid, l)[[criterion]]
 
                 if (temp.IC < res.IC) {

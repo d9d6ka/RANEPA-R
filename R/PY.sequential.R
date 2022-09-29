@@ -93,7 +93,7 @@ PY.sequential <- function(y,
 
                 k.hat <- max(1, AR(y.i, x.i, max.lag, criterion)$lag)
 
-                resids <- OLS(y.i, x.i)$residuals
+                resids <- y.i - x.i %*% solve(t(x.i) %*% x.i) %*% t(x.i) %*% y.i
 
                 d.resid <- as.matrix(c(0, diff(resids)))
 
@@ -106,10 +106,8 @@ PY.sequential <- function(y,
                 }
                 x.u <- trimr(x.u, k.hat - 1, 0)
 
-                tmp.OLS <- OLS(y.u, x.u)
-                beta.u <- tmp.OLS$beta
-                u.resid <- tmp.OLS$residuals
-                rm(tmp.OLS)
+                beta.u <- solve(t(x.u) %*% x.u) %*% t(x.u) %*% y.u
+                u.resid <- y.u - x.u %*% beta.u
 
                 VCV <- qr.solve(t(x.u) %*% x.u) *
                     drop(t(u.resid) %*% u.resid) / nrow(u.resid)
@@ -159,10 +157,8 @@ PY.sequential <- function(y,
                 x.g <- subr(x.g, date.vec[i] + 1, n.obs.i - 1)
                 x.g <- x.g - a.hat.M * lagn(x.g, 1, na = 0)
 
-                tmp.OLS <- OLS(y.g, x.g)
-                beta.g <- tmp.OLS$beta
-                g.resid <- tmp.OLS$residuals
-                rm(tmp.OLS)
+                beta.g <- solve(t(x.g) %*% x.g) %*% t(x.g) %*% y.g
+                g.resid <- y.g - x.g %*% beta.g
 
                 if (k.hat == 1) {
                     h0 <- drop(t(g.resid) %*% g.resid) / nrow(g.resid)
@@ -175,10 +171,8 @@ PY.sequential <- function(y,
                         y.v <- trimr(g.resid, k.hat - 2, 0)
                         x.v <- trimr(x.v, k.hat - 2, 0)
 
-                        tmp.OLS <- OLS(y.v, x.v)
-                        beta.v <- tmp.OLS$beta
-                        v.resid <- tmp.OLS$residuals
-                        rm(tmp.OLS)
+                        beta.v <- solve(t(x.v) %*% x.v) %*% t(x.v) %*% y.v
+                        v.resid <- y.v - x.v %*% beta.v
 
                         if (!const) {
                             h0 <- (drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat)) / # nolint
@@ -197,7 +191,8 @@ PY.sequential <- function(y,
                                         DT.ki
                                     ), date.vec[i] + 1, n.obs.i - 1)
                                 x.g.ki <- x.ki - a.hat.M * lagn(x.ki, 1, na = 0)
-                                beta.ki <- OLS(y.g, x.g.ki)$beta
+                                beta.ki <- solve(t(x.g.ki) %*% x.g.ki) %*%
+                                    t(x.g.ki) %*% y.g
                                 BETAS[k.i, ] <- drop(beta.ki)
                                 sig.e <- drop(t(v.resid) %*% v.resid) / (n.obs.i - k.hat) # nolint
                                 h0 <- sig.e / ((1 - sum(beta.v))^2)

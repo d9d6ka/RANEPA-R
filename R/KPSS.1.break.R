@@ -72,11 +72,10 @@ KPSS.1.break <- function(y,
             xt <- cbind(deter, x, xdu)
         }
 
-        tmp.OLS <- OLS(y, xt)
-        beta <- tmp.OLS$beta
-        resids <- tmp.OLS$residuals
-        t.beta <- tmp.OLS$t.beta
-        rm(tmp.OLS)
+        beta <- solve(t(xt) %*% xt) %*% t(xt) %*% y
+        resids <- y - xt %*% beta
+        s2 <- drop(t(resids) %*% resids) / (nrow(xt) - ncol(xt))
+        t.beta <- beta / sqrt(diag(s2 * solve(t(xt) %*% xt)))
     } else {
         bic.min <- Inf
         for (i in ll.init:1) {
@@ -306,20 +305,22 @@ DOLS.1.break <- function(y,
         )
     }
 
-    res.OLS <- OLS(
-        trimr(y, k.lags + 1, k.leads),
-        xreg
-    )
+    yreg <- trimr(y, k.lags + 1, k.leads)
+    beta <- solve(t(xreg) %*% xreg) %*% t(xreg) %*% yreg
+    resid <- yreg - xreg %*% beta
+    s2 <- drop(t(resid) %*% resid) / (nrow(xreg) - ncol(xreg))
+    t.beta <- beta / sqrt(diag(s2 * solve(t(xreg) %*% xreg)))
 
-    bic <- log(drop(t(res.OLS$residuals) %*% res.OLS$residuals) / nrow(xreg)) +
+
+    bic <- log(drop(t(resid) %*% resid) / nrow(xreg)) +
         ncol(xreg) * log(nrow(xreg)) / nrow(xreg)
 
     return(
         list(
-            beta   = res.OLS$beta,
-            resid  = res.OLS$residuals,
+            beta   = beta,
+            resid  = resid,
             bic    = bic,
-            t.beta = res.OLS$t.beta
+            t.beta = t.beta
         )
     )
 }

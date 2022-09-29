@@ -205,10 +205,10 @@ detrend.recursively <- function(y,
     yt <- y - (1 + ct) * lagn(y, 1, na = 0)
     xt <- x - (1 + ct) * lagn(x, 1, na = 0)
 
-    yd <- OLS(
-        yt[1:beg, , drop = FALSE],
-        xt[1:beg, , drop = FALSE]
-    )$residuals
+    tmp.y <- yt[1:beg, , drop = FALSE]
+    tmp.x <- xt[1:beg, , drop = FALSE]
+    b <- solve(t(tmp.x) %*% tmp.x) %*% t(tmp.x) %*% tmp.y
+    yd <- tmp.y - tmp.x %*% b
 
     yd <- rbind(
         yd,
@@ -216,10 +216,10 @@ detrend.recursively <- function(y,
     )
 
     for (lstar in (beg + 1):n.obs) {
-        ystar <- OLS(
-            yt[1:lstar, , drop = FALSE],
-            xt[1:lstar, , drop = FALSE]
-        )$residuals
+        tmp.y <- yt[1:lstar, , drop = FALSE]
+        tmp.x <- xt[1:lstar, , drop = FALSE]
+        b <- solve(t(tmp.x) %*% tmp.x) %*% t(tmp.x) %*% tmp.y
+        ystar <- tmp.y - tmp.x %*% b
         yd[lstar, ] <- ystar[lstar, ]
     }
 

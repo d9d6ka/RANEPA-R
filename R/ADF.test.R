@@ -70,7 +70,8 @@ ADF.test <- function(y,
 
     ## Detrending
     if (!is.null(deter)) {
-        yd <- OLS(y, deter)$residuals
+        b <- solve(t(deter) %*% deter) %*% t(deter) %*% y
+        yd <- y - deter %*% b
     } else {
         yd <- y
     }
@@ -97,13 +98,10 @@ ADF.test <- function(y,
             xr <- x
         }
 
-        tmp.ols <- OLS(
-            trimr(d.yr, max.lag + 1, 0),
-            trimr(x, max.lag + 1, 0)[, 1, drop = FALSE]
-        )
-        b <- tmp.ols$beta
-        e <- tmp.ols$residuals
-        rm(tmp.ols)
+        tmp.y <- trimr(d.yr, max.lag + 1, 0)
+        tmp.x <- trimr(x, max.lag + 1, 0)[, 1, drop = FALSE]
+        b <- solve(t(tmp.x) %*% tmp.x) %*% t(tmp.x) %*% tmp.y
+        e <- tmp.y - tmp.x %*% b
 
         res.ic <- info.criterion(
             e, 0,
@@ -126,13 +124,10 @@ ADF.test <- function(y,
                 xr <- x
             }
 
-            tmp.ols <- OLS(
-                trimr(d.yr, max.lag + 1, 0),
-                trimr(xr, max.lag + 1, 0)[, 1:(1 + l), drop = FALSE]
-            )
-            b <- tmp.ols$beta
-            e <- tmp.ols$residuals
-            rm(tmp.ols)
+            tmp.y <- trimr(d.yr, max.lag + 1, 0)
+            tmp.x <- trimr(xr, max.lag + 1, 0)[, 1:(1 + l), drop = FALSE]
+            b <- solve(t(tmp.x) %*% tmp.x) %*% t(tmp.x) %*% tmp.y
+            e <- tmp.y - tmp.x %*% b
 
             tmp.ic <- info.criterion(
                 e, l,
@@ -148,12 +143,14 @@ ADF.test <- function(y,
         }
     }
 
-    res.OLS <- OLS(
-        trimr(d.y, res.lag + 1, 0),
-        trimr(x, res.lag + 1, 0)[, 1:(1 + res.lag), drop = FALSE]
-    )
+    tmp.y <- trimr(d.y, res.lag + 1, 0)
+    tmp.x <- trimr(x, res.lag + 1, 0)[, 1:(1 + res.lag), drop = FALSE]
 
-    Z.stat <- (n.obs - res.lag - 1) * drop(res.OLS$beta[1] - 1)
+    b <- solve(t(tmp.x) %*% tmp.x) %*% t(tmp.x) %*% tmp.y
+    r <- tmp.y - tmp.x %*% b
+    s2 <- drop(t(r) %*% r) / (nrow(tmp.x) - ncol(tmp.x))
+    t.beta <- b / sqrt(diag(s2 * solve(t(tmp.x) %*% tmp.x)))
+    Z.stat <- (n.obs - res.lag - 1) * drop(b[1] - 1)
 
     return(
         list(
@@ -161,12 +158,12 @@ ADF.test <- function(y,
             yd = drop(yd),
             const = const,
             trend = trend,
-            beta = res.OLS$beta,
-            t.beta = drop(res.OLS$t.beta),
-            alpha = drop(res.OLS$beta[1]),
-            t.alpha = drop(res.OLS$t.beta[1]),
+            beta = b,
+            t.beta = t.beta,
+            alpha = b[1],
+            t.alpha = drop(t.beta[1]),
             Z.stat = Z.stat,
-            residuals = res.OLS$residuals,
+            residuals = r,
             lag = res.lag
         )
     )
@@ -203,7 +200,9 @@ rescale.CPST <- function(d.y,
                          deter,
                          adf.lag,
                          max.lag) {
-    e <- OLS(d.y, x[, 1:(1 + adf.lag), drop = FALSE])$residuals
+    tmp.x <- x[, 1:(1 + adf.lag), drop = FALSE]
+    b <- solve(t(tmp.x) %*% tmp.x) %*% t(tmp.x) %*% d.y
+    e <- d.y - tmp.x %*% b
 
     NW.se <- NW.volatility(
         e,
@@ -213,7 +212,8 @@ rescale.CPST <- function(d.y,
     yr <- cumsum(d.y / NW.se)
 
     if (!is.null(deter)) {
-        yr <- OLS(yr, deter)$residuals
+        b <- solve(t(deter) %*% deter) %*% t(deter) %*% yr
+        yr <- yr - deterr %*% b
     }
 
     d.yr <- as.matrix(c(0, diff(yr)))

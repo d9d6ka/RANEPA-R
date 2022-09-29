@@ -24,7 +24,7 @@ robust.tests.single <- function(y,
             x.const,
             seasonal.dummies(n.obs)
         )
-        y <- OLS(y, SEAS)$residuals
+        y <- y - SEAS %*% solve(t(SEAS) %*% SEAS) %*% t(SEAS) %*% y
     }
 
     result <- MDF.single(
@@ -68,7 +68,7 @@ robust.tests.multiple <- function(y,
             x.const,
             seasonal.dummies(n.obs)
         )
-        y <- OLS(y, SEAS)$residuals
+        y <- y - SEAS %*% solve(t(SEAS) %*% SEAS) %*% t(SEAS) %*% y
     }
 
     m.star <- KP(

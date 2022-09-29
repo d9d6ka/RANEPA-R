@@ -200,14 +200,24 @@ supSBADF.statistic <- function(y,
 
     if (!generalized) {
         for (j in (floor(trim * n.obs)):n.obs) {
-            t.beta <- OLS(diff(C.t)[1:j], C.t[1:j])$t.beta
+            x.reg <- C.t[1:j]
+            y.reg <- diff(C.t)[1:j]
+            beta <- solve(t(x.reg) %*% x.reg) %*% t(x.reg) %*% y.reg
+            resids <- y.reg - x.reg %*% beta
+            s2 <- drop(t(resids) %*% resids) / (nrow(x.reg) - ncol(x.reg))
+            t.beta <- beta / sqrt(diag(s2 * solve(t(x.reg) %*% x.reg)))
             SBADF.values[m] <- drop(t.beta)
             m <- m + 1
         }
     } else {
         for (i in 1:(n.obs - floor(trim * n.obs) + 1)) {
             for (j in (i + floor(trim * n.obs) - 1):n.obs) {
-                t.beta <- OLS(diff(C.t)[i:j], C.t[i:j])$t.beta
+                x.reg <- C.t[i:j]
+                y.reg <- diff(C.t)[i:j]
+                beta <- solve(t(x.reg) %*% x.reg) %*% t(x.reg) %*% y.reg
+                resids <- y.reg - x.reg %*% beta
+                s2 <- drop(t(resids) %*% resids) / (nrow(x.reg) - ncol(x.reg))
+                t.beta <- beta / sqrt(diag(s2 * solve(t(x.reg) %*% x.reg)))
                 SBADF.values[m] <- drop(t.beta)
                 m <- m + 1
             }

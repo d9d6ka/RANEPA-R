@@ -53,12 +53,13 @@ KPSS.HLT <- function(y,
             DT
         )
 
-        tmp.OLS <- OLS(y, x)
-
-        lr.var.y <- lr.var.bartlett(tmp.OLS$residuals)
         inv.xx <- qr.solve(t(x) %*% x)
+        beta <- inv.xx %*% t(x) %*% y
+        resid <- y - x %*% beta
 
-        t0.stat <- abs(tmp.OLS$beta[ncol(x)] /
+        lr.var.y <- lr.var.bartlett(resid)
+
+        t0.stat <- abs(beta[ncol(x)] /
                        sqrt(lr.var.y * inv.xx[ncol(x), ncol(x)]))
 
         x <- cbind(
@@ -67,12 +68,13 @@ KPSS.HLT <- function(y,
             DU[2:n.obs]
         )
 
-        tmp.OLS <- OLS(d.y, x)
-
-        lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals)
         inv.xx <- qr.solve(t(x) %*% x)
+        beta <- inv.xx %*% t(x) %*% d.y
+        resid <- d.y - x %*% beta
 
-        t1.stat <- abs(tmp.OLS$beta[ncol(x)] /
+        lr.var.dy <- lr.var.bartlett(resid)
+
+        t1.stat <- abs(beta[ncol(x)] /
                        sqrt(lr.var.dy * inv.xx[ncol(x), ncol(x)]))
 
         if (t0.stat > t0) {
@@ -95,10 +97,11 @@ KPSS.HLT <- function(y,
         DT0
     )
 
-    tmp.OLS <- OLS(y, x)
+    beta <- solve(t(x) %*% x) %*% t(x) %*% y
+    resid <- y - x %*% beta
 
-    lr.var.y <- lr.var.bartlett(tmp.OLS$residuals)
-    kpss.y <- KPSS(tmp.OLS$residuals, lr.var.y)
+    lr.var.y <- lr.var.bartlett(resid)
+    kpss.y <- KPSS(resid, lr.var.y)
 
     DU1 <- c(rep(0, tb1), rep(1, n.obs - tb1))
 
@@ -108,10 +111,11 @@ KPSS.HLT <- function(y,
         DU1[2:n.obs]
     )
 
-    tmp.OLS <- OLS(d.y, x)
+    beta <- solve(t(x) %*% x) %*% t(x) %*% d.y
+    resid <- d.y - x %*% beta
 
-    lr.var.dy <- lr.var.bartlett(tmp.OLS$residuals)
-    kpss.dy <- KPSS(tmp.OLS$residuals, lr.var.dy)
+    lr.var.dy <- lr.var.bartlett(resid)
+    kpss.dy <- KPSS(resid, lr.var.dy)
 
     lambda.kpss <- exp(-((500 * kpss.y * kpss.dy)^2))
     t.lambda.kpss <- lambda.kpss * t0 + m.ksi * (1 - lambda.kpss) * t1

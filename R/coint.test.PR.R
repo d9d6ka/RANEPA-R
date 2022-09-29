@@ -60,9 +60,7 @@ coint.test.PR <- function(y,
 
     y.d <- GLS(y, zy, opt.cbar)$residuals
     x.d <- GLS(x, zx, opt.cbar)$residuals
-
-    model <- OLS(y.d, x.d)
-    ud.hat <- cbind(model$residuals)
+    ud.hat <- y.d - x.d %*% solve(t(x.d) %*% x.d) %*% t(x.d) %*% y.d
 
     result <- resid.tests.PR(ud.hat, min.lag, max.lag, opt.cbar, deter)
 
@@ -104,13 +102,11 @@ resid.tests.PR <- function(ud,
     d.ud <- diffn(ud, na = 0)
     sum.ud.sq <- drop(t(lag.ud) %*% lag.ud)
 
-    model.1 <- OLS(
-        trimr(ud, 1, 0),
-        trimr(ud, 0, 1)
-    )
+    y.reg <- trimr(ud, 1, 0)
+    x.reg <- trimr(ud, 0, 1)
 
-    rho.hat <- as.matrix(model.1$beta)
-    omega <- as.matrix(model.1$residuals)
+    rho.hat <- solve(t(x.reg) %*% x.reg) %*% t(x.reg) %*% y.reg
+    omega <- y.reg - x.reg %*% rho.hat
     s2.ud <- c(t(omega) %*% omega) / (nrow(omega) - 1)
     t.rho <- (rho.hat - 1) / sqrt(s2.ud / sum.ud.sq)
 
@@ -131,19 +127,17 @@ resid.tests.PR <- function(ud,
 
         tmp.reg <- trimr(tmp.reg, lag.bic + 1, 0)
 
-        model.2 <- OLS(
-            trimr(d.ud, lag.bic + 1, 0),
-            tmp.reg
-        )
+        y.reg <- trimr(d.ud, lag.bic + 1, 0)
+        beta.reg <- solve(t(tmp.reg) %*% tmp.reg) %*% t(tmp.reg) %*% y.reg
 
-        eta <- cbind(model.2$residuals)
+        eta <- y.reg - tmp.reg %*% beta.reg
         s2.eta <- c(t(eta) %*% eta) / (nrow(eta) - ncol(tmp.reg))
         xtx.inv <- solve(t(tmp.reg) %*% tmp.reg)
 
         if (lag.bic == 0) {
             sumb <- 0
         } else {
-            sumb <- sum(subr(model.2$beta, 2, lag.bic + 1))
+            sumb <- sum(subr(beta.reg, 2, lag.bic + 1))
         }
 
         s2.adj <- s2.eta / ((1 - sumb)^2)
@@ -158,7 +152,7 @@ resid.tests.PR <- function(ud,
                 (2 * sum.ud.sq / n.obs^2)
             gls.tests[2, 1] <- sqrt(2 * sum.ud.sq / (n.obs^2 * s2.adj))
             gls.tests[3, 1] <- gls.tests[1, 1] * gls.tests[2, 1]
-            gls.tests[4, 1] <- model.2$beta[1] / sqrt(s2.eta * xtx.inv[1, 1])
+            gls.tests[4, 1] <- beta.reg[1] / sqrt(s2.eta * xtx.inv[1, 1])
             gls.tests[5, 1] <- (n.obs - 1) * (rho.hat - 1) -
                 (s2.adj - s2.ud) / (2 * sum.ud.sq / n.obs^2)
             gls.tests[6, 1] <- sqrt(s2.ud / s2.adj) * t.rho -

@@ -87,7 +87,8 @@ MDF.single <- function(y,
 
     ## OLS/GLS Part ##
     ## Mean case
-    resid.OLS.m <- OLS(y, x[, 1, drop = FALSE])$residuals
+    xreg <- x[, 1, drop = FALSE]
+    resid.OLS.m <- y - xreg %*% solve(t(xreg) %*% xreg) %*% t(xreg) %*% y
     DF.OLS.m <- ADF.test(resid.OLS.m,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
@@ -107,7 +108,8 @@ MDF.single <- function(y,
                          criterion = NULL)
 
     ## Trend case
-    resid.OLS.t <- OLS(y, x[, 1:2])$residuals
+    xreg <- x[, 1:2]
+    resid.OLS.t <- y - xreg %*% solve(t(xreg) %*% xreg) %*% xreg %*% y
     DF.OLS.t <- ADF.test(resid.OLS.t,
                          const = FALSE, trend = FALSE,
                          max.lag = max.lag,
@@ -127,7 +129,7 @@ MDF.single <- function(y,
                          criterion = NULL)
 
     ## ADF-OLS (lambda) ##
-    resid.OLS <- OLS(y, x)$residuals
+    resid.OLS <- y - x %*% solve(t(x) %*% x) %*% t(x) %*% y
     DF1 <- ADF.test(resid.OLS,
                     const = FALSE, trend = FALSE,
                     max.lag = max.lag,
@@ -154,7 +156,7 @@ MDF.single <- function(y,
             if (trend) DT1 else NULL
         )
 
-        resid.OLS <- OLS(y, z)$residuals
+        resid.OLS <- y - z %*% solve(t(z) %*% z) %*% t(z) %*% y
         DF1.tb <- ADF.test(resid.OLS,
                            const = FALSE, trend = FALSE,
                            max.lag = max.lag,
@@ -182,7 +184,7 @@ MDF.single <- function(y,
             DT1
         )
 
-        resid.OLS <- OLS(y, z)$residuals
+        resid.OLS <- y - z %*% solve(t(z) %*% z) %*% t(z) %*% y
         DF2 <- ADF.test(resid.OLS,
                         const = FALSE, trend = FALSE,
                         max.lag = max.lag,
@@ -205,9 +207,9 @@ MDF.single <- function(y,
     cv.PY <- tmp.PY$critical.value
     rm(tmp.PY)
 
-    tmp.OLS <- OLS(y, x)
-    t.alpha <- tmp.OLS$beta[1] /
-        sqrt(drop(t(tmp.OLS$residuals) %*% tmp.OLS$residuals) / n.obs)
+    bb <- solve(t(x) %*% x) %*% t(x) %*% y
+    rr <- y - x %*% bb
+    t.alpha <- bb[1] / sqrt(drop(t(rr) %*% rr) / n.obs)
     t.alpha.id <- as.numeric(abs(t.alpha) > 1)
 
     ## UR-HLT

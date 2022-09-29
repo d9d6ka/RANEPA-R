@@ -101,7 +101,7 @@ coint.test.GH <- function(...,
             )
         }
 
-        e <- OLS(y1, x)$residuals
+        e <- y1 - x %*% solve(t(x) %*% x) %*% t(x) %*% y1
         e0 <- trimr(e, 0, 1, drop = TRUE)
         e1 <- trimr(e, 1, 0, drop = TRUE)
 
