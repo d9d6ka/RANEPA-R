@@ -18,7 +18,7 @@ ADF.test.S(
 )
 }
 \arguments{
-\item{y}{A series of interest.}
+\item{y}{A time series of interest.}
 
 \item{const, trend}{Whether the constant and trend are to be included.}
 

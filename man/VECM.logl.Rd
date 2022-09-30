@@ -10,7 +10,7 @@ VECM.logl(y, p)
 VECM.break.logl(y, p, breaks.list)
 }
 \arguments{
-\item{y}{The matrix of \eqn{n} VAR variables.}
+\item{y}{A matrix of \eqn{n} VAR variables.}
 
 \item{p}{Number of lags.}
 
@@ -18,7 +18,7 @@ VECM.break.logl(y, p, breaks.list)
 }
 \value{
 The vector or matrix with the values of quasi log likelihood
-for all possible values of co-integration rank and different break dates,
+for all possible values of cointegration rank and different break dates,
 if the function with breaks is called.
 }
 \description{

@@ -14,11 +14,11 @@ PY.sequential(
 )
 }
 \arguments{
-\item{y}{The input series of interest.}
+\item{y}{A time series of interest.}
 
 \item{const}{Allowing the break in constant.}
 
-\item{breaks}{Number of breaks.}
+\item{breaks}{A number of breaks.}
 
 \item{criterion}{Needed information criterion: aic, bic, hq or lwz.}
 
@@ -27,7 +27,7 @@ PY.sequential(
 \item{max.lag}{The maximum possible lag in the model.}
 }
 \value{
-The estimated Wald statistic.
+An estimated Wald statistic.
 }
 \description{
 Sequential Perron-Yabu (2009) statistic for breaks at unknown date.

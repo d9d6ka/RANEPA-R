@@ -4,8 +4,8 @@
 #' @description
 #' Procedure to compute the KPSS test with multiple known structural breaks
 #'
-#' @param y An input (LHS) time series of interest.
-#' @param x A matrix of (RHS) explanatory stochastic regressors.
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory stochastic regressors.
 #' @param model A scalar or vector of
 #' * 1: for the break in const,
 #' * 2: for the break in trend,
@@ -134,8 +134,8 @@ KPSS.N.breaks <- function(y,
 #' @description
 #' Procedure to compute the KPSS test with multiple unknown structural breaks
 #'
-#' @param y An input (LHS) time series of interest.
-#' @param x A matrix of (RHS) explanatory stochastic regressors.
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory stochastic regressors.
 #' @param model A scalar or vector of
 #' * 1: for the break in const,
 #' * 2: for the break in trend,
@@ -280,8 +280,8 @@ KPSS.N.breaks.bootstrap <- function(y,
 #' @title
 #' Estimating DOLS regression for multiple known break points
 #'
-#' @param y A dependent (LHS) variable.
-#' @param x A matrix of explanatory (RHS) variables.
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory stochastic regressors.
 #' @param model A scalar or vector of break types:
 #' * 1: for the break in const.
 #' * 2: for the break in trend.
@@ -336,8 +336,8 @@ DOLS.N.breaks <- function(y,
 #' @title
 #' Preparing variables for DOLS regression with multiple known break points
 #'
-#' @param y A dependent (LHS) variable.
-#' @param x A matrix of explanatory (RHS) variables.
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory stochastic regressors.
 #' @param model A scalar or vector of
 #' * 1: for the break in const.
 #' * 2: for the break in trend.

@@ -7,7 +7,7 @@
 segments.OLS.2.breaks(y, model)
 }
 \arguments{
-\item{y}{(Tx1)-vector of time series}
+\item{y}{A time series of interest.}
 
 \item{model}{A scalar equal to
 \itemize{

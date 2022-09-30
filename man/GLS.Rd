@@ -7,14 +7,20 @@
 GLS(y, z, c)
 }
 \arguments{
-\item{y}{Dependent variable.}
+\item{y}{A dependent variable.}
 
-\item{z}{Explanatory variables.}
+\item{c}{A coefficient for \eqn{\rho} calculation.}
 
-\item{c}{Coefficient for \eqn{\rho} calculation.}
+\item{x}{Explanatory variables.}
 }
 \value{
-The list of betas, residuals, forecasted values and t-values.
+A list of:
+\itemize{
+\item \code{beta}: estimates of coefficients,
+\item \code{resid}: estimated residuals,
+\item \code{predict}: forecasted values,
+\item \code{t.beta}: \eqn{t}-statistics for \code{beta}.
+}
 }
 \description{
 Getting GLS estimates of betas, residuals, forecasted values and t-values.

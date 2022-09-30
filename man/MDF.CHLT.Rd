@@ -7,7 +7,7 @@
 MDF.CHLT(y, max.lag = 10, trim = 0.15, iter = 499)
 }
 \arguments{
-\item{y}{A series of interest}
+\item{y}{A time series of interest.}
 
 \item{max.lag}{The maximum possible lag.}
 

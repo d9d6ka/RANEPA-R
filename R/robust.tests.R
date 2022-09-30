@@ -1,9 +1,8 @@
 #' @title
 #' A wrapping function around [MDF.single].
 #'
-#' @param y A series of interest.
-#' @param const Whether the constant term should be included.
-#' @param trend Whether the trend term should be included.
+#' @param y A time series of interest.
+#' @param const,trend Whether the constant term and trend should be included.
 #' @param season Whether the seasonal adjustment is needed.
 #' @param trim Trimming value for a possible break date bounds.
 #'

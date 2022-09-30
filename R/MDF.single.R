@@ -1,7 +1,7 @@
 #' @title
 #' MDF procedure for a single unknown break.
 #'
-#' @param y A series of interest.
+#' @param y A time series of interest.
 #' @param const Whether the constant term should be included.
 #' @param trend Whether the trend term should be included.
 #' @param trim Trimming value for a possible break date bounds.

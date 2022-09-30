@@ -7,8 +7,9 @@
 #' the ordinary `SADF` and `GSADF` tests using Nadaraya-Watson residuals and
 #' reindexing procedure by Cavaliere-Taylor (2008).
 #'
-#' @param y An input time series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param y A time series of interest.
+#' @param trim A trimming parameter to determine the lower and upper bounds for
+#' a possible break point.
 #' @param const Whether the constant needs to be included.
 #' @param omega.est Whether the variance of Nadaraya-Watson residuals should be
 #' used.

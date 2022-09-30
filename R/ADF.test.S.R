@@ -14,7 +14,7 @@
 #' corresponding number of observations. This step was repeated 5 times to cope
 #' with possible biases. After that MacKinnon-like regressions were estimated.
 #'
-#' @param y A series of interest.
+#' @param y A time series of interest.
 #' @param const,trend Whether the constant and trend are to be included.
 #' @param c A filtration parameter used to construct an autocorrelation
 #' coefficient.
@@ -163,14 +163,14 @@ ADF.test.S <- function(y,
 #' Elliott et al (1996) recommend using \eqn{c = -7} for the model with only
 #' an intercept, and \eqn{c = -13.5} for the model with a linear trend.
 #'
-#' @param y The dependent (LHS) variable.
-#' @param x The matrix of explanatory (RHS) variables.
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory variables.
 #' @param c A filtration parameter used to construct an autocorrelation
 #' coefficient.
 #' @param gamma A detrending type selection parameter. If 0 the OLS detrending
 #' is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
 #' coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.
-#' @param trim The trimming parameter. It's used to find the minimum size of
+#' @param trim A trimming parameter. It's used to find the minimum size of
 #' subsamples while calculating recursive estimates. The ending point of the
 #' subsample for the \eqn{t} is \eqn{max(t, trim \times T)}.
 #'

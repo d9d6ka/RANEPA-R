@@ -7,9 +7,9 @@
 KPSS(resids, variance)
 }
 \arguments{
-\item{resids}{The series of residuals.}
+\item{resids}{A series of residuals.}
 
-\item{variance}{The value of the long-run variance.}
+\item{variance}{A value of the long-run variance.}
 }
 \description{
 Auxiliary function returning KPSS statistic value.

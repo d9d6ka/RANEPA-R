@@ -30,7 +30,7 @@ lr.var.bartlett.AK(y)
 lr.var.SPC(y, max.lag = 0, kernel = "bartlett", criterion = "bic")
 }
 \arguments{
-\item{y}{A series of interest.}
+\item{y}{A time series of interest.}
 
 \item{demean}{Whether the demeaning is needed.}
 

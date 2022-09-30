@@ -1,7 +1,7 @@
 #' @title
 #' MDF test for a single break and possible heterscedasticity
 #'
-#' @param y A series of interest
+#' @param y A time series of interest.
 #' @param max.lag The maximum possible lag.
 #' @param trim Trimming parameter for lag selection
 #' @param iter Number of bootstrap iterations.
@@ -455,9 +455,9 @@ MDF.CHLT <- function(y,
 #' @title
 #' GLS fitering with a break
 #'
-#' @param y Series of interest.
-#' @param lambda Break relative position.
-#' @param c Filtering parameter.
+#' @param y A time series of interest.
+#' @param lambda A break relative position.
+#' @param c A coefficient for \eqn{\rho} calculation.
 #'
 #' @keywords internal
 GLS.bt <- function(y,

@@ -8,8 +8,9 @@
 #'
 #' `GSADF.bootstrap.test` is the same procedure but for [GSADF.test].
 #'
-#' @param y An input time series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param y A time series of interest.
+#' @param trim A trimming parameter to determine the lower and upper bounds for
+#' a possible break point.
 #' @param const Whether the constant needs to be included.
 #' @param alpha The significance level of interest.
 #' @param iter The number of iterations.

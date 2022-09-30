@@ -7,11 +7,11 @@
 GLS.bt(y, lambda, c)
 }
 \arguments{
-\item{y}{Series of interest.}
+\item{y}{A time series of interest.}
 
-\item{lambda}{Break relative position.}
+\item{lambda}{A break relative position.}
 
-\item{c}{Filtering parameter.}
+\item{c}{A coefficient for \eqn{\rho} calculation.}
 }
 \description{
 GLS fitering with a break

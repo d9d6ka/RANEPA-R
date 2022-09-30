@@ -5,7 +5,7 @@
 #' This procedure is to construct a confidence set for the change point in
 #' cointegrating regressions.
 #'
-#' @param y A LHS variable of interest.
+#' @param y A time series of interest.
 #' @param trend Whether the trend is to be included.
 #' @param zb I(1) regressors with break.
 #' @param zf I(1) regressors without break.
@@ -311,7 +311,7 @@ coint.conf.sets <- function(y,
 #' @details
 #' The function is not intended to be used directly so it's not exported.
 #'
-#' @param y LHS dependent variable.
+#' @param y A time series of interest.
 #' @param trend Whether the trend is to be included.
 #' @param zb I(1) regressors with break.
 #' @param zf I(1) regressors without break.

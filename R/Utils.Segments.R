@@ -1,8 +1,8 @@
 #' @title
 #' Procedure to minimize the SSR for 1 break point
 #'
-#' @param beg Sample begin.
-#' @param end Sample end.
+#' @param beg Start of the sample.
+#' @param end End of the sample.
 #' @param first.break First possible break point.
 #' @param last.break Last possible break point.
 #' @param len Total number of observations.
@@ -48,7 +48,7 @@ segments.OLS.1.break <- function(beg,
 #' @title
 #' Procedure to minimize the SSR for 2 break points
 #'
-#' @param y (Tx1)-vector of time series
+#' @param y A time series of interest.
 #' @param model A scalar equal to
 #' * 1: for the AA (without trend) model,
 #' * 2: for the AA (with trend) model,

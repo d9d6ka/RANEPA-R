@@ -7,9 +7,9 @@
 DOLS.1.break(y, x, model, break.point, k.lags, k.leads)
 }
 \arguments{
-\item{y}{A dependent (LHS) variable.}
+\item{y}{A time series of interest.}
 
-\item{x}{A matrix of explanatory (RHS) variables.}
+\item{x}{A matrix of explanatory stochastic regressors.}
 
 \item{model}{See Carrion-i-Silvestre and Sansó (2006)
 \itemize{

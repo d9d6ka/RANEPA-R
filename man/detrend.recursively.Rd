@@ -7,9 +7,9 @@
 detrend.recursively(y, x, c, gamma, trim)
 }
 \arguments{
-\item{y}{The dependent (LHS) variable.}
+\item{y}{A time series of interest.}
 
-\item{x}{The matrix of explanatory (RHS) variables.}
+\item{x}{A matrix of explanatory variables.}
 
 \item{c}{A filtration parameter used to construct an autocorrelation
 coefficient.}
@@ -18,7 +18,7 @@ coefficient.}
 is applied, if 1 the GLS detrending is applied, otherwise the autocorrelation
 coefficient is calculated as \eqn{1 + c^{\gamma} T^{-\gamma}}.}
 
-\item{trim}{The trimming parameter. It's used to find the minimum size of
+\item{trim}{A trimming parameter. It's used to find the minimum size of
 subsamples while calculating recursive estimates. The ending point of the
 subsample for the \eqn{t} is \eqn{max(t, trim \times T)}.}
 }

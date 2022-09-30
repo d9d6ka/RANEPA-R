@@ -8,7 +8,7 @@ Perron-Rodriguez (2016)}
 \method{resid}{tests.PR}(ud, min.lag, max.lag, c.bar, deter)
 }
 \arguments{
-\item{ud}{A vecctor of residuals for testing.}
+\item{ud}{A vector of residuals for testing.}
 
 \item{min.lag, max.lag}{Minimum and maximum lag number.}
 

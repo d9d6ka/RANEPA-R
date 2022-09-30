@@ -7,11 +7,11 @@
 MZ.statistic(y, l, const = FALSE, trend = FALSE)
 }
 \arguments{
-\item{y}{A series of interest.}
+\item{y}{A time series of interest.}
 
 \item{l}{Number of lags for inner ADF test.}
 
-\item{const, trend}{Whether a constand and trend are to be included.}
+\item{const, trend}{Whether a constant and trend are to be included.}
 }
 \value{
 List of values of \eqn{MZ_\alpha}, \eqn{MZ_t} and \eqn{MSB}

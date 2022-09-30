@@ -1,10 +1,11 @@
 #' @title
 #' Perron-Yabu (2009) statistic for break at unknown date.
 #'
-#' @param y The input series of interest.
+#' @param y A time series of interest.
 #' @param const,trend Allowing the break in constant or trend.
 #' @param criterion Needed information criterion: aic, bic, hq or lwz.
-#' @param trim A trimming value for a possible break date bounds.
+#' @param trim A trimming parameter to determine the lower and upper bounds for
+#' a possible break point.
 #' @param max.lag The maximum possible lag in the model.
 #'
 #' @return A list of the estimated Wald statistic as well as its c.v.

@@ -12,9 +12,10 @@ supBZ.statistic(
 )
 }
 \arguments{
-\item{y}{The series of interest.}
+\item{y}{A time series of interest.}
 
-\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+\item{trim}{The trimming parameter to find the lower and upper bounds of
+possible break dates.}
 
 \item{sigma.sq}{Local non-parametric estimates of variance. If \code{NULL} they
 will be estimated via Nadaraya-Watson procedure.}

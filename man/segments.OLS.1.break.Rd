@@ -7,9 +7,9 @@
 segments.OLS.1.break(beg, end, first.break, last.break, len, SSR.data)
 }
 \arguments{
-\item{beg}{Sample begin.}
+\item{beg}{Start of the sample.}
 
-\item{end}{Sample end.}
+\item{end}{End of the sample.}
 
 \item{first.break}{First possible break point.}
 

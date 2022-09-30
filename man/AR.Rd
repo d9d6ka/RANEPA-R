@@ -7,9 +7,9 @@
 AR(y, x, max.lag, criterion = "aic")
 }
 \arguments{
-\item{y}{Dependent variable.}
+\item{y}{A dependent variable.}
 
-\item{x}{Exogenous explanatory variables.}
+\item{x}{Explanatory variables.}
 
 \item{max.lag}{The maximum number of lags.}
 

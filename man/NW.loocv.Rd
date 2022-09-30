@@ -7,9 +7,9 @@
 NW.loocv(y, x, kernel = "unif")
 }
 \arguments{
-\item{y}{LHS dependent variable.}
+\item{y}{A dependent variable.}
 
-\item{x}{RHS explanation variable.}
+\item{x}{An explanatory variable.}
 
 \item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}:
 \itemize{

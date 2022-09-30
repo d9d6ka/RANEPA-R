@@ -1,8 +1,9 @@
 #' @title
 #' Sign-based SADF test
 #'
-#' @param y A series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param y A time series of interest.
+#' @param trim A trimming parameter to determine the lower and upper bounds for
+#' a possible break point.
 #' @param const Whether the constant needs to be included.
 #' @param alpha Needed level of significance.
 #' @param iter Number of bootstrapping iterations.

@@ -7,7 +7,7 @@
 MDF.single(y, const = FALSE, trend = FALSE, trim = 0.15)
 }
 \arguments{
-\item{y}{A series of interest.}
+\item{y}{A time series of interest.}
 
 \item{const}{Whether the constant term should be included.}
 

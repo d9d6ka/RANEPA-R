@@ -9,8 +9,9 @@
 #' `GSADF.test` is a generalized version of `SADF.test`. Subsamples are allowed
 #' to start at any point between 1 and \eqn{T (1 - trim)}.
 #'
-#' @param y The input time series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param y A time series of interest.
+#' @param trim A trimming parameter to determine the lower and upper bounds for
+#' a possible break point.
 #' @param const Whether the constant needs to be included.
 #' @param add.p.value Whether the p-value is to be returned. This argument is
 #' needed to suppress the calculation of p-values during the precalculation of

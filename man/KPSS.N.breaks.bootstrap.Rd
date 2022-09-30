@@ -22,9 +22,9 @@ KPSS.N.breaks.bootstrap(
 )
 }
 \arguments{
-\item{y}{An input (LHS) time series of interest.}
+\item{y}{A time series of interest.}
 
-\item{x}{A matrix of (RHS) explanatory stochastic regressors.}
+\item{x}{A matrix of explanatory stochastic regressors.}
 
 \item{model}{A scalar or vector of
 \itemize{

@@ -1,7 +1,7 @@
 #' @title
 #' MDF procedure for multiple unknown breaks.
 #'
-#' @param y A series of interest.
+#' @param y A time series of interest.
 #' @param const Whether the constant term should be included.
 #' @param breaks Number of breaks.
 #' @param breaks.star Number of breaks got from the Kejrival-Perron procedure.

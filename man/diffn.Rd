@@ -7,11 +7,11 @@
 diffn(x, lag = 1, differences = 1, na = NA)
 }
 \arguments{
-\item{x}{Initial vector.}
+\item{x}{An initial vector.}
 
 \item{lag}{Size of lag.}
 
-\item{na}{Value to fill missing observations, \code{NA} by default.}
+\item{na}{A value to fill missing observations, \code{NA} by default.}
 
 \item{difference}{Order of differentiating.}
 }

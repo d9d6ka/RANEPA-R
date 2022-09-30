@@ -1,7 +1,7 @@
 #' @title
 #' Unit root testing procedure under a single structural break.
 #'
-#' @param y A series of interest.
+#' @param y A time series of interest.
 #' @param const Whether a constant should be included.
 #' @param trim The trimming parameter to find the lower and upper bounds of
 #' possible break dates.

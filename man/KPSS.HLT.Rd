@@ -7,7 +7,7 @@
 KPSS.HLT(y, const = FALSE, trim = 0.15)
 }
 \arguments{
-\item{y}{A series of interest.}
+\item{y}{A time series of interest.}
 
 \item{const}{Whether a constant should be included.}
 

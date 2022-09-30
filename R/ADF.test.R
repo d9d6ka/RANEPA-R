@@ -10,16 +10,16 @@
 #' Due to the Frisch-Waugh-Lovell theorem we first detrend `y` and then apply
 #' the test to the detrended series.
 #'
-#' @param y The input time series of interest.
+#' @param y A time series of interest.
 #' @param const,trend Whether a constand and trend are to be included.
-#' @param max.lag Maximum lag number
+#' @param max.lag Maximum lag number.
 #' @param criterion A criterion used to select number of lags.
 #' If lag selection is not needed keep this NULL.
 #' @param modified.criterion Whether the unit-root test modificaton is needed.
 #' @param rescale.criterion Whether the rescaling informational criterion
 #' is needed. Designed to cope with heteroscedasticity in residuals.
 #'
-#' @return List containing:
+#' @return A list containing:
 #' * y,
 #' * const,
 #' * trend,
@@ -181,7 +181,7 @@ ADF.test <- function(y,
 #' variance.
 #'
 #' @param d.y A series of first differences.
-#' @param x A matrix of ADF RHS variables.
+#' @param x A matrix of ADF variables.
 #' @param deter A matrix of deterministic variables for detrending.
 #' @param adf.lag A lag of the corresponding ADF model.
 #' @param max.lag The maximum possible lag.

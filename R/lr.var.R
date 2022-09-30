@@ -2,7 +2,7 @@
 #' @title
 #' Calculating long-run variance or covariance matrix
 #'
-#' @param y A series of interest.
+#' @param y A time series of interest.
 #' @param demean Whether the demeaning is needed.
 #' @param kernel A kernel to be used:
 #' * `truncated`: \eqn{\left\{\begin{array}{ll}

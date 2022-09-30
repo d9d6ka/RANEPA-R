@@ -9,8 +9,8 @@
 #'
 #' See Carrion-i-Silvestre and Sansó (2006) for further details.
 #'
-#' @param y An input (LHS) time series of interest.
-#' @param x A matrix of (RHS) explanatory stochastic regressors.
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory stochastic regressors.
 #' @param model A scalar equal to
 #' * 1: for model An,
 #' * 2: for model A,
@@ -18,12 +18,13 @@
 #' * 4: for model C,
 #' * 5: for model D,
 #' * 6: for model E.
-#' @param break.point Position of the break point.
+#' @param break.point A position of the break point.
 #' @param weakly.exog Exogeneity of the stochastic regressors
 #' * `TRUE`: if the regressors are weakly exogenous,
 #' * `FALSE`: if the regressors are not weakly exogenous
 #' (DOLS is used in this case).
-#' @param ll.init Scalar, defines the initial number of leads and lags for DOLS.
+#' @param ll.init A scalar, defines the initial number of leads and lags
+#' for DOLS.
 #'
 #' @return A list of:
 #' * `beta`: DOLS estimates of the coefficients,
@@ -130,8 +131,8 @@ KPSS.1.break <- function(y,
 #'
 #' See Carrion-i-Silvestre and Sansó (2006) for further details.
 #'
-#' @param y (Tx1)-vector of the dependent variable
-#' @param x (Txk)-matrix of explanatory stochastic regressors
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory stochastic regressors.
 #' @param model A scalar equal to
 #' * 1: for model An,
 #' * 2: for model A,
@@ -200,8 +201,8 @@ KPSS.1.break.unknown <- function(y,
 #' @title
 #' Estimating DOLS regression for multiple known break points
 #'
-#' @param y A dependent (LHS) variable.
-#' @param x A matrix of explanatory (RHS) variables.
+#' @param y A time series of interest.
+#' @param x A matrix of explanatory stochastic regressors.
 #' @param model See Carrion-i-Silvestre and Sansó (2006)
 #' * 1: for model An,
 #' * 2: for model A,

@@ -7,14 +7,14 @@
 SSR.matrix(y, x, width = 2)
 }
 \arguments{
-\item{y}{Dependent variable.}
+\item{y}{A dependent variable.}
 
 \item{x}{Explanatory variables.}
 
 \item{width}{Minimum spacing between the breaks.}
 }
 \value{
-The matrix of recursive SSR values.
+A matrix of recursive SSR values.
 }
 \description{
 Pre-calculate matrix of recursive SSR values.

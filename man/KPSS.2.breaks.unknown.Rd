@@ -7,7 +7,7 @@
 KPSS.2.breaks.unknown(y, model, max.lag = 0, kernel = "bartlett")
 }
 \arguments{
-\item{y}{(Tx1)-vector of time series.}
+\item{y}{A time series of interest.}
 
 \item{model}{A scalar equal to
 \itemize{
@@ -18,7 +18,7 @@ KPSS.2.breaks.unknown(y, model, max.lag = 0, kernel = "bartlett")
 \item 5: for the AC-CA model.
 }}
 
-\item{max.lag}{scalar, with the maximum order of the parametric correction.
+\item{max.lag}{A scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected using
 the BIC information criterion.}
 

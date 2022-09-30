@@ -13,11 +13,9 @@ robust.tests.single(
 )
 }
 \arguments{
-\item{y}{A series of interest.}
+\item{y}{A time series of interest.}
 
-\item{const}{Whether the constant term should be included.}
-
-\item{trend}{Whether the trend term should be included.}
+\item{const, trend}{Whether the constant term and trend should be included.}
 
 \item{season}{Whether the seasonal adjustment is needed.}
 

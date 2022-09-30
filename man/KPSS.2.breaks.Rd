@@ -7,7 +7,7 @@
 KPSS.2.breaks(y, model, break.point, max.lag, kernel)
 }
 \arguments{
-\item{y}{An input (LHS) time series of interest.}
+\item{y}{A time series of interest.}
 
 \item{model}{A scalar equal to
 \itemize{
@@ -21,7 +21,7 @@ KPSS.2.breaks(y, model, break.point, max.lag, kernel)
 \item{break.point}{Positions for the first and second structural breaks
 (respective to the origin which is 1).}
 
-\item{max.lag}{scalar, with the maximum order of the parametric correction.
+\item{max.lag}{A scalar, with the maximum order of the parametric correction.
 The final order of the parametric correction is selected using the
 BIC information criterion.}
 

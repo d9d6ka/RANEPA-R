@@ -15,11 +15,11 @@ ADF.test(
 )
 }
 \arguments{
-\item{y}{The input time series of interest.}
+\item{y}{A time series of interest.}
 
 \item{const, trend}{Whether a constand and trend are to be included.}
 
-\item{max.lag}{Maximum lag number}
+\item{max.lag}{Maximum lag number.}
 
 \item{criterion}{A criterion used to select number of lags.
 If lag selection is not needed keep this NULL.}
@@ -30,7 +30,7 @@ If lag selection is not needed keep this NULL.}
 is needed. Designed to cope with heteroscedasticity in residuals.}
 }
 \value{
-List containing:
+A list containing:
 \itemize{
 \item y,
 \item const,

@@ -7,9 +7,9 @@
 KPSS.1.break(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 }
 \arguments{
-\item{y}{An input (LHS) time series of interest.}
+\item{y}{A time series of interest.}
 
-\item{x}{A matrix of (RHS) explanatory stochastic regressors.}
+\item{x}{A matrix of explanatory stochastic regressors.}
 
 \item{model}{A scalar equal to
 \itemize{
@@ -21,7 +21,7 @@ KPSS.1.break(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 \item 6: for model E.
 }}
 
-\item{break.point}{Position of the break point.}
+\item{break.point}{A position of the break point.}
 
 \item{weakly.exog}{Exogeneity of the stochastic regressors
 \itemize{
@@ -30,7 +30,8 @@ KPSS.1.break(y, x, model, break.point, weakly.exog = TRUE, ll.init)
 (DOLS is used in this case).
 }}
 
-\item{ll.init}{Scalar, defines the initial number of leads and lags for DOLS.}
+\item{ll.init}{A scalar, defines the initial number of leads and lags
+for DOLS.}
 }
 \value{
 A list of:

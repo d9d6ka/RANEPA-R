@@ -25,7 +25,7 @@
 \method{print}{robustURN}(x, ...)
 }
 \arguments{
-\item{x}{Object containing results.}
+\item{x}{An jbject containing results.}
 
 \item{...}{Any additional arguments for \link{print} function.}
 }

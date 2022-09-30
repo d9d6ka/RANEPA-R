@@ -7,11 +7,11 @@
 lagn(x, i, na = NA)
 }
 \arguments{
-\item{x}{Initial vector.}
+\item{x}{An initial vector.}
 
 \item{i}{Size of lag (lead if negative).}
 
-\item{na}{Value to fill missing observations, \code{NA} by default.}
+\item{na}{A value to fill missing observations, \code{NA} by default.}
 }
 \value{
 Lagged or leaded vector.

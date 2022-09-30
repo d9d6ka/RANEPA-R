@@ -7,9 +7,9 @@
 SSR.recursive(y, x, beg, end, width = 2)
 }
 \arguments{
-\item{y}{(Tx1)-vector of the dependent variable.}
+\item{y}{A dependent variable.}
 
-\item{x}{(Txk)-vector of the explanatory stochastic regressors.}
+\item{x}{Explanatory variables.}
 
 \item{beg, end}{The start and the end of SSR calculating period.}
 

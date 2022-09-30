@@ -7,9 +7,9 @@
 KPSS.1.break.unknown(y, x, model, weakly.exog, ll.init)
 }
 \arguments{
-\item{y}{(Tx1)-vector of the dependent variable}
+\item{y}{A time series of interest.}
 
-\item{x}{(Txk)-matrix of explanatory stochastic regressors}
+\item{x}{A matrix of explanatory stochastic regressors.}
 
 \item{model}{A scalar equal to
 \itemize{

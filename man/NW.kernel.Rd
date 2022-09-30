@@ -7,13 +7,13 @@
 NW.kernel(i, x, h, kernel = "unif")
 }
 \arguments{
-\item{i}{Index of the base point.}
+\item{i}{An index of the base point.}
 
-\item{x}{Series for kernel calculations.}
+\item{x}{A series for kernel calculations.}
 
-\item{h}{Kernel bandwidth.}
+\item{h}{A bandwidth parameter.}
 
-\item{kernel}{Kernel type:
+\item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}:
 \itemize{
 \item \code{unif}: \eqn{K(x) = \left\{\begin{array}{ll}
 1 & \frac{|x - x_i|}{h} \leq 1 \\

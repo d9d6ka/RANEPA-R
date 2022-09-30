@@ -14,7 +14,7 @@ select.lead.lag.KS(
 )
 }
 \arguments{
-\item{y}{LHS dependent variable.}
+\item{y}{A time series of interest.}
 
 \item{trend}{Whether the trend is to be included.}
 

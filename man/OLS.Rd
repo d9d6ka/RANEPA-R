@@ -7,12 +7,12 @@
 OLS(y, x)
 }
 \arguments{
-\item{y}{Dependent variable.}
+\item{y}{A dependent variable.}
 
 \item{x}{Explanatory variables.}
 }
 \value{
-The list of:
+A list of:
 \itemize{
 \item \code{beta}: estimates of coefficients,
 \item \code{resid}: estimated residuals,

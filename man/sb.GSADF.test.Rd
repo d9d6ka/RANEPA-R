@@ -15,9 +15,10 @@ sb.GSADF.test(
 )
 }
 \arguments{
-\item{y}{A series of interest.}
+\item{y}{A time series of interest.}
 
-\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+\item{trim}{A trimming parameter to determine the lower and upper bounds for
+a possible break point.}
 
 \item{const}{Whether the constant needs to be included.}
 

@@ -16,9 +16,9 @@ DOLS.N.breaks(
 )
 }
 \arguments{
-\item{y}{A dependent (LHS) variable.}
+\item{y}{A time series of interest.}
 
-\item{x}{A matrix of explanatory (RHS) variables.}
+\item{x}{A matrix of explanatory stochastic regressors.}
 
 \item{model}{A scalar or vector of break types:
 \itemize{

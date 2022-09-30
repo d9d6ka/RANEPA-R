@@ -9,7 +9,7 @@ rescale.CPST(d.y, x, deter, adf.lag, max.lag)
 \arguments{
 \item{d.y}{A series of first differences.}
 
-\item{x}{A matrix of ADF RHS variables.}
+\item{x}{A matrix of ADF variables.}
 
 \item{deter}{A matrix of deterministic variables for detrending.}
 

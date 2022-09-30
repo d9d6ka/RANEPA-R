@@ -1,11 +1,11 @@
 #' @title
 #' Pre-calculate matrix of recursive SSR values.
 #'
-#' @param y Dependent variable.
+#' @param y A dependent variable.
 #' @param x Explanatory variables.
 #' @param width Minimum spacing between the breaks.
 #'
-#' @return The matrix of recursive SSR values.
+#' @return A matrix of recursive SSR values.
 #'
 #' @keywords internal
 SSR.matrix <- function(y,
@@ -31,8 +31,8 @@ SSR.matrix <- function(y,
 #' @title
 #' Calculate SSR recursively
 #'
-#' @param y (Tx1)-vector of the dependent variable.
-#' @param x (Txk)-vector of the explanatory stochastic regressors.
+#' @param y A dependent variable.
+#' @param x Explanatory variables.
 #' @param beg,end The start and the end of SSR calculating period.
 #' @param width Minimum spacing between the breaks.
 #'

@@ -2,13 +2,14 @@
 #' Weighted supremum ADF test
 #' @order 1
 #'
-#' @param y The input time series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param y A time series of interest.
+#' @param trim The trimming parameter to find the lower and upper bounds of
+#' possible break dates.
 #' @param const Whether the constant needs to be included.
-#' @param alpha The significance level of interest.
-#' @param iter The number of iterations.
+#' @param alpha A significance level of interest.
+#' @param iter Nnumber of iterations.
 #' @param urs Use `union of rejections` strategy.
-#' @param seed The seed parameter for the random number generator.
+#' @param seed A seed parameter for the random number generator.
 #'
 #' @return An object of type `sadf`. It's a list of:
 #' * `y`,
@@ -348,8 +349,9 @@ weighted.GSADF.test <- function(y,
 #' @title
 #' Calculate supBZ statistic
 #'
-#' @param y The series of interest.
-#' @param trim Trimming parameter to determine the lower and upper bounds.
+#' @param y A time series of interest.
+#' @param trim The trimming parameter to find the lower and upper bounds of
+#' possible break dates.
 #' @param sigma.sq Local non-parametric estimates of variance. If `NULL` they
 #' will be estimated via Nadaraya-Watson procedure.
 #' @param generalized Whether to calculate generalized statistic value.

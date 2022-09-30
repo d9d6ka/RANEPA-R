@@ -4,10 +4,10 @@
 #' @description
 #' Getting OLS estimates of betas, residuals, forecasted values and t-values.
 #'
-#' @param y Dependent variable.
+#' @param y A dependent variable.
 #' @param x Explanatory variables.
 #'
-#' @return The list of:
+#' @return A list of:
 #' * `beta`: estimates of coefficients,
 #' * `resid`: estimated residuals,
 #' * `predict`: forecasted values,
@@ -43,11 +43,15 @@ OLS <- function(y,
 #' @description
 #' Getting GLS estimates of betas, residuals, forecasted values and t-values.
 #'
-#' @param y Dependent variable.
-#' @param z Explanatory variables.
-#' @param c Coefficient for \eqn{\rho} calculation.
+#' @param y A dependent variable.
+#' @param x Explanatory variables.
+#' @param c A coefficient for \eqn{\rho} calculation.
 #'
-#' @return The list of betas, residuals, forecasted values and t-values.
+#' @return A list of:
+#' * `beta`: estimates of coefficients,
+#' * `resid`: estimated residuals,
+#' * `predict`: forecasted values,
+#' * `t.beta`: \eqn{t}-statistics for `beta`.
 #'
 #' @keywords internal
 GLS <- function(y,
@@ -103,8 +107,8 @@ GLS <- function(y,
 #' @title
 #' Custom AR with extra information
 #'
-#' @param y Dependent variable.
-#' @param x Exogenous explanatory variables.
+#' @param y A dependent variable.
+#' @param x Explanatory variables.
 #' @param max.lag The maximum number of lags.
 #' @param criterion A criterion for lag number estimation.
 #'
@@ -210,9 +214,9 @@ AR <- function(y,
 #' @title
 #' Nadaraya–Watson kernel regression.
 #'
-#' @param y LHS dependent variable.
-#' @param x RHS explanation variable.
-#' @param h Bandwidth.
+#' @param y A dependent variable.
+#' @param x Explanatory variables.
+#' @param h A bandwidth parameter.
 #' @param kernel Needed kernel, currently only `unif` and `gauss`:
 #' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
 #' 1 & \frac{|x - x_i|}{h} \leq 1 \\
@@ -263,8 +267,8 @@ NW.estimation <- function(y,
 #' @title
 #' Nadaraya–Watson kernel volatility estimation
 #'
-#' @param e The series of interest.
-#' @param h Bandwidth.
+#' @param e A series of interest.
+#' @param h A bandwidth parameter.
 #' @param kernel Needed kernel, currently only `unif` and `gauss`:
 #' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
 #' 1 & \frac{|x - x_i|}{h} \leq 1 \\
@@ -319,8 +323,8 @@ NW.volatility <- function(e,
 #' @title
 #' LOO-CV for h in Nadaraya–Watson kernel regression.
 #'
-#' @param y LHS dependent variable.
-#' @param x RHS explanation variable.
+#' @param y A dependent variable.
+#' @param x An explanatory variable.
 #' @param kernel Needed kernel, currently only `unif` and `gauss`:
 #' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
 #' 1 & \frac{|x - x_i|}{h} \leq 1 \\
@@ -379,10 +383,10 @@ NW.loocv <- function(y,
 #' @title
 #' Returning a kernel value for a specific point
 #'
-#' @param i Index of the base point.
-#' @param x Series for kernel calculations.
-#' @param h Kernel bandwidth.
-#' @param kernel Kernel type:
+#' @param i An index of the base point.
+#' @param x A series for kernel calculations.
+#' @param h A bandwidth parameter.
+#' @param kernel Needed kernel, currently only `unif` and `gauss`:
 #' * `unif`: \eqn{K(x) = \left\{\begin{array}{ll}
 #' 1 & \frac{|x - x_i|}{h} \leq 1 \\
 #' 0 & \textrm{otherwize}

@@ -7,11 +7,11 @@
 NW.estimation(y, x, h, kernel = "unif")
 }
 \arguments{
-\item{y}{LHS dependent variable.}
+\item{y}{A dependent variable.}
 
-\item{x}{RHS explanation variable.}
+\item{x}{Explanatory variables.}
 
-\item{h}{Bandwidth.}
+\item{h}{A bandwidth parameter.}
 
 \item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}:
 \itemize{

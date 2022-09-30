@@ -17,7 +17,7 @@ coint.conf.sets(
 )
 }
 \arguments{
-\item{y}{A LHS variable of interest.}
+\item{y}{A time series of interest.}
 
 \item{trend}{Whether the trend is to be included.}
 

@@ -1,8 +1,8 @@
 #' @title
-#' Test of the co-integration rank with a possible break in trend
+#' Test of the cointegration rank with a possible break in trend
 #'
 #' @description
-#' This procedure is aimed on the problem of testing for the co-integration rank
+#' This procedure is aimed on the problem of testing for the cointegration rank
 #' of a vector autoregressive process in the case where a trend break may
 #' potentially be present in the data.
 #'
@@ -10,10 +10,11 @@
 #' with break, and without it. The one with the smallest value is considered to
 #' be the result.
 #'
-#' @param y The matrix of \eqn{n} VAR variables.
-#' @param r The co-integration rank tested against the alternative of \eqn{n}.
+#' @param y A matrix of \eqn{n} VAR variables.
+#' @param r The cointegration rank tested against the alternative of \eqn{n}.
 #' @param max.lag The maximum number of lags.
-#' @param trim The trimming parameter to determine the lower and upper bounds.
+#' @param trim The trimming parameter to find the lower and upper bounds of
+#' possible break dates.
 #'
 #' @return A list of:
 #' * the indicator of the rejection of null.
@@ -112,12 +113,12 @@ VECM.test <- function(y,
 #' Quasi log likelihood for VECM without and with breaks
 #' @order 1
 #'
-#' @param y The matrix of \eqn{n} VAR variables.
+#' @param y A matrix of \eqn{n} VAR variables.
 #' @param p Number of lags.
 #' @param breaks.list Vector of possible break dates.
 #'
 #' @return The vector or matrix with the values of quasi log likelihood
-#' for all possible values of co-integration rank and different break dates,
+#' for all possible values of cointegration rank and different break dates,
 #' if the function with breaks is called.
 #'
 #' @importFrom Rfast spdinv

@@ -26,19 +26,20 @@ weighted.GSADF.test(
 )
 }
 \arguments{
-\item{y}{The input time series of interest.}
+\item{y}{A time series of interest.}
 
-\item{trim}{Trimming parameter to determine the lower and upper bounds.}
+\item{trim}{The trimming parameter to find the lower and upper bounds of
+possible break dates.}
 
 \item{const}{Whether the constant needs to be included.}
 
-\item{alpha}{The significance level of interest.}
+\item{alpha}{A significance level of interest.}
 
-\item{iter}{The number of iterations.}
+\item{iter}{Nnumber of iterations.}
 
 \item{urs}{Use \verb{union of rejections} strategy.}
 
-\item{seed}{The seed parameter for the random number generator.}
+\item{seed}{A seed parameter for the random number generator.}
 }
 \value{
 An object of type \code{sadf}. It's a list of:

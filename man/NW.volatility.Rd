@@ -7,9 +7,9 @@
 NW.volatility(e, h, kernel = "unif")
 }
 \arguments{
-\item{e}{The series of interest.}
+\item{e}{A series of interest.}
 
-\item{h}{Bandwidth.}
+\item{h}{A bandwidth parameter.}
 
 \item{kernel}{Needed kernel, currently only \code{unif} and \code{gauss}:
 \itemize{

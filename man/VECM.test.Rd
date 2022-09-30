@@ -2,18 +2,19 @@
 % Please edit documentation in R/VECM.test.R
 \name{VECM.test}
 \alias{VECM.test}
-\title{Test of the co-integration rank with a possible break in trend}
+\title{Test of the cointegration rank with a possible break in trend}
 \usage{
 VECM.test(y, r, max.lag, trim = 0.15)
 }
 \arguments{
-\item{y}{The matrix of \eqn{n} VAR variables.}
+\item{y}{A matrix of \eqn{n} VAR variables.}
 
-\item{r}{The co-integration rank tested against the alternative of \eqn{n}.}
+\item{r}{The cointegration rank tested against the alternative of \eqn{n}.}
 
 \item{max.lag}{The maximum number of lags.}
 
-\item{trim}{The trimming parameter to determine the lower and upper bounds.}
+\item{trim}{The trimming parameter to find the lower and upper bounds of
+possible break dates.}
 }
 \value{
 A list of:
@@ -24,7 +25,7 @@ A list of:
 }
 }
 \description{
-This procedure is aimed on the problem of testing for the co-integration rank
+This procedure is aimed on the problem of testing for the cointegration rank
 of a vector autoregressive process in the case where a trend break may
 potentially be present in the data.
 

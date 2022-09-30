@@ -74,7 +74,7 @@ coint.test.PR <- function(y,
 #' Internal procedure for calculating test statistics from
 #' Perron-Rodriguez (2016)
 #'
-#' @param ud A vecctor of residuals for testing.
+#' @param ud A vector of residuals for testing.
 #' @param min.lag,max.lag Minimum and maximum lag number.
 #' @param c.bar A `c` parameter used for GLS detrending purposes.
 #' @param deter A value equal to

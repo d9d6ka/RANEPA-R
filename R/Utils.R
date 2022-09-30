@@ -1,9 +1,9 @@
 #' @title
 #' Produce a vector lagged backward of forward
 #'
-#' @param x Initial vector.
+#' @param x An initial vector.
 #' @param i Size of lag (lead if negative).
-#' @param na Value to fill missing observations, `NA` by default.
+#' @param na A value to fill missing observations, `NA` by default.
 #'
 #' @return Lagged or leaded vector.
 #'
@@ -35,10 +35,10 @@ lagn <- function(x,
 #' @title
 #' Produce a vector or matrix of differences, keeping initial length
 #'
-#' @param x Initial vector.
+#' @param x An initial vector.
 #' @param lag Size of lag.
 #' @param difference Order of differentiating.
-#' @param na Value to fill missing observations, `NA` by default.
+#' @param na A value to fill missing observations, `NA` by default.
 #'
 #' @return Vector or matrix of differences.
 #'
@@ -67,8 +67,8 @@ diffn <- function(x,
 #' @title
 #' Auxiliary function returning KPSS statistic value.
 #'
-#' @param resids The series of residuals.
-#' @param variance The value of the long-run variance.
+#' @param resids A series of residuals.
+#' @param variance A value of the long-run variance.
 #'
 #' @keywords internal
 KPSS <- function(resids,
@@ -86,9 +86,9 @@ KPSS <- function(resids,
 #' @title
 #' Calculating M-statistics by Stock (1990) and Perron and Ng (1996).
 #'
-#' @param y A series of interest.
+#' @param y A time series of interest.
 #' @param l Number of lags for inner ADF test.
-#' @param const,trend Whether a constand and trend are to be included.
+#' @param const,trend Whether a constant and trend are to be included.
 #'
 #' @return List of values of \eqn{MZ_\alpha}, \eqn{MZ_t} and \eqn{MSB}
 #' statistics.

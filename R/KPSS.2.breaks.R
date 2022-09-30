@@ -11,7 +11,7 @@
 #'
 #' See Carrion-i-Silvestre and Sansó (2007) for further details.
 #'
-#' @param y An input (LHS) time series of interest.
+#' @param y A time series of interest.
 #' @param model A scalar equal to
 #' * 1: for the AA (without trend) model,
 #' * 2: for the AA (with trend) model,
@@ -20,7 +20,7 @@
 #' * 5: for the AC-CA model.
 #' @param break.point Positions for the first and second structural breaks
 #' (respective to the origin which is 1).
-#' @param max.lag scalar, with the maximum order of the parametric correction.
+#' @param max.lag A scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using the
 #' BIC information criterion.
 #' @param kernel Kernel for calculating long-run variance
@@ -92,14 +92,14 @@ KPSS.2.breaks <- function(y,
 #'
 #' See Carrion-i-Silvestre and Sansó (2007) for further details.
 #'
-#' @param y (Tx1)-vector of time series.
+#' @param y A time series of interest.
 #' @param model A scalar equal to
 #' * 1: for the AA (without trend) model,
 #' * 2: for the AA (with trend) model,
 #' * 3: for the BB model,
 #' * 4: for the CC model,
 #' * 5: for the AC-CA model.
-#' @param max.lag scalar, with the maximum order of the parametric correction.
+#' @param max.lag A scalar, with the maximum order of the parametric correction.
 #' The final order of the parametric correction is selected using
 #' the BIC information criterion.
 #' @param kernel Kernel for calculating long-run variance

@@ -14,13 +14,14 @@ PY.single(
 )
 }
 \arguments{
-\item{y}{The input series of interest.}
+\item{y}{A time series of interest.}
 
 \item{const, trend}{Allowing the break in constant or trend.}
 
 \item{criterion}{Needed information criterion: aic, bic, hq or lwz.}
 
-\item{trim}{A trimming value for a possible break date bounds.}
+\item{trim}{A trimming parameter to determine the lower and upper bounds for
+a possible break point.}
 
 \item{max.lag}{The maximum possible lag in the model.}
 }
