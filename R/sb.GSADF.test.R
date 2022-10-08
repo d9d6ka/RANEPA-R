@@ -1,6 +1,9 @@
 #' @title
 #' Sign-based SADF test
 #'
+#' @details
+#' Refactored original code by Kurozumi et al.
+#'
 #' @param y A time series of interest.
 #' @param trim A trimming parameter to determine the lower and upper bounds for
 #' a possible break point.
@@ -16,6 +19,11 @@
 #' in the Presence of Deterministically Time-Varying Volatility.”
 #' Econometric Theory 36, no. 1 (February 2020): 122–69.
 #' https://doi.org/10.1017/S0266466619000057.
+#'
+#' Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+#' “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
+#' Journal of Financial Econometrics, April 23, 2022.
+#' https://doi.org/10.1093/jjfinec/nbac004.
 #'
 #' @import doSNOW
 #' @import foreach

@@ -9,6 +9,9 @@
 #' `GSADF.test` is a generalized version of `SADF.test`. Subsamples are allowed
 #' to start at any point between 1 and \eqn{T (1 - trim)}.
 #'
+#' @details
+#' Refactored original code by Kurozumi et al.
+#'
 #' @param y A time series of interest.
 #' @param trim A trimming parameter to determine the lower and upper bounds for
 #' a possible break point.

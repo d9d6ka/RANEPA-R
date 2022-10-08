@@ -24,3 +24,7 @@ robust.tests.single(
 \description{
 A wrapping function around \link{MDF.single}.
 }
+\details{
+The code provided is the original Ox code by Skrobotov (2018)
+ported to R.
+}

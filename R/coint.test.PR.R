@@ -1,6 +1,10 @@
 #' @title
 #' A set of residual based tests for cointegration
 #'
+#' @details
+#' The code provided is the original GAUSS code by Perron and Rodríguez
+#' ported to R.
+#'
 #' @param y,x Variables of interest. `x` can be a matrix of several variables.
 #' @param deter A value equal to
 #' * 1: quasi-demeaned y and x,

@@ -59,6 +59,9 @@ critical and \eqn{p}-values for \link{SADF.test}.
 
 \code{GSADF.bootstrap.test} is the same procedure but for \link{GSADF.test}.
 }
+\details{
+Refactored original code by Kurozumi et al.
+}
 \references{
 Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
 “Time-Transformed Test for Bubbles under Non-Stationary Volatility.”

@@ -1,5 +1,9 @@
 #' @title
-#' MDF test for a single break and possible heterscedasticity
+#' MDF test for a single break and possible heteroscedasticity
+#'
+#' @details
+#' The code provided is the original GAUSS code by Cavaliere et al.
+#' ported to R.
 #'
 #' @param y A time series of interest.
 #' @param max.lag The maximum possible lag.

@@ -31,6 +31,10 @@ A list of the estimated Wald statistic as well as its c.v.
 \description{
 Perron-Yabu (2009) statistic for break at unknown date.
 }
+\details{
+The code provided is the original Ox code by Skrobotov (2018)
+ported to R.
+}
 \references{
 Perron, Pierre, and Tomoyoshi Yabu.
 “Testing for Shifts in Trend With an Integrated or

@@ -74,6 +74,10 @@ A list of
 \description{
 Procedure to compute the KPSS test with multiple known structural breaks
 }
+\details{
+The code provided is based on the original code
+by Carrion-i-Silvestre and Sansó.
+}
 \references{
 Carrion-i-Silvestre, Josep Lluís, and Andreu Sansó.
 “Testing the Null of Cointegration with Structural Breaks.”

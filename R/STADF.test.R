@@ -7,6 +7,9 @@
 #' the ordinary `SADF` and `GSADF` tests using Nadaraya-Watson residuals and
 #' reindexing procedure by Cavaliere-Taylor (2008).
 #'
+#' @details
+#' Refactored original code by Kurozumi et al.
+#'
 #' @param y A time series of interest.
 #' @param trim A trimming parameter to determine the lower and upper bounds for
 #' a possible break point.

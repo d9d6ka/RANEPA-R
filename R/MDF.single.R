@@ -1,6 +1,10 @@
 #' @title
 #' MDF procedure for a single unknown break.
 #'
+#' @details
+#' The code provided is the original Ox code by Skrobotov (2018)
+#' ported to R.
+#'
 #' @param y A time series of interest.
 #' @param const Whether the constant term should be included.
 #' @param trend Whether the trend term should be included.

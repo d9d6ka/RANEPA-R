@@ -4,6 +4,10 @@
 #' @description
 #' Procedure to compute the KPSS test with multiple known structural breaks
 #'
+#' @details
+#' The code provided is based on the original code
+#' by Carrion-i-Silvestre and Sansó.
+#'
 #' @param y A time series of interest.
 #' @param x A matrix of explanatory stochastic regressors.
 #' @param model A scalar or vector of

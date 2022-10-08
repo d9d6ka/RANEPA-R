@@ -2,6 +2,9 @@
 #' Weighted supremum ADF test
 #' @order 1
 #'
+#' @details
+#' Refactored original code by Kurozumi et al.
+#'
 #' @param y A time series of interest.
 #' @param trim The trimming parameter to find the lower and upper bounds of
 #' possible break dates.

@@ -28,6 +28,10 @@ A list of:
 \description{
 A set of residual based tests for cointegration
 }
+\details{
+The code provided is the original GAUSS code by Perron and Rodríguez
+ported to R.
+}
 \references{
 Perron, Pierre, and Gabriel Rodríguez.
 “Residuals‐based Tests for Cointegration with Generalized Least‐squares

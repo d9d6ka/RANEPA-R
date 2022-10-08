@@ -5,9 +5,10 @@
 #' Procedure to compute the KPSS test with two structural breaks
 #'
 #' @details
-#' The break points are known
+#' The break points are known.
 #'
-#' The code provided is the original GAUSS code ported to R.
+#' The code provided is the original GAUSS code by Carrion-i-Silvestre and Sansó
+#' ported to R.
 #'
 #' See Carrion-i-Silvestre and Sansó (2007) for further details.
 #'

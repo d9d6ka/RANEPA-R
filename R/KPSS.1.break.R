@@ -5,7 +5,8 @@
 #' Computes the cointegration test with one known structural break.
 #'
 #' @details
-#' The code provided is the original GAUSS code ported to R.
+#' The code provided is the original GAUSS code by Carrion-i-Silvestre and Sansó
+#' ported to R.
 #'
 #' See Carrion-i-Silvestre and Sansó (2006) for further details.
 #'

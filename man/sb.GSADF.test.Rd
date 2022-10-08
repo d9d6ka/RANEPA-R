@@ -33,10 +33,18 @@ a possible break point.}
 \description{
 Sign-based SADF test
 }
+\details{
+Refactored original code by Kurozumi et al.
+}
 \references{
 Harvey, David I., Stephen J. Leybourne, and Yang Zu.
 “Sign-Based Unit Root Tests for Explosive Financial Bubbles
 in the Presence of Deterministically Time-Varying Volatility.”
 Econometric Theory 36, no. 1 (February 2020): 122–69.
 https://doi.org/10.1017/S0266466619000057.
+
+Kurozumi, Eiji, Anton Skrobotov, and Alexey Tsarev.
+“Time-Transformed Test for Bubbles under Non-Stationary Volatility.”
+Journal of Financial Econometrics, April 23, 2022.
+https://doi.org/10.1093/jjfinec/nbac004.
 }

@@ -1,6 +1,10 @@
 #' @title
 #' A wrapping function around [MDF.single].
 #'
+#' @details
+#' The code provided is the original Ox code by Skrobotov (2018)
+#' ported to R.
+#'
 #' @param y A time series of interest.
 #' @param const,trend Whether the constant term and trend should be included.
 #' @param season Whether the seasonal adjustment is needed.
@@ -42,6 +46,10 @@ robust.tests.single <- function(y,
 
 #' @title
 #' A wrapping function around [KP] and [MDF.multiple].
+#'
+#' @details
+#' The code provided is the original Ox code by Skrobotov (2018)
+#' ported to R.
 #'
 #' @param y A series of interest.
 #' @param const Whether the constant term should be included.
@@ -94,6 +102,10 @@ robust.tests.multiple <- function(y,
 
 #' @title
 #' Kejrival-Perron procedure of breaks number detection
+#'
+#' @details
+#' The code provided is the original Ox code by Skrobotov (2018)
+#' ported to R.
 #'
 #' @param y An input series of interest.
 #' @param const Whether the break in constant is allowed.

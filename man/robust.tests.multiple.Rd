@@ -26,3 +26,7 @@ robust.tests.multiple(
 \description{
 A wrapping function around \link{KP} and \link{MDF.multiple}.
 }
+\details{
+The code provided is the original Ox code by Skrobotov (2018)
+ported to R.
+}

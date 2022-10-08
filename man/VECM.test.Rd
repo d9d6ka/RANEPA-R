@@ -33,6 +33,10 @@ The test is based on estimating the quasi log likelihood for two situations,
 with break, and without it. The one with the smallest value is considered to
 be the result.
 }
+\details{
+The code provided is the original GAUSS code by Harris et al.
+ported to R.
+}
 \references{
 Harris, David, Stephen J. Leybourne, and A. M. Robert Taylor.
 “Tests of the Co-Integration Rank in VAR Models in the Presence

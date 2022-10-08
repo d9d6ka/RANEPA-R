@@ -1,6 +1,10 @@
 #' @title
 #' Perron-Yabu (2009) statistic for break at unknown date.
 #'
+#' @details
+#' The code provided is the original Ox code by Skrobotov (2018)
+#' ported to R.
+#'
 #' @param y A time series of interest.
 #' @param const,trend Allowing the break in constant or trend.
 #' @param criterion Needed information criterion: aic, bic, hq or lwz.

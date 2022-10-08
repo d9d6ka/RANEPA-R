@@ -23,6 +23,10 @@ The estimated optimal break point.
 \description{
 Kejrival-Perron procedure of breaks number detection
 }
+\details{
+The code provided is the original Ox code by Skrobotov (2018)
+ported to R.
+}
 \references{
 Kejriwal, Mohitosh, and Pierre Perron.
 “A Sequential Procedure to Determine the Number of Breaks in Trend

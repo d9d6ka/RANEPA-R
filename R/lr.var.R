@@ -2,6 +2,10 @@
 #' @title
 #' Calculating long-run variance or covariance matrix
 #'
+#' @details
+#' The code provided is based on the original code by Kurozumi, Sul et al.
+#' ported to R.
+#'
 #' @param y A time series of interest.
 #' @param demean Whether the demeaning is needed.
 #' @param kernel A kernel to be used:

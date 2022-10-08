@@ -85,6 +85,10 @@ recolorization. Otherwize ignored.}
 \description{
 Calculating long-run variance or covariance matrix
 }
+\details{
+The code provided is based on the original code by Kurozumi, Sul et al.
+ported to R.
+}
 \references{
 Andrews, Donald W. K.
 “Heteroskedasticity and Autocorrelation Consistent

@@ -26,3 +26,7 @@ A list of sublists each containing
 \description{
 MDF procedure for a single unknown break.
 }
+\details{
+The code provided is the original Ox code by Skrobotov (2018)
+ported to R.
+}

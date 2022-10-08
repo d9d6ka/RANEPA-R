@@ -10,6 +10,10 @@
 #' with break, and without it. The one with the smallest value is considered to
 #' be the result.
 #'
+#' @details
+#' The code provided is the original GAUSS code by Harris et al.
+#' ported to R.
+#'
 #' @param y A matrix of \eqn{n} VAR variables.
 #' @param r The cointegration rank tested against the alternative of \eqn{n}.
 #' @param max.lag The maximum number of lags.

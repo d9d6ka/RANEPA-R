@@ -91,6 +91,9 @@ See \link{SADF.test}. Tests with time transformation are the modified versions o
 the ordinary \code{SADF} and \code{GSADF} tests using Nadaraya-Watson residuals and
 reindexing procedure by Cavaliere-Taylor (2008).
 }
+\details{
+Refactored original code by Kurozumi et al.
+}
 \references{
 Cavaliere, Giuseppe, and A. M. Robert Taylor.
 “Time-Transformed Unit Root Tests for Models with Non-Stationary Volatility.”

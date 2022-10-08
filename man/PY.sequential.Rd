@@ -32,6 +32,10 @@ An estimated Wald statistic.
 \description{
 Sequential Perron-Yabu (2009) statistic for breaks at unknown date.
 }
+\details{
+The code provided is the original Ox code by Skrobotov (2018)
+ported to R.
+}
 \references{
 Kejriwal, Mohitosh, and Pierre Perron.
 “A Sequential Procedure to Determine the Number of Breaks in Trend

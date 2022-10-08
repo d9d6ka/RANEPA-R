@@ -2,7 +2,7 @@
 % Please edit documentation in R/MDF.CHLT.R
 \name{MDF.CHLT}
 \alias{MDF.CHLT}
-\title{MDF test for a single break and possible heterscedasticity}
+\title{MDF test for a single break and possible heteroscedasticity}
 \usage{
 MDF.CHLT(y, max.lag = 10, trim = 0.15, iter = 499)
 }
@@ -25,7 +25,11 @@ each containing:
 }
 }
 \description{
-MDF test for a single break and possible heterscedasticity
+MDF test for a single break and possible heteroscedasticity
+}
+\details{
+The code provided is the original GAUSS code by Cavaliere et al.
+ported to R.
 }
 \references{
 Cavaliere, Giuseppe, David I. Harvey, Stephen J. Leybourne,
