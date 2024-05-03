@@ -306,7 +306,7 @@ segments.GLS <- function(y,
     res.tb <- rep(0, breaks)
 
     for (alpha in steps) {
-        if (const && !trend) {
+        if (breaks == 1) {
             for (tb1 in first.break:last.break) {
                 DU1 <- as.numeric(x.trend > tb1)
                 DT1 <- DU1 * (x.trend - tb1)
@@ -328,7 +328,7 @@ segments.GLS <- function(y,
                     res.tb <- c(tb1)
                 }
             }
-        } else if (!const && trend) {
+        } else if (breaks == 2) {
             for (tb1 in first.break:(last.break - width)) {
                 for (tb2 in (tb1 + width):last.break) {
                     DU1 <- as.numeric(x.trend > tb1)
@@ -356,7 +356,7 @@ segments.GLS <- function(y,
                     }
                 }
             }
-        } else if (const && trend) {
+        } else if (breaks == 3) {
             for (tb1 in first.break:(last.break - 2 * width)) {
                 for (tb2 in (tb1 + width):(last.break - width)) {
                     for (tb3 in (tb2 + width):last.break) {
