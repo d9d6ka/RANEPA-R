@@ -221,7 +221,7 @@ PY.sequential <- function(y,
                     }
 
                     if (abs(a.hat.M) < 1)
-                        h0 <- lr.var.quadratic(g.resid)$lrv
+                        h0 <- lr.var.quadratic(g.resid)
                 }
 
                 VCV <- h0 * qr.solve(t(x.g) %*% x.g)

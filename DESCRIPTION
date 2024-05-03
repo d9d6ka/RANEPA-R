@@ -1,6 +1,6 @@
 Package: breaktest
-Version: 1.0.1
-Date: 2022-10-08
+Version: 1.0.2
+Date: 2024-05-03
 Title: Set of unit root and cointegration tests
 Authors@R: c(person("Anton", "Skrobotov", role = c("aut", "ctb"),
                     email = "antonskrobotov@gmail.com"),
